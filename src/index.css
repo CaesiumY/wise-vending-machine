@@ -102,3 +102,47 @@
   }
 }
 
+/* 다이얼로그 애니메이션 */
+@keyframes dialog-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* 자동 닫힘 프로그레스 바 */
+@keyframes progress-bar {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+/* 다이얼로그 컨텐츠 애니메이션 */
+.dialog-content {
+  animation: dialog-fade-in 0.3s ease-out;
+}
+
+/* 성공/실패 아이콘 애니메이션 */
+.dialog-icon-success {
+  animation: bounce-success 0.6s ease-out;
+}
+
+.dialog-icon-error {
+  animation: shake-error 0.5s ease-out;
+}
+
+@keyframes bounce-success {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shake-error {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
