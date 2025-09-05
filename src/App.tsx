@@ -1,4 +1,5 @@
 import { MainLayout, VendingLayout } from '@/components/layout/MainLayout';
+import { AdminPanel } from '@/components/admin/AdminPanel';
 
 // 임시 더미 컴포넌트들 (Phase 3의 다른 Task에서 구현 예정)
 const ProductDisplay = () => (
@@ -74,19 +75,6 @@ const CardPanel = () => (
   </div>
 );
 
-const AdminPanel = () => (
-  <div className="bg-yellow-50 border-2 border-yellow-300 rounded-lg p-4 shadow-sm">
-    <h3 className="font-bold text-yellow-800 mb-3 text-center">🔧 관리자 패널</h3>
-    <div className="grid grid-cols-2 gap-2 text-sm">
-      <button className="bg-yellow-200 hover:bg-yellow-300 text-yellow-800 p-2 rounded-md transition-colors border border-yellow-300">
-        📦 재고 관리
-      </button>
-      <button className="bg-red-200 hover:bg-red-300 text-red-800 p-2 rounded-md transition-colors border border-red-300">
-        ⚠️ 예외 테스트
-      </button>
-    </div>
-  </div>
-);
 
 function App() {
   return (
