@@ -42,8 +42,11 @@ export type {
 // 관리자 패널 타입들
 export type { 
   AdminSettings, 
+  TaskAdminSettings,
+  TaskAdminStore,
   ExceptionToggleItem, 
   ScenarioPreset, 
+  FullScenarioPreset,
   AdminState, 
   AdminLogEntry, 
   AdminActions, 

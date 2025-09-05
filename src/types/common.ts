@@ -31,6 +31,7 @@ export type ErrorType =
   | 'dispense_blocked'    // 배출구 막힘
   | 'temperature_error'   // 온도 이상
   | 'power_unstable'      // 전원 불안정
+  | 'admin_intervention'  // 관리자 개입 필요
 
 // 거래 상태
 export type TransactionStatus = 'pending' | 'success' | 'failed' | 'cancelled'
@@ -50,11 +51,11 @@ export type Partial<T> = {
 
 // 관리자 프리셋 이름 (5가지)
 export type PresetName = 
-  | 'normal'        // 정상 작동
-  | 'change_short'  // 거스름돈 부족
-  | 'stock_empty'   // 재고 소진
-  | 'system_error'  // 시스템 오류
-  | 'worst_case'    // 최악 상황
+  | 'normal'          // 정상 작동
+  | 'change_shortage' // 거스름돈 부족
+  | 'stock_shortage'  // 재고 소진
+  | 'system_error'    // 시스템 오류
+  | 'worst_case'      // 최악 상황
 
 // 액션 결과 타입
 export interface ActionResult<T = void> {

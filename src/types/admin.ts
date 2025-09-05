@@ -4,7 +4,8 @@ import type {
   PresetName, 
   ActionResult, 
   Nullable, 
-  MonitoringInfo 
+  MonitoringInfo,
+  CashDenomination
 } from './common'
 
 // 15가지 예외 상황 설정 (완전한 관리자 설정)
@@ -62,8 +63,16 @@ export interface ExceptionToggleItem {
   thresholdKey?: keyof AdminSettings
 }
 
-// 5가지 시나리오 프리셋
+// 5가지 시나리오 프리셋 (Task-3용)
 export interface ScenarioPreset {
+  name: PresetName
+  displayName: string
+  description: string
+  settings: Partial<TaskAdminSettings>
+}
+
+// 원본 시나리오 프리셋 (기존 시스템용)
+export interface FullScenarioPreset {
   name: PresetName
   displayName: string
   description: string
@@ -147,7 +156,66 @@ export interface AdminActions {
   exportLogs: () => AdminLogEntry[]
 }
 
-// Zustand 관리자 스토어 통합 타입
+// Task-3에서 사용하는 간소화된 AdminSettings (15가지 예외 시뮬레이터용)
+export interface TaskAdminSettings {
+  // 결제 예외 (4가지)
+  changeShortageMode: boolean
+  fakeMoneyDetection: boolean
+  billJamMode: boolean
+  coinJamMode: boolean
+  
+  // 재고 관리 (동적)
+  stockLevels: Record<ProductType, number>
+  
+  // 시스템 예외 (10가지)  
+  dispenseFaultMode: boolean
+  cardReaderFault: boolean
+  cardPaymentReject: boolean
+  networkErrorMode: boolean
+  systemMaintenanceMode: boolean
+  timeoutMode: boolean
+  dispenseBlockedMode: boolean
+  temperatureErrorMode: boolean
+  powerUnstableMode: boolean
+  adminInterventionMode: boolean
+}
+
+// Task-3용 AdminStore 타입 (Zustand 스토어용)
+export interface TaskAdminStore extends TaskAdminSettings {
+  // UI 상태
+  isPanelOpen: boolean
+  activePreset: Nullable<PresetName>
+  
+  // 모니터링 상태
+  totalTransactions: number
+  errorCount: number
+  lastError: Nullable<{
+    type: ErrorType
+    message: string
+    timestamp: number
+  }>
+  
+  // 화폐 보유량
+  cashInventory: Record<CashDenomination, number>
+
+  // 액션들
+  togglePanel: () => void
+  openPanel: () => void
+  closePanel: () => void
+  toggleException: (exception: keyof TaskAdminSettings) => void
+  updateStockLevel: (productId: ProductType, level: number) => void
+  updateCashInventory: (denomination: CashDenomination, amount: number) => void
+  loadPreset: (preset: PresetName) => void
+  saveCustomPreset: (name: string, settings: TaskAdminSettings) => void
+  resetToDefault: () => void
+  incrementTransactionCount: () => void
+  recordError: (type: ErrorType, message: string) => void
+  clearErrorLog: () => void
+  triggerException: (type: ErrorType) => void
+  simulateNetworkDelay: (delayMs: number) => Promise<void>
+}
+
+// 기존 AdminStore 타입
 export interface AdminStore extends AdminState, AdminActions {}
 
 // 재고 관리 타입

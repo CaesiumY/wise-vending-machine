@@ -104,8 +104,12 @@ export interface VendingActions {
   dispenseProduct: () => Promise<ActionResult>
   
   // 거래 관리
-  completeTransaction: () => ActionResult
+  completeTransaction: () => Promise<ActionResult>
   cancelTransaction: () => ActionResult
+  
+  // 내부 헬퍼 메서드
+  processCashTransaction: (productId: ProductType) => void
+  getErrorMessage: (errorType: ErrorType) => string
   
   // 시스템 제어
   setStatus: (status: VendingStatus) => void
