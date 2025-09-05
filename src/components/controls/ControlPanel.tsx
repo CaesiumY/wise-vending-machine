@@ -1,8 +1,28 @@
-export function ControlPanel() {
+import { PaymentSelector } from './PaymentSelector'
+import { CashPanel } from './CashPanel'
+import { CardPanel } from './CardPanel'
+import { ControlStatus } from './ControlStatus'
+
+interface ControlPanelProps {
+  className?: string
+}
+
+export function ControlPanel({ className }: ControlPanelProps) {
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6">
-      <h2 className="text-xl font-bold mb-4">컨트롤 패널</h2>
-      <p>구현 예정</p>
+    <div className={className}>
+      <div className="space-y-4">
+        {/* 결제 방식 선택 */}
+        <PaymentSelector />
+        
+        {/* 현재 상태 표시 */}
+        <ControlStatus />
+        
+        {/* 현금 투입 패널 */}
+        <CashPanel />
+        
+        {/* 카드 결제 패널 */}
+        <CardPanel />
+      </div>
     </div>
   )
 }
