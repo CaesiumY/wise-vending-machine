@@ -17,6 +17,7 @@ export function calculateOptimalChange(
         100: 0,
       },
       possible: true,
+      remainingAmount: 0,
     }
   }
 
@@ -46,10 +47,23 @@ export function calculateOptimalChange(
     total: changeAmount - remainingAmount,
     denominations: breakdown,
     possible: canProvideChange,
+    remainingAmount,
     shortage: canProvideChange ? undefined : CASH_DENOMINATIONS.filter(d => 
       Math.floor(remainingAmount / d) > (inventory[d] || 0)
     ),
   }
+}
+
+// 관리자 스토어의 cashInventory와 연동하는 계산 함수
+export function calculateChangeWithAdminInventory(
+  changeAmount: number
+): ChangeBreakdown {
+  // 동적으로 adminStore에서 현재 보유량 가져오기
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { useAdminStore } = require('@/stores/adminStore');
+  const adminState = useAdminStore.getState();
+  
+  return calculateOptimalChange(changeAmount, adminState.cashInventory);
 }
 
 // 거스름돈 지급 시뮬레이션 (실제 하드웨어 제어)

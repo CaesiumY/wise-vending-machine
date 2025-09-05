@@ -12,6 +12,13 @@ import type {
 } from '@/types'
 import { PRODUCTS } from '@/constants/products'
 import { calculateOptimalChange } from '@/utils/changeCalculator'
+import { 
+  validateCashDenomination, 
+  validateMaxCashInput,
+  validateInsertionState,
+  authenticateCurrency 
+} from '@/utils/validators'
+import { formatSuccessMessage } from '@/utils/formatters'
 import { useAdminStore } from './adminStore'
 
 // 초기 상태
@@ -24,6 +31,10 @@ const initialState = {
   status: 'idle' as const,
   isOperational: true,
   
+  // 현금 투입 관련 (새 추가)
+  insertedCash: [] as CashDenomination[],
+  lastInsertTime: 0,
+  
   // 거래 관련
   lastTransaction: null,
   transactionHistory: [],
@@ -32,6 +43,7 @@ const initialState = {
   dialog: { isOpen: false, type: 'info' as const, title: '', message: '' },
   currentError: null,
   errorMessage: '',
+  isLoading: false,
   
   // 타이머 관련
   timeoutId: null,
@@ -111,41 +123,83 @@ export const useVendingStore = create<VendingStore>()(
       // ===== 현금 관련 액션 =====
       
       insertCash: (denomination: CashDenomination): ActionResult => {
-        const { status, currentBalance } = get()
+        const { status, currentBalance, isOperational, insertedCash, lastInsertTime } = get()
         
-        // 현금 투입 가능 상태 확인
-        if (status !== 'cash_input' && status !== 'product_select') {
-          return { success: false, error: '현금을 투입할 수 없는 상태입니다.' }
+        set({ isLoading: true })
+        
+        try {
+          // 1. 기본 검증
+          if (!validateCashDenomination(denomination)) {
+            return { success: false, error: '유효하지 않은 화폐 단위입니다.' }
+          }
+          
+          const stateValidation = validateInsertionState(status, isOperational)
+          if (!stateValidation.canInsert) {
+            return { success: false, error: stateValidation.reason }
+          }
+          
+          // 2. 최대 금액 검증 (50,000원 제한)
+          if (!validateMaxCashInput(currentBalance, denomination)) {
+            get().setError('max_amount_exceeded', '최대 투입 금액(50,000원)을 초과했습니다.')
+            return { success: false, errorType: 'max_amount_exceeded' }
+          }
+          
+          // 3. 연속 투입 간격 검증 (1초 간격)
+          if (Date.now() - lastInsertTime < 1000) {
+            return { success: false, error: '너무 빠르게 투입하고 있습니다. 잠시 기다려주세요.' }
+          }
+          
+          // 4. AdminStore 예외 상황 확인
+          const adminState = useAdminStore.getState()
+          
+          // 4-1. 화폐 진위성 확인
+          const authResult = authenticateCurrency(denomination, adminState.fakeMoneyDetection)
+          if (!authResult.isValid) {
+            get().setError('fake_money_detected', authResult.reason || '위조화폐가 감지되었습니다.')
+            return { success: false, errorType: 'fake_money_detected' }
+          }
+          
+          // 4-2. 지폐/동전 걸림 시뮬레이션
+          const isBill = denomination >= 1000
+          const jamMode = isBill ? adminState.billJamMode : adminState.coinJamMode
+          
+          if (jamMode && Math.random() < 0.25) {
+            const jamType = isBill ? 'bill_jam' : 'coin_jam'
+            get().setError(jamType, `${isBill ? '지폐' : '동전'}가 걸렸습니다. 다시 투입해주세요.`)
+            return { success: false, errorType: jamType }
+          }
+          
+          // 5. 정상 투입 처리
+          const newBalance = currentBalance + denomination
+          const newInsertedCash = [...insertedCash, denomination]
+          
+          set({
+            currentBalance: newBalance,
+            insertedCash: newInsertedCash,
+            lastInsertTime: Date.now(),
+            status: 'product_select', // 음료 선택 가능 상태로 전환
+          })
+          
+          // 6. 성공 메시지 표시
+          const successMessage = formatSuccessMessage('cash_inserted', {
+            amount: denomination,
+            balance: newBalance
+          })
+          get().showDialog('success', '투입 완료', successMessage)
+          
+          // 7. 타임아웃 시작 (관리자 설정에 따라)
+          if (adminState.timeoutMode) {
+            get().startTimeout(30, () => {
+              get().cancelTransaction()
+              get().showDialog('error', '시간 초과', '시간 초과로 인해 현금을 반환합니다.')
+            })
+          }
+          
+          return { success: true }
+          
+        } finally {
+          set({ isLoading: false })
         }
-        
-        // adminStore 예외 상황 확인
-        const adminState = useAdminStore.getState()
-        
-        // 위조화폐 검사 시뮬레이션
-        if (adminState.fakeMoneyDetection && Math.random() < 0.15) {
-          get().setError('fake_money_detected', '위조화폐가 감지되었습니다. 화폐를 반환합니다.')
-          return { success: false, errorType: 'fake_money_detected' }
-        }
-        
-        // 지폐/동전 걸림 시뮬레이션
-        const isBill = denomination >= 1000
-        const jamMode = isBill ? adminState.billJamMode : adminState.coinJamMode
-        
-        if (jamMode && Math.random() < 0.2) {
-          const jamType = isBill ? 'bill_jam' : 'coin_jam'
-          get().setError(jamType, `${isBill ? '지폐' : '동전'}가 걸렸습니다. 다시 투입해주세요.`)
-          return { success: false, errorType: jamType }
-        }
-        
-        // 정상 투입 처리
-        const newBalance = currentBalance + denomination
-        
-        set({
-          currentBalance: newBalance,
-          status: 'product_select', // 음료 선택 가능 상태로 전환
-        })
-        
-        return { success: true }
       },
 
       // ===== 카드 관련 액션 =====

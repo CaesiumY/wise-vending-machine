@@ -28,6 +28,7 @@ export interface ChangeBreakdown {
   denominations: Record<CashDenomination, number>
   possible: boolean
   shortage?: CashDenomination[]
+  remainingAmount?: number
 }
 
 // 향상된 거래 정보
@@ -64,6 +65,10 @@ export interface VendingMachineState {
   selectedProduct: Nullable<ProductType>
   paymentMethod: Nullable<PaymentMethod>
   
+  // 현금 투입 관련 (새 추가)
+  insertedCash: CashDenomination[]
+  lastInsertTime: number
+  
   // 시스템 상태
   status: VendingStatus
   isOperational: boolean
@@ -74,6 +79,7 @@ export interface VendingMachineState {
   
   // UI 상태
   dialog: DialogState
+  isLoading: boolean
   
   // 오류 상태
   currentError: Nullable<ErrorType>
