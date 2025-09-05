@@ -1,5 +1,8 @@
-import type { CashDenomination } from '@/types';
+import type { ProductType, CashDenomination, ErrorType, PaymentValidationResult } from '@/types';
 import { CASH_DENOMINATIONS } from '@/constants/denominations';
+import { useAdminStore } from '@/stores/adminStore';
+import { useVendingStore } from '@/stores/vendingStore';
+import { calculateOptimalChange } from './changeCalculator';
 
 /**
  * 유효한 화폐 단위 검증
@@ -9,17 +12,17 @@ export function validateCashDenomination(amount: number): amount is CashDenomina
 }
 
 /**
- * 최대 투입 금액 검증 (50,000원 제한)
+ * 최대 투입 금액 검증 (50,000원 제한) - 기존 호환성 유지
  */
 export function validateMaxCashInput(currentAmount: number, newAmount: CashDenomination): boolean {
-  const MAX_CASH_LIMIT = 50000;
-  return (currentAmount + newAmount) <= MAX_CASH_LIMIT;
+  const validation = validateMaxCashLimit(currentAmount, newAmount);
+  return validation.isValid;
 }
 
 /**
- * 구매 가능 여부 검증
+ * 구매 가능 여부 검증 - 기존 호환성 유지 (deprecated, validatePurchase 사용 권장)
  */
-export function validatePurchase(
+export function validatePurchaseSimple(
   balance: number,
   productPrice: number,
   productStock: number
@@ -165,5 +168,283 @@ export function authenticateCurrency(
   return {
     isValid: true,
     confidence: 0.9 + Math.random() * 0.1, // 높은 신뢰도
+  };
+}
+
+// ===== Task 3: 새로운 검증 로직 =====
+
+/**
+ * 1. 재고 검증 (품절 처리)
+ */
+export function validateStock(
+  productId: ProductType,
+  requestedQuantity: number = 1
+): { isValid: boolean; reason?: string; currentStock: number } {
+  const { stockLevels } = useAdminStore.getState();
+  const currentStock = stockLevels[productId] ?? 0;
+
+  if (currentStock === 0) {
+    return {
+      isValid: false,
+      reason: '선택하신 상품이 품절입니다. 다른 상품을 선택해주세요.',
+      currentStock: 0
+    };
+  }
+
+  if (currentStock < requestedQuantity) {
+    return {
+      isValid: false,
+      reason: `재고가 부족합니다. (현재 ${currentStock}개 남음)`,
+      currentStock
+    };
+  }
+
+  return {
+    isValid: true,
+    currentStock
+  };
+}
+
+/**
+ * 2. 거스름돈 가능 여부 확인
+ */
+export function validateChangeAvailability(
+  paymentAmount: number,
+  productPrice: number
+): PaymentValidationResult {
+  const { changeShortageMode, cashInventory } = useAdminStore.getState();
+  const changeRequired = paymentAmount - productPrice;
+
+  // 거스름돈이 필요 없는 경우
+  if (changeRequired === 0) {
+    return {
+      isValid: true,
+      canProceed: true,
+      requiredAmount: productPrice,
+      availableChange: true
+    };
+  }
+
+  // 거스름돈이 필요한 경우
+  if (changeRequired > 0) {
+    // 관리자 패널에서 거스름돈 부족 모드 활성화 시
+    if (changeShortageMode) {
+      const changeResult = calculateOptimalChange(changeRequired, cashInventory);
+      
+      if (!changeResult.possible) {
+        return {
+          isValid: false,
+          reason: `거스름돈이 부족합니다. 정확한 금액 ${productPrice}원을 투입해주세요.`,
+          canProceed: false,
+          requiredAmount: productPrice,
+          availableChange: false
+        };
+      }
+    }
+
+    return {
+      isValid: true,
+      canProceed: true,
+      requiredAmount: productPrice,
+      availableChange: true
+    };
+  }
+
+  // 투입 금액이 부족한 경우
+  return {
+    isValid: false,
+    reason: `${Math.abs(changeRequired)}원이 부족합니다. 추가로 투입해주세요.`,
+    canProceed: false,
+    requiredAmount: productPrice,
+    availableChange: true
+  };
+}
+
+/**
+ * 3. 관리자 설정에 따른 예외 발생
+ */
+export function validateAdminExceptions(): {
+  hasException: boolean;
+  exceptionType?: ErrorType;
+  message?: string;
+} {
+  const adminSettings = useAdminStore.getState();
+
+  // 시스템 점검 모드 (최고 우선순위)
+  if (adminSettings.systemMaintenanceMode) {
+    return {
+      hasException: true,
+      exceptionType: 'system_maintenance',
+      message: '현재 시스템 점검 중입니다. 잠시 후 이용해주세요.'
+    };
+  }
+
+  // 온도 이상 모드
+  if (adminSettings.temperatureErrorMode && Math.random() < 0.2) {
+    return {
+      hasException: true,
+      exceptionType: 'temperature_error',
+      message: '온도 이상으로 서비스가 제한됩니다.'
+    };
+  }
+
+  // 전원 불안정 모드
+  if (adminSettings.powerUnstableMode && Math.random() < 0.15) {
+    return {
+      hasException: true,
+      exceptionType: 'power_unstable',
+      message: '전원 상태가 불안정합니다. 안전 모드로 전환됩니다.'
+    };
+  }
+
+  // 배출구 막힘 모드
+  if (adminSettings.dispenseBlockedMode && Math.random() < 0.25) {
+    return {
+      hasException: true,
+      exceptionType: 'dispense_blocked',
+      message: '배출구가 막혔습니다. 관리자에게 문의하세요.'
+    };
+  }
+
+  // 관리자 개입 필요 모드
+  if (adminSettings.adminInterventionMode && Math.random() < 0.1) {
+    return {
+      hasException: true,
+      exceptionType: 'admin_intervention',
+      message: '관리자 개입이 필요합니다. 잠시만 기다려주세요.'
+    };
+  }
+
+  return { hasException: false };
+}
+
+/**
+ * 4. 배출 가능 여부 검증
+ */
+export function validateDispensing(productId: ProductType): {
+  canDispense: boolean;
+  reason?: string;
+  errorType?: ErrorType;
+} {
+  // 관리자 예외 상황 체크
+  const adminException = validateAdminExceptions();
+  if (adminException.hasException) {
+    return {
+      canDispense: false,
+      reason: adminException.message,
+      errorType: adminException.exceptionType
+    };
+  }
+
+  // 재고 검증
+  const stockValidation = validateStock(productId);
+  if (!stockValidation.isValid) {
+    return {
+      canDispense: false,
+      reason: stockValidation.reason,
+      errorType: 'out_of_stock'
+    };
+  }
+
+  // 배출 실패 모드 체크
+  const { dispenseFaultMode } = useAdminStore.getState();
+  if (dispenseFaultMode && Math.random() < 0.3) {
+    return {
+      canDispense: false,
+      reason: '음료 배출에 실패했습니다. 차액을 반환합니다.',
+      errorType: 'dispense_failure'
+    };
+  }
+
+  return { canDispense: true };
+}
+
+/**
+ * 5. 최대 투입 금액 검증 (기존 함수 확장)
+ */
+export function validateMaxCashLimit(
+  currentAmount: number,
+  additionalAmount: CashDenomination
+): { isValid: boolean; reason?: string; maxLimit: number } {
+  const MAX_CASH_LIMIT = 50000; // 5만원 제한
+  const totalAmount = currentAmount + additionalAmount;
+
+  if (totalAmount > MAX_CASH_LIMIT) {
+    return {
+      isValid: false,
+      reason: `최대 투입 가능 금액은 ${MAX_CASH_LIMIT.toLocaleString()}원입니다.`,
+      maxLimit: MAX_CASH_LIMIT
+    };
+  }
+
+  return {
+    isValid: true,
+    maxLimit: MAX_CASH_LIMIT
+  };
+}
+
+/**
+ * 6. 종합 구매 검증 (모든 검증을 통합)
+ */
+export function validatePurchase(
+  productId: ProductType,
+  paymentAmount: number,
+  paymentMethod: 'cash' | 'card'
+): PaymentValidationResult {
+  const product = Object.values(useVendingStore.getState().products).find(p => p.id === productId);
+  
+  if (!product) {
+    return {
+      isValid: false,
+      reason: '존재하지 않는 상품입니다.',
+      canProceed: false
+    };
+  }
+
+  // 1. 관리자 예외 상황 체크
+  const adminException = validateAdminExceptions();
+  if (adminException.hasException) {
+    return {
+      isValid: false,
+      reason: adminException.message,
+      canProceed: false
+    };
+  }
+
+  // 2. 재고 검증
+  const stockValidation = validateStock(productId);
+  if (!stockValidation.isValid) {
+    return {
+      isValid: false,
+      reason: stockValidation.reason,
+      canProceed: false
+    };
+  }
+
+  // 3. 결제 금액 검증 (현금의 경우만)
+  if (paymentMethod === 'cash') {
+    const changeValidation = validateChangeAvailability(paymentAmount, product.price);
+    if (!changeValidation.isValid) {
+      return changeValidation;
+    }
+  }
+
+  // 4. 카드 결제 추가 검증
+  if (paymentMethod === 'card') {
+    const { networkErrorMode } = useAdminStore.getState();
+    if (networkErrorMode && Math.random() < 0.3) {
+      return {
+        isValid: false,
+        reason: '네트워크 오류가 발생했습니다. 현금 결제를 이용해주세요.',
+        canProceed: false
+      };
+    }
+  }
+
+  return {
+    isValid: true,
+    canProceed: true,
+    requiredAmount: product.price,
+    availableChange: true
   };
 }

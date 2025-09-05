@@ -35,7 +35,8 @@ export type {
   CashInventory, 
   ChangeCalculationResult, 
   PaymentState, 
-  PaymentValidation, 
+  PaymentValidation,
+  PaymentValidationResult, 
   PaymentProcessor 
 } from './payment'
 

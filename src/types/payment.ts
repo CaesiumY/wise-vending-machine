@@ -88,6 +88,15 @@ export interface PaymentValidation {
   networkTimeout: number
 }
 
+// 결제 검증 결과 (Task 3 추가)
+export interface PaymentValidationResult {
+  isValid: boolean
+  canProceed: boolean
+  reason?: string
+  requiredAmount?: number
+  availableChange?: boolean
+}
+
 // 결제 프로세서 액션
 export interface PaymentProcessor {
   // 현금 처리
