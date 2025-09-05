@@ -204,6 +204,27 @@ export const useVendingStore = create<VendingStore>()(
 
       // ===== 카드 관련 액션 =====
       
+      // 카드 결제 시작
+      selectCardPayment: () => {
+        set({
+          paymentMethod: 'card',
+          status: 'card_process'
+        });
+      },
+
+      // 상품별 재고 업데이트
+      updateStock: (productId: ProductType, change: number) => {
+        set(state => ({
+          products: {
+            ...state.products,
+            [productId]: {
+              ...state.products[productId],
+              stock: Math.max(0, state.products[productId].stock + change)
+            }
+          }
+        }));
+      },
+      
       processCardPayment: async (_amount: number): Promise<ActionResult> => {
         const { products, selectedProduct } = get()
         
@@ -274,59 +295,26 @@ export const useVendingStore = create<VendingStore>()(
 
       // ===== 배출 관련 액션 =====
       
-      dispenseProduct: async (): Promise<ActionResult> => {
-        const { selectedProduct, products, lastTransaction } = get()
+      // 배출 시뮬레이션
+      dispenseProduct: async (): Promise<boolean> => {
+        const { selectedProduct } = get()
+        const { dispenseFaultMode } = useAdminStore.getState()
         
-        if (!selectedProduct || !lastTransaction) {
-          return { success: false, error: '배출할 상품이 없습니다.' }
-        }
-        
+        if (!selectedProduct) return false
+
         set({ status: 'dispensing' })
         
-        try {
-          // 배출 과정 시뮬레이션 (2초)
-          await new Promise(resolve => setTimeout(resolve, 2000))
-          
-          // adminStore 설정에 따른 배출 실패 시뮬레이션
-          const adminState = useAdminStore.getState()
-          if (adminState.dispenseFaultMode && Math.random() < 0.3) {
-            throw new Error('dispense_failure')
-          }
-          
-          // 재고 감소
-          const updatedProducts = { ...products }
-          updatedProducts[selectedProduct] = {
-            ...updatedProducts[selectedProduct],
-            stock: updatedProducts[selectedProduct].stock - 1
-          }
-          
-          set({
-            products: updatedProducts,
-            status: 'completing',
-          })
-          
-          // 거래 완료 처리
-          await get().completeTransaction()
-          
-          return { success: true }
-          
-        } catch {
-          // 배출 실패시 차액 및 재고 복구
-          get().setError('dispense_failure', '음료 배출에 실패했습니다. 결제 금액을 환불합니다.')
-          
-          // 현금 결제인 경우 잔액 복구
-          if (lastTransaction.paymentMethod === 'cash') {
-            set(state => ({
-              currentBalance: state.currentBalance + lastTransaction.amount,
-              status: 'product_select',
-            }))
-          } else {
-            // 카드 결제인 경우 취소 처리
-            set({ status: 'idle' })
-          }
-          
-          return { success: false, errorType: 'dispense_failure' }
+        // 배출 실패 모드 체크
+        if (dispenseFaultMode && Math.random() < 0.3) {
+          set({ status: 'idle' })
+          return false
         }
+
+        // 배출 시뮬레이션 (2초)
+        await new Promise(resolve => setTimeout(resolve, 2000))
+        
+        set({ status: 'completing' })
+        return true
       },
 
       // ===== 내부 헬퍼 메서드 =====

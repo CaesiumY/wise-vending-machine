@@ -102,12 +102,16 @@ export interface VendingActions {
   insertCash: (denomination: CashDenomination) => ActionResult
   processCardPayment: (amount: number) => Promise<ActionResult>
   
+  // 카드 결제 관련 (새로 추가)
+  selectCardPayment: () => void
+  updateStock: (productId: ProductType, change: number) => void
+  
   // 거스름돈 처리
   calculateChange: (amount: number) => ChangeBreakdown
   dispenseCash: (breakdown: ChangeBreakdown) => ActionResult
   
   // 음료 배출
-  dispenseProduct: () => Promise<ActionResult>
+  dispenseProduct: () => Promise<boolean>
   
   // 거래 관리
   completeTransaction: () => Promise<ActionResult>
