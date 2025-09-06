@@ -50,8 +50,6 @@ export interface Transaction {
   changeBreakdown?: ChangeBreakdown
   timestamp: Date
   status: TransactionStatus
-  refundReason?: string
-  isRefund?: boolean
 }
 
 // 자판기 상태 타입 (state만)
@@ -62,7 +60,6 @@ export interface VendingState {
   selectedProduct: Nullable<ProductType>
   paymentMethod: Nullable<PaymentMethod>
   status: VendingStatus
-  isOperational: boolean
   
   // 카드 결제 관련
   selectedProductForCard: Nullable<ProductType>
