@@ -15,10 +15,6 @@ export interface AdminSettings {
   changeShortageThreshold: number       // 거스름돈 부족 임계값
   fakeMoneyDetectionMode: boolean       // 위조화폐 감지
   fakeMoneyDetectionRate: number        // 위조화폐 감지율 (0-100%)
-  billJamMode: boolean                  // 지폐 걸림
-  billJamRate: number                   // 지폐 걸림 발생률
-  coinJamMode: boolean                  // 동전 걸림
-  coinJamRate: number                   // 동전 걸림 발생률
   
   // 📦 재고 예외 (1개 + 관리)
   forceOutOfStock: Record<ProductType, boolean>  // 강제 품절 설정
@@ -34,8 +30,6 @@ export interface AdminSettings {
   systemMaintenanceMode: boolean        // 시스템 점검 모드
   maxAmountExceededMode: boolean        // 최대 투입 금액 초과
   maxAmountThreshold: number            // 최대 투입 금액 설정
-  timeoutMode: boolean                  // 타임아웃 강제 발생
-  timeoutDuration: number               // 타임아웃 시간 (초)
   dispenseBlockMode: boolean            // 배출구 막힘
   temperatureErrorMode: boolean         // 온도 이상
   temperatureThreshold: number          // 온도 임계값
@@ -157,20 +151,17 @@ export interface AdminActions {
 
 // Task-3에서 사용하는 간소화된 AdminSettings (15가지 예외 시뮬레이터용)
 export interface TaskAdminSettings {
-  // 결제 예외 (4가지)
+  // 결제 예외 (2가지)
   changeShortageMode: boolean
   fakeMoneyDetection: boolean
-  billJamMode: boolean
-  coinJamMode: boolean
   
   
-  // 시스템 예외 (10가지)  
+  // 시스템 예외 (9가지)  
   dispenseFaultMode: boolean
   cardReaderFault: boolean
   cardPaymentReject: boolean
   networkErrorMode: boolean
   systemMaintenanceMode: boolean
-  timeoutMode: boolean
   dispenseBlockedMode: boolean
   temperatureErrorMode: boolean
   powerUnstableMode: boolean

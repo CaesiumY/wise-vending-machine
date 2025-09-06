@@ -14,14 +14,10 @@ export function useCashPayment() {
     setError,
     showDialog,
     reset,
-    startTimeout,
   } = useVendingStore();
 
   const {
-    billJamMode,
-    coinJamMode,
     changeShortageMode,
-    timeoutMode,
     cashInventory,
   } = useAdminStore();
 
@@ -32,24 +28,6 @@ export function useCashPayment() {
     try {
       // (삭제) 위조화폐 감지 로직 제거
 
-      // 지폐/동전 걸림 모드 (40% 확률)
-      if ((amount >= 1000 && billJamMode) || (amount < 1000 && coinJamMode)) {
-        if (Math.random() < 0.4) {
-          const jamType = amount >= 1000 ? "bill_jam" : "coin_jam";
-          setError(
-            jamType,
-            `${
-              amount >= 1000 ? "지폐" : "동전"
-            }가 걸렸습니다. 다시 시도해주세요.`
-          );
-          showDialog(
-            "error",
-            `${amount >= 1000 ? "지폐" : "동전"} 걸림!`,
-            "다시 투입해주세요."
-          );
-          return false;
-        }
-      }
 
       // 정상 투입 처리
       const result = storeInsertCash(amount);
@@ -95,17 +73,10 @@ export function useCashPayment() {
   };
 
   /**
-   * 4단계: 타임아웃 처리
+   * 4단계: 타임아웃 처리 (제거됨)
    */
   const startPaymentTimeout = () => {
-    if (timeoutMode) {
-      return startTimeout(30, () => {
-        if (currentBalance > 0) {
-          returnAllCash();
-          showDialog("error", "시간 초과", "시간 초과로 잔액을 반환합니다.");
-        }
-      });
-    }
+    // 타임아웃 기능 제거됨
     return null;
   };
 
@@ -147,7 +118,7 @@ export function useCashPayment() {
       showDialog("success", "반환 완료", `${returnAmount}원을 반환했습니다.`);
       return true;
     } catch {
-      setError("timeout_occurred", "반환 처리 중 오류가 발생했습니다.");
+      setError("change_shortage", "반환 처리 중 오류가 발생했습니다.");
       return false;
     }
   };

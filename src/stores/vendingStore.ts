@@ -225,27 +225,7 @@ export const useVendingStore = create<VendingStore>()(
             };
           }
 
-          // 4. AdminStore 예외 상황 확인
-          const adminState = useAdminStore.getState();
-
-          // 4-1. (삭제) 위조화폐 감지 로직 제거
-
-          // 4-2. 지폐/동전 걸림 시뮬레이션
-          const isBill = denomination >= 1000;
-          const jamMode = isBill
-            ? adminState.billJamMode
-            : adminState.coinJamMode;
-
-          if (jamMode && Math.random() < 0.25) {
-            const jamType = isBill ? "bill_jam" : "coin_jam";
-            get().setError(
-              jamType,
-              `${isBill ? "지폐" : "동전"}가 걸렸습니다. 다시 투입해주세요.`
-            );
-            return { success: false, errorType: jamType };
-          }
-
-          // 4-3. (삭제) 시스템 점검/전원 불안정 등 비사용 시나리오 제거
+          // 4. AdminStore 예외 상황 확인 (현재 사용되지 않음)
 
           // 5. 정상 투입 처리
           const newBalance = currentBalance + denomination;
@@ -265,16 +245,6 @@ export const useVendingStore = create<VendingStore>()(
           });
           get().showDialog("success", "투입 완료", successMessage);
 
-          // 7. 타임아웃 시작 (관리자 설정에 따라)
-          if (adminState.timeoutMode) {
-            get().startTimeout(15, () => {
-              get().setError(
-                "timeout_occurred",
-                "시간이 초과되었습니다. 투입된 금액을 반환합니다."
-              );
-              get().cancelTransaction();
-            });
-          }
 
           return { success: true };
         } finally {
@@ -544,57 +514,8 @@ export const useVendingStore = create<VendingStore>()(
         get().dispenseProduct();
       },
 
-      completeTransaction: async (): Promise<ActionResult> => {
-        const { lastTransaction, currentBalance } = get();
 
-        if (!lastTransaction) {
-          return { success: false, error: "완료할 거래가 없습니다." };
-        }
-
-        // 거래 완료 메시지 표시
-        const changeMessage =
-          lastTransaction.change > 0
-            ? ` 거스름돈 ${lastTransaction.change}원을 받아가세요.`
-            : "";
-
-        get().showDialog(
-          "success",
-          "구매 완료",
-          `${lastTransaction.productName}을(를) 배출했습니다.${changeMessage}`
-        );
-
-        // 거래 기록에 추가
-        set((state) => ({
-          transactionHistory: [
-            ...state.transactionHistory,
-            {
-              ...lastTransaction,
-              status: "success",
-            },
-          ],
-          lastTransaction: { ...lastTransaction, status: "success" },
-        }));
-
-        // 잔액이 남아있고 최저가 음료(600원) 이상이면 연속 구매 가능
-        const minPrice = Math.min(
-          ...Object.values(get().products).map((p) => p.price)
-        );
-        if (currentBalance >= minPrice) {
-          set({
-            status: "product_select",
-            selectedProduct: null,
-          });
-        } else {
-          // 잔액 부족시 대기 상태로 전환
-          get().reset();
-        }
-
-        return { success: true };
-      },
-
-      // ===== 기존 액션들 =====
-
-      resetProductSelection: () => set({ selectedProduct: null }),
+      // ===== 유틸리티 메서드 =====
 
       updateProductStock: (productId, newStock) => {
         const products = { ...get().products };
@@ -608,11 +529,6 @@ export const useVendingStore = create<VendingStore>()(
         return calculateOptimalChange(amount, INITIAL_CHANGE_STOCK);
       },
 
-      dispenseCash: (_breakdown: ChangeBreakdown): ActionResult => {
-        // 실제로는 하드웨어 제어
-        // 여기서는 시뮬레이션
-        return { success: true };
-      },
 
       cancelTransaction: (): ActionResult => {
         const { currentBalance } = get();
@@ -674,14 +590,11 @@ export const useVendingStore = create<VendingStore>()(
         const errorMessages: Record<ErrorType, string> = {
           // 실제 사용되는 오류 타입들만 유지
           change_shortage: "거스름돈이 부족합니다. 정확한 금액을 투입해주세요.",
-          bill_jam: "지폐가 걸렸습니다. 다시 투입해주세요.",
-          coin_jam: "동전이 걸렸습니다. 다시 투입해주세요.",
           out_of_stock: "선택하신 음료가 품절되었습니다.",
           dispense_failure: "음료 배출에 실패했습니다. 잠시 후 다시 시도해주세요.",
           card_reader_fault: "카드를 인식할 수 없습니다. 다시 삽입해주세요.",
           card_payment_reject: "카드 결제가 거부되었습니다. 다른 카드를 사용해주세요.",
           max_amount_exceeded: "최대 투입 금액을 초과했습니다.",
-          timeout_occurred: "시간이 초과되었습니다. 처음부터 다시 시도해주세요.",
         };
 
         return errorMessages[errorType] || "알 수 없는 오류가 발생했습니다.";

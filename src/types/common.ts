@@ -17,14 +17,11 @@ export type VendingStatus =
 // 실제 사용되는 예외 상황 타입
 export type ErrorType = 
   | 'change_shortage'      // 거스름돈 부족
-  | 'bill_jam'            // 지폐 걸림
-  | 'coin_jam'            // 동전 걸림
   | 'out_of_stock'        // 재고 부족
   | 'dispense_failure'    // 배출 실패
   | 'card_reader_fault'   // 카드 리더기 오류
   | 'card_payment_reject' // 카드 결제 거부
   | 'max_amount_exceeded' // 최대 투입 금액 초과
-  | 'timeout_occurred'    // 시간 초과
 
 // 거래 상태
 export type TransactionStatus = 'pending' | 'success' | 'failed' | 'cancelled'

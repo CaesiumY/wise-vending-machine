@@ -106,7 +106,6 @@ export interface VendingMachineState {
 export interface VendingActions {
   // 상품 관리
   selectProduct: (productId: ProductType) => ActionResult
-  resetProductSelection: () => void
   updateProductStock: (productId: ProductType, newStock: number) => void
   
   // 결제 관리
@@ -123,13 +122,11 @@ export interface VendingActions {
   
   // 거스름돈 처리
   calculateChange: (amount: number) => ChangeBreakdown
-  dispenseCash: (breakdown: ChangeBreakdown) => ActionResult
   
   // 음료 배출
   dispenseProduct: () => Promise<boolean>
   
   // 거래 관리
-  completeTransaction: () => Promise<ActionResult>
   cancelTransaction: () => ActionResult
   
   // 내부 헬퍼 메서드

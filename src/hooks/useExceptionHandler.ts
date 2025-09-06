@@ -53,19 +53,6 @@ export function useExceptionHandler() {
 
       // (삭제) 위조화폐 감지 시나리오 제거
 
-      // 3-4. 지폐/동전 걸림
-      if (
-        (adminState.billJamMode || adminState.coinJamMode) &&
-        operation === "insert_cash"
-      ) {
-        const jamType = adminState.billJamMode ? "bill_jam" : "coin_jam";
-        exceptions.push({
-          type: jamType,
-          message: "화폐 투입에 실패했습니다. 다시 시도해주세요.",
-          recovery: "retry_insertion",
-          shouldBlock: true,
-        });
-      }
 
       // 5. 품절 상황
       if (operation === "select_product" && context?.productType) {
@@ -117,15 +104,6 @@ export function useExceptionHandler() {
 
       // (삭제) 최대 투입금액 초과 예외 시나리오 제거 (별도 검증 경로 유지)
 
-      // 12. 타임아웃
-      if (adminState.timeoutMode && operation === "user_interaction") {
-        exceptions.push({
-          type: "timeout_occurred",
-          message: "시간이 초과되었습니다. 투입된 금액을 반환합니다.",
-          recovery: "auto_return",
-          shouldBlock: true,
-        });
-      }
 
       // (삭제) 배출구 막힘 시나리오 제거
 

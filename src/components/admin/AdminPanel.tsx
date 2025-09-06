@@ -78,7 +78,7 @@ export function AdminPanel({ className }: AdminPanelProps) {
                   useAdminStore
                     .getState()
                     .recordError(
-                      "timeout_occurred",
+                      "change_shortage",
                       "설정이 초기화되었습니다"
                     );
                 }}

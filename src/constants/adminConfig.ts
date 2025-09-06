@@ -11,7 +11,7 @@ export interface ExceptionToggleItem {
 
 // 예외 토글 항목 정의
 export const EXCEPTION_TOGGLES: ExceptionToggleItem[] = [
-  // 결제 예외 (4가지)
+  // 결제 예외 (2가지)
   {
     key: 'changeShortageMode',
     label: '거스름돈 부족',
@@ -26,22 +26,8 @@ export const EXCEPTION_TOGGLES: ExceptionToggleItem[] = [
     category: 'payment',
     severity: 'high',
   },
-  {
-    key: 'billJamMode',
-    label: '지폐 걸림',
-    description: '지폐 투입시 걸림 현상이 발생합니다',
-    category: 'payment',
-    severity: 'medium',
-  },
-  {
-    key: 'coinJamMode',
-    label: '동전 걸림',
-    description: '동전 투입시 걸림 현상이 발생합니다',
-    category: 'payment',
-    severity: 'medium',
-  },
   
-  // 시스템 예외 (10가지)
+  // 시스템 예외 (9가지)
   {
     key: 'dispenseFaultMode',
     label: '배출 실패',
@@ -76,13 +62,6 @@ export const EXCEPTION_TOGGLES: ExceptionToggleItem[] = [
     description: '전체 시스템을 점검 모드로 전환합니다',
     category: 'system',
     severity: 'critical',
-  },
-  {
-    key: 'timeoutMode',
-    label: '타임아웃 강제 발생',
-    description: '사용자 입력 대기 시간을 단축시킵니다',
-    category: 'system',
-    severity: 'low',
   },
   {
     key: 'dispenseBlockedMode',

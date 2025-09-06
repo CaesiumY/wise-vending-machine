@@ -120,13 +120,10 @@ export function formatPurchaseMessage(
 export function formatErrorMessage(errorType: string, details?: string): string {
   const templates: Record<string, string> = {
     fake_money_detected: '위조화폐가 감지되었습니다.',
-    bill_jam: '지폐가 걸렸습니다. 다시 시도해주세요.',
-    coin_jam: '동전이 걸렸습니다. 다시 시도해주세요.',
     change_shortage: '거스름돈이 부족합니다.',
     out_of_stock: '선택하신 음료가 품절되었습니다.',
     dispense_failure: '음료 배출에 실패했습니다.',
     max_amount_exceeded: '최대 투입 금액을 초과했습니다.',
-    timeout_occurred: '시간이 초과되었습니다.',
     system_maintenance: '시스템 점검 중입니다.',
     card_reader_fault: '카드를 인식할 수 없습니다.',
     network_error: '네트워크 오류가 발생했습니다.',

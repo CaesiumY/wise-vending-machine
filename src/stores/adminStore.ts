@@ -10,19 +10,16 @@ import type {
 
 // 기본 관리자 설정 (모든 예외 비활성화)
 const defaultSettings: TaskAdminSettings = {
-  // 결제 예외 (4가지)
+  // 결제 예외 (2가지)
   changeShortageMode: false,
   fakeMoneyDetection: false,
-  billJamMode: false,
-  coinJamMode: false,
 
-  // 시스템 예외 (10가지)
+  // 시스템 예외 (9가지)
   dispenseFaultMode: false,
   cardReaderFault: false,
   cardPaymentReject: false,
   networkErrorMode: false, // (미사용)
   systemMaintenanceMode: false, // (미사용)
-  timeoutMode: false,
   dispenseBlockedMode: false, // (미사용)
   temperatureErrorMode: false, // (미사용)
   powerUnstableMode: false, // (미사용)
@@ -169,11 +166,8 @@ export const useAdminStore = create<TaskAdminStore>((set, get) => ({
     // 해당 예외를 즉시 발생시키는 로직
     const exceptionMap: Partial<Record<ErrorType, keyof TaskAdminSettings>> = {
       change_shortage: "changeShortageMode",
-      bill_jam: "billJamMode",
-      coin_jam: "coinJamMode",
       dispense_failure: "dispenseFaultMode",
       card_reader_fault: "cardReaderFault",
-      timeout_occurred: "timeoutMode",
     };
 
     const settingKey = exceptionMap[type];
@@ -202,23 +196,14 @@ export const adminSelectors = {
     // 1) 거스름돈 부족
     if (state.changeShortageMode) activeExceptions.push("change_shortage");
 
-    // 2) 동전/지폐 인식 실패 (bill_jam or coin_jam 둘 중 하나라도 켜져 있으면 포함)
-    if (state.billJamMode || state.coinJamMode) {
-      if (state.billJamMode) activeExceptions.push("bill_jam");
-      if (state.coinJamMode) activeExceptions.push("coin_jam");
-    }
-
-    // 3) 카드 인식 실패
+    // 2) 카드 인식 실패
     if (state.cardReaderFault) activeExceptions.push("card_reader_fault");
 
-    // 4) 카드 결제 실패
+    // 3) 카드 결제 실패
     if (state.cardPaymentReject) activeExceptions.push("card_payment_reject");
 
-    // 5) 배출 실패
+    // 4) 배출 실패
     if (state.dispenseFaultMode) activeExceptions.push("dispense_failure");
-
-    // 6) 타임아웃
-    if (state.timeoutMode) activeExceptions.push("timeout_occurred");
 
     return activeExceptions;
   },
@@ -258,12 +243,9 @@ export const adminSelectors = {
 
     const probabilityMap: Partial<Record<ErrorType, number>> = {
       change_shortage: state.changeShortageMode ? 0.5 : 0,
-      bill_jam: state.billJamMode ? 0.25 : 0.02,
-      coin_jam: state.coinJamMode ? 0.2 : 0.02,
       card_reader_fault: state.cardReaderFault ? 0.4 : 0.05,
       card_payment_reject: state.cardPaymentReject ? 0.35 : 0.03,
       dispense_failure: state.dispenseFaultMode ? 0.3 : 0.02,
-      timeout_occurred: state.timeoutMode ? 0.2 : 0.01,
     };
 
     return probabilityMap[type] || 0;
