@@ -29,7 +29,6 @@ export function ErrorDialog({
   onRetry,
   canRetry = false,
 }: ErrorDialogProps) {
-
   const getActionMessage = () => {
     switch (errorType) {
       case "insufficient_funds":
@@ -38,12 +37,10 @@ export function ErrorDialog({
         return "다른 음료를 선택해주세요.";
       case "change_shortage":
         return "정확한 금액을 투입하거나 카드로 결제해주세요.";
-      case "fake_money":
-        return "투입하신 화폐를 확인하고 다시 시도해주세요.";
+      // (삭제) 위조화폐 시나리오 제거
       case "card_error":
         return "카드를 다시 삽입하거나 현금으로 결제해주세요.";
-      case "network_error":
-        return "현금 결제를 이용하거나 잠시 후 다시 시도해주세요.";
+      // (삭제) 네트워크 오류 시나리오 제거
       case "system_maintenance":
         return "시스템 점검 중입니다. 잠시 후 다시 이용해주세요.";
       default:

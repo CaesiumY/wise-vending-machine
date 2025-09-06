@@ -51,18 +51,7 @@ export function useExceptionHandler() {
         });
       }
 
-      // 2. 위조화폐 감지
-      if (adminState.fakeMoneyDetection && operation === "insert_cash") {
-        if (Math.random() < 0.3) {
-          // 30% 확률로 감지
-          exceptions.push({
-            type: "fake_money_detected",
-            message: "위조화폐가 감지되었습니다. 화폐를 반환합니다.",
-            recovery: "return_money",
-            shouldBlock: true,
-          });
-        }
-      }
+      // (삭제) 위조화폐 감지 시나리오 제거
 
       // 3-4. 지폐/동전 걸림
       if (
@@ -122,38 +111,11 @@ export function useExceptionHandler() {
         });
       }
 
-      // 9. 네트워크 오류
-      if (adminState.networkErrorMode && operation === "card_payment") {
-        exceptions.push({
-          type: "network_error",
-          message: "네트워크 연결이 불안정합니다. 현금 결제를 이용해주세요.",
-          recovery: "use_cash",
-          shouldBlock: true,
-        });
-      }
+      // (삭제) 네트워크 오류 시나리오 제거
 
-      // 10. 시스템 점검
-      if (adminState.systemMaintenanceMode) {
-        exceptions.push({
-          type: "system_maintenance",
-          message: "시스템 점검 중입니다. 잠시 후 이용해주세요.",
-          recovery: "service_unavailable",
-          shouldBlock: true,
-        });
-      }
+      // (삭제) 시스템 점검 시나리오 제거
 
-      // 11. 최대 투입금액 초과
-      if (operation === "insert_cash" && context?.amount) {
-        const currentBalance = useVendingStore.getState().currentBalance;
-        if (currentBalance + context.amount > 50000) {
-          exceptions.push({
-            type: "max_amount_exceeded",
-            message: "최대 투입 가능한 금액을 초과했습니다.",
-            recovery: "return_excess",
-            shouldBlock: true,
-          });
-        }
-      }
+      // (삭제) 최대 투입금액 초과 예외 시나리오 제거 (별도 검증 경로 유지)
 
       // 12. 타임아웃
       if (adminState.timeoutMode && operation === "user_interaction") {
@@ -165,35 +127,11 @@ export function useExceptionHandler() {
         });
       }
 
-      // 13. 배출구 막힘
-      if (adminState.dispenseBlockedMode && operation === "dispense") {
-        exceptions.push({
-          type: "dispense_blocked",
-          message: "배출구가 막혔습니다. 관리자에게 문의하세요.",
-          recovery: "maintenance_mode",
-          shouldBlock: true,
-        });
-      }
+      // (삭제) 배출구 막힘 시나리오 제거
 
-      // 14. 온도 이상
-      if (adminState.temperatureErrorMode && operation === "dispense") {
-        exceptions.push({
-          type: "temperature_error",
-          message: "냉각 시스템 이상으로 서비스가 제한됩니다.",
-          recovery: "limited_service",
-          shouldBlock: true,
-        });
-      }
+      // (삭제) 온도 이상 시나리오 제거
 
-      // 15. 전원 불안정
-      if (adminState.powerUnstableMode) {
-        exceptions.push({
-          type: "power_unstable",
-          message: "전원이 불안정합니다. 안전 모드로 전환됩니다.",
-          recovery: "safe_mode",
-          shouldBlock: true,
-        });
-      }
+      // (삭제) 전원 불안정 시나리오 제거
 
       return exceptions;
     },

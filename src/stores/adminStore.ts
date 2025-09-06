@@ -16,18 +16,17 @@ const defaultSettings: TaskAdminSettings = {
   billJamMode: false,
   coinJamMode: false,
 
-
   // 시스템 예외 (10가지)
   dispenseFaultMode: false,
   cardReaderFault: false,
   cardPaymentReject: false,
-  networkErrorMode: false,
-  systemMaintenanceMode: false,
+  networkErrorMode: false, // (미사용)
+  systemMaintenanceMode: false, // (미사용)
   timeoutMode: false,
-  dispenseBlockedMode: false,
-  temperatureErrorMode: false,
-  powerUnstableMode: false,
-  adminInterventionMode: false,
+  dispenseBlockedMode: false, // (미사용)
+  temperatureErrorMode: false, // (미사용)
+  powerUnstableMode: false, // (미사용)
+  adminInterventionMode: false, // (미사용)
 };
 
 // 기본 화폐 보유량
@@ -75,7 +74,6 @@ export const useAdminStore = create<TaskAdminStore>((set, get) => ({
 
   toggleException: (exception: keyof TaskAdminSettings) => {
     set((state: TaskAdminStore) => {
-
       const newValue = !state[exception];
 
       // 시스템 점검 모드가 활성화되면 다른 모든 예외 비활성화
@@ -96,7 +94,6 @@ export const useAdminStore = create<TaskAdminStore>((set, get) => ({
     });
   },
 
-
   // 화폐 재고 업데이트 (전체 재고 교체)
   updateCashInventory: (newInventory: Record<CashDenomination, number>) => {
     set({ cashInventory: newInventory });
@@ -107,10 +104,7 @@ export const useAdminStore = create<TaskAdminStore>((set, get) => ({
     set((state) => ({
       cashInventory: {
         ...state.cashInventory,
-        [denomination]: Math.max(
-          0,
-          state.cashInventory[denomination] + change
-        ),
+        [denomination]: Math.max(0, state.cashInventory[denomination] + change),
       },
     }));
   },

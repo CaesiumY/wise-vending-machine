@@ -3,7 +3,6 @@ import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useVendingStore } from "@/stores/vendingStore";
 import type { PaymentMethod } from "@/types";
-import { X } from "lucide-react";
 
 interface PaymentSelectorProps {
   className?: string;
@@ -38,19 +37,8 @@ export function PaymentSelector({ className }: PaymentSelectorProps) {
 
   return (
     <Card className={cn("p-4 mb-4", className)}>
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-lg font-semibold text-center flex-1">결제 방식 선택</h3>
-        {shouldShowCancelButton && (
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
-            onClick={handlePaymentCancel}
-            aria-label="결제 방식 취소"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        )}
+      <div className="mb-3">
+        <h3 className="text-lg font-semibold text-center">결제 방식 선택</h3>
       </div>
       
       <div className="grid grid-cols-2 gap-3">

@@ -65,7 +65,6 @@ export function CashPanel({ className }: CashPanelProps) {
         {/* 헤더 */}
         <div className="text-center">
           <h3 className="text-lg font-semibold">현금 투입</h3>
-          <p className="text-sm text-gray-600">지폐나 동전을 선택해주세요</p>
         </div>
 
         {/* 현금 투입 버튼들 */}
@@ -97,11 +96,6 @@ export function CashPanel({ className }: CashPanelProps) {
           >
             <span className="text-xs">반환</span>
           </Button>
-        </div>
-
-        {/* 투입 안내 */}
-        <div className="text-center text-xs text-gray-500">
-          <p>투입한 금액만큼 음료 선택이 가능합니다</p>
         </div>
 
         {/* 상태 메시지 */}
