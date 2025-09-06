@@ -61,8 +61,9 @@ export function useExceptionHandler() {
 
     // 5. 품절 상황
     if (operation === 'select_product' && context?.productType) {
-      const stock = adminState.stockLevels[context.productType as ProductType]
-      if (stock === 0) {
+      const vendingState = vendingStore.getState()
+      const product = vendingState.products[context.productType as ProductType]
+      if (product && product.stock === 0) {
         exceptions.push({
           type: 'out_of_stock',
           message: `${context.productType}가 품절되었습니다. 다른 음료를 선택해주세요.`,

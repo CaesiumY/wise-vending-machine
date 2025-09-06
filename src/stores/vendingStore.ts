@@ -88,12 +88,8 @@ export const useVendingStore = create<VendingStore>()(
           return { success: false, error: '존재하지 않는 상품입니다.' }
         }
         
-        // 관리자 설정에 따른 재고 레벨 확인
-        const adminState = useAdminStore.getState()
-        const adminStockLevel = adminState.stockLevels[productId]
-        
-        // 재고 확인 (관리자 설정 기준)
-        if (product.stock <= 0 || adminStockLevel <= 0) {
+        // 재고 확인
+        if (product.stock <= 0) {
           get().setError('out_of_stock', `${product.name}이(가) 품절되었습니다.`)
           return { success: false, error: `${product.name}이(가) 품절되었습니다.` }
         }
@@ -391,10 +387,7 @@ export const useVendingStore = create<VendingStore>()(
           }
         }
 
-        // 관리자 스토어의 재고도 동기화
-        const adminStore = useAdminStore.getState()
-        const currentAdminStock = adminStore.stockLevels[selectedProduct]
-        adminStore.updateStockLevel(selectedProduct, Math.max(0, currentAdminStock - 1))
+        // 재고 감소 완료
 
         set({ 
           status: 'completing',

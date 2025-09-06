@@ -180,8 +180,8 @@ export function validateStock(
   productId: ProductType,
   requestedQuantity: number = 1
 ): { isValid: boolean; reason?: string; currentStock: number } {
-  const { stockLevels } = useAdminStore.getState();
-  const currentStock = stockLevels[productId] ?? 0;
+  const vendingState = useVendingStore.getState();
+  const currentStock = vendingState.products[productId]?.stock ?? 0;
 
   if (currentStock === 0) {
     return {

@@ -21,18 +21,15 @@ export function useCardPayment() {
     cardReaderFault,
     cardPaymentReject,
     networkErrorMode,
-    stockLevels
   } = useAdminStore();
 
   // 1단계: 재고 확인 및 버튼 활성화
   const checkStockAndActivateButtons = () => {
     return Object.values(products).map(product => {
-      const actualStock = stockLevels[product.id] ?? product.stock;
       return {
         ...product,
-        stock: actualStock,
-        isAvailable: actualStock > 0,
-        reason: actualStock === 0 ? '품절' : null
+        isAvailable: product.stock > 0,
+        reason: product.stock === 0 ? '품절' : null
       };
     });
   };

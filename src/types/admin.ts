@@ -22,7 +22,6 @@ export interface AdminSettings {
   
   // 📦 재고 예외 (1개 + 관리)
   forceOutOfStock: Record<ProductType, boolean>  // 강제 품절 설정
-  stockLevels: Record<ProductType, number>       // 실제 재고 수준
   
   // 🚨 시스템 예외 (9개)
   dispenseFaultMode: boolean            // 배출 실패
@@ -164,8 +163,6 @@ export interface TaskAdminSettings {
   billJamMode: boolean
   coinJamMode: boolean
   
-  // 재고 관리 (동적)
-  stockLevels: Record<ProductType, number>
   
   // 시스템 예외 (10가지)  
   dispenseFaultMode: boolean
@@ -203,7 +200,6 @@ export interface TaskAdminStore extends TaskAdminSettings {
   openPanel: () => void
   closePanel: () => void
   toggleException: (exception: keyof TaskAdminSettings) => void
-  updateStockLevel: (productId: ProductType, level: number) => void
   
   // 화폐 재고 관리 (Task 4 추가)
   updateCashInventory: (newInventory: Record<CashDenomination, number>) => void

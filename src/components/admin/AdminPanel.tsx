@@ -8,7 +8,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { ChevronDown, ChevronUp, Settings } from "lucide-react";
 import { ExceptionToggles } from "./ExceptionToggles";
-import { StockControls } from "./StockControls";
 import { cn } from "@/lib/utils";
 import { useAdminStore, adminSelectors } from "@/stores/adminStore";
 // import { useExceptionHandler } from '@/hooks/useExceptionHandler';
@@ -38,7 +37,7 @@ export function AdminPanel({ className }: AdminPanelProps) {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Settings className="h-4 w-4" />
-                <span className="font-medium text-sm">관리자 패널</span>
+                <span className="font-medium text-sm">테스트 패널</span>
                 {activeExceptions.length > 0 && (
                   <Badge
                     variant={
@@ -68,58 +67,9 @@ export function AdminPanel({ className }: AdminPanelProps) {
           {/* 예외 상황 토글 */}
           <ExceptionToggles activeExceptions={activeExceptions} />
 
-          {/* 재고 조정 */}
-          <StockControls />
-
-          {/* 설정 저장/로드 */}
+          {/* 설정 초기화 */}
           <Card className="p-3">
             <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex-1 text-xs"
-                onClick={() => {
-                  const settings = useAdminStore.getState();
-                  localStorage.setItem(
-                    "vending-admin-backup",
-                    JSON.stringify(settings)
-                  );
-                  useAdminStore
-                    .getState()
-                    .recordError("admin_intervention", "설정이 저장되었습니다");
-                }}
-              >
-                설정 저장
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex-1 text-xs"
-                onClick={() => {
-                  const backup = localStorage.getItem("vending-admin-backup");
-                  if (backup) {
-                    try {
-                      const settings = JSON.parse(backup);
-                      useAdminStore.setState(settings);
-                      useAdminStore
-                        .getState()
-                        .recordError(
-                          "admin_intervention",
-                          "설정이 복원되었습니다"
-                        );
-                    } catch {
-                      useAdminStore
-                        .getState()
-                        .recordError(
-                          "admin_intervention",
-                          "설정 파일이 손상되었습니다"
-                        );
-                    }
-                  }
-                }}
-              >
-                설정 불러오기
-              </Button>
               <Button
                 variant="outline"
                 size="sm"
@@ -134,7 +84,7 @@ export function AdminPanel({ className }: AdminPanelProps) {
                     );
                 }}
               >
-                초기화
+                설정 초기화
               </Button>
             </div>
           </Card>

@@ -20,16 +20,13 @@ export function ProductDisplay({ className }: ProductDisplayProps) {
     selectProduct,
   } = useVendingStore();
 
-  // 관리자 설정
-  const { stockLevels } = useAdminStore();
 
   // 버튼 상태 결정 함수
   const getButtonState = (productId: ProductType) => {
     const product = products[productId];
-    const adminStock = stockLevels[productId];
 
-    // 재고 확인 (관리자 설정 우선)
-    if (product.stock <= 0 || adminStock <= 0) return "out-of-stock";
+    // 재고 확인
+    if (product.stock <= 0) return "out-of-stock";
 
     // 선택된 상태
     if (selectedProduct === productId) return "selected";
@@ -81,7 +78,6 @@ export function ProductDisplay({ className }: ProductDisplayProps) {
     <div className={cn("grid grid-cols-3 gap-3", className)}>
       {Object.entries(products).map(([productId, product]) => {
         const buttonState = getButtonState(productId as ProductType);
-        const adminStock = stockLevels[productId as ProductType];
         const isDisabled =
           buttonState === "out-of-stock" ||
           buttonState === "insufficient-funds" ||

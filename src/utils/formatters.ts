@@ -190,18 +190,3 @@ export function formatAdminStatus(
   return `활성 예외: ${activeExceptions}개 | 총 거래: ${totalTransactions}건 | 오류: ${errorCount}건`;
 }
 
-/**
- * 재고 상태 포맷팅
- */
-export function formatStockStatus(stockLevels: Record<ProductType, number>): string {
-  return Object.entries(stockLevels)
-    .map(([product, stock]) => {
-      const productNames: Record<string, string> = {
-        cola: '콜라',
-        water: '물',
-        coffee: '커피'
-      };
-      return `${productNames[product]}: ${stock}개`;
-    })
-    .join(', ');
-}

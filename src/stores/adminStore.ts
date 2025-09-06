@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { devtools, persist } from "zustand/middleware";
 import type {
   TaskAdminStore,
   TaskAdminSettings,
@@ -18,12 +17,6 @@ const defaultSettings: TaskAdminSettings = {
   billJamMode: false,
   coinJamMode: false,
 
-  // 재고 관리 (동적)
-  stockLevels: {
-    cola: 5,
-    water: 5,
-    coffee: 5,
-  },
 
   // 시스템 예외 (10가지)
   dispenseFaultMode: false,
@@ -49,220 +42,170 @@ const defaultCashInventory = {
 
 // 시나리오 프리셋 제거됨
 
-export const useAdminStore = create<TaskAdminStore>()(
-  devtools(
-    persist(
-      (set, get) => ({
-        // 초기 상태
-        ...defaultSettings,
+export const useAdminStore = create<TaskAdminStore>((set, get) => ({
+  // 초기 상태
+  ...defaultSettings,
 
-        // UI 상태
-        isPanelOpen: false,
-        activePreset: "normal",
+  // UI 상태
+  isPanelOpen: false,
+  activePreset: "normal",
 
-        // 모니터링 상태
-        totalTransactions: 0,
-        errorCount: 0,
-        lastError: null,
+  // 모니터링 상태
+  totalTransactions: 0,
+  errorCount: 0,
+  lastError: null,
 
-        // 화폐 보유량
-        cashInventory: defaultCashInventory,
+  // 화폐 보유량
+  cashInventory: defaultCashInventory,
 
-        // ===== 패널 제어 =====
+  // ===== 패널 제어 =====
 
-        togglePanel: () => {
-          set((state: TaskAdminStore) => ({ isPanelOpen: !state.isPanelOpen }));
-        },
+  togglePanel: () => {
+    set((state: TaskAdminStore) => ({ isPanelOpen: !state.isPanelOpen }));
+  },
 
-        openPanel: () => {
-          set({ isPanelOpen: true });
-        },
+  openPanel: () => {
+    set({ isPanelOpen: true });
+  },
 
-        closePanel: () => {
-          set({ isPanelOpen: false });
-        },
+  closePanel: () => {
+    set({ isPanelOpen: false });
+  },
 
-        // ===== 예외 설정 =====
+  // ===== 예외 설정 =====
 
-        toggleException: (exception: keyof TaskAdminSettings) => {
-          set((state: TaskAdminStore) => {
-            // stockLevels는 토글할 수 없음
-            if (exception === "stockLevels") return state;
+  toggleException: (exception: keyof TaskAdminSettings) => {
+    set((state: TaskAdminStore) => {
 
-            const newValue = !state[exception];
+      const newValue = !state[exception];
 
-            // 시스템 점검 모드가 활성화되면 다른 모든 예외 비활성화
-            if (exception === "systemMaintenanceMode" && newValue) {
-              return {
-                ...state,
-                [exception]: newValue,
-                activePreset: null, // 프리셋 해제
-                // 다른 예외들은 유지하되, 점검 모드가 우선
-              };
-            }
-
-            return {
-              ...state,
-              [exception]: newValue,
-              activePreset: null, // 수동 조정시 프리셋 해제
-            };
-          });
-        },
-
-        updateStockLevel: (productId: ProductType, level: number) => {
-          const clampedLevel = Math.max(0, Math.min(99, level));
-
-          set((state: TaskAdminStore) => ({
-            stockLevels: {
-              ...state.stockLevels,
-              [productId]: clampedLevel,
-            },
-            activePreset: null, // 수동 조정시 프리셋 해제
-          }));
-        },
-
-        // 화폐 재고 업데이트 (전체 재고 교체)
-        updateCashInventory: (
-          newInventory: Record<CashDenomination, number>
-        ) => {
-          set({ cashInventory: newInventory });
-        },
-
-        // 개별 화폐 수량 조정
-        adjustCashCount: (denomination: CashDenomination, change: number) => {
-          set((state) => ({
-            cashInventory: {
-              ...state.cashInventory,
-              [denomination]: Math.max(
-                0,
-                state.cashInventory[denomination] + change
-              ),
-            },
-          }));
-        },
-
-        // 재고 초기화 (관리자 리셋)
-        resetCashInventory: () => {
-          set({
-            cashInventory: defaultCashInventory,
-          });
-        },
-
-        // ===== 프리셋 관리 =====
-
-        loadPreset: (_preset: PresetName) => {
-          // 프리셋 기능 제거: no-op
-          return;
-        },
-
-        saveCustomPreset: (name: string, settings: TaskAdminSettings) => {
-          // 실제로는 서버나 로컬스토리지에 저장
-          // 여기서는 콘솔에만 출력
-          console.log(`Custom preset "${name}" saved:`, settings);
-        },
-
-        resetToDefault: () => {
-          set({
-            ...defaultSettings,
-            cashInventory: defaultCashInventory,
-            activePreset: "normal",
-            // UI 상태와 모니터링 상태는 유지
-          });
-        },
-
-        // ===== 모니터링 =====
-
-        incrementTransactionCount: () => {
-          set((state: TaskAdminStore) => ({
-            totalTransactions: state.totalTransactions + 1,
-          }));
-        },
-
-        recordError: (type: ErrorType, message: string) => {
-          set((state: TaskAdminStore) => ({
-            errorCount: state.errorCount + 1,
-            lastError: {
-              type,
-              message,
-              timestamp: Date.now(),
-            },
-          }));
-        },
-
-        clearErrorLog: () => {
-          set({
-            errorCount: 0,
-            lastError: null,
-          });
-        },
-
-        // ===== 시뮬레이션 제어 =====
-
-        triggerException: (type: ErrorType) => {
-          // 해당 예외를 즉시 발생시키는 로직
-          const exceptionMap: Partial<
-            Record<ErrorType, keyof TaskAdminSettings>
-          > = {
-            change_shortage: "changeShortageMode",
-            fake_money_detected: "fakeMoneyDetection",
-            bill_jam: "billJamMode",
-            coin_jam: "coinJamMode",
-            dispense_failure: "dispenseFaultMode",
-            card_reader_fault: "cardReaderFault",
-            network_error: "networkErrorMode",
-            system_maintenance: "systemMaintenanceMode",
-            timeout_occurred: "timeoutMode",
-            dispense_blocked: "dispenseBlockedMode",
-            temperature_error: "temperatureErrorMode",
-            power_unstable: "powerUnstableMode",
-            admin_intervention: "adminInterventionMode",
-          };
-
-          const settingKey = exceptionMap[type];
-          if (settingKey) {
-            get().toggleException(settingKey);
-          }
-
-          // 에러 기록
-          get().recordError(type, `관리자가 ${type} 예외를 트리거했습니다`);
-        },
-
-        simulateNetworkDelay: async () => {
-          // 네트워크 지연 시뮬레이션 비활성화
-          set({ networkErrorMode: true });
-          set({ networkErrorMode: false });
-        },
-      }),
-      {
-        name: "admin-settings", // localStorage 키
-        // 민감한 정보는 저장하지 않음
-        partialize: (state) => ({
-          // 설정만 영구 저장
-          changeShortageMode: state.changeShortageMode,
-          fakeMoneyDetection: state.fakeMoneyDetection,
-          billJamMode: state.billJamMode,
-          coinJamMode: state.coinJamMode,
-          stockLevels: state.stockLevels,
-          dispenseFaultMode: state.dispenseFaultMode,
-          cardReaderFault: state.cardReaderFault,
-          cardPaymentReject: state.cardPaymentReject,
-          networkErrorMode: state.networkErrorMode,
-          systemMaintenanceMode: state.systemMaintenanceMode,
-          timeoutMode: state.timeoutMode,
-          dispenseBlockedMode: state.dispenseBlockedMode,
-          temperatureErrorMode: state.temperatureErrorMode,
-          powerUnstableMode: state.powerUnstableMode,
-          adminInterventionMode: state.adminInterventionMode,
-          cashInventory: state.cashInventory,
-          activePreset: state.activePreset,
-        }),
+      // 시스템 점검 모드가 활성화되면 다른 모든 예외 비활성화
+      if (exception === "systemMaintenanceMode" && newValue) {
+        return {
+          ...state,
+          [exception]: newValue,
+          activePreset: null, // 프리셋 해제
+          // 다른 예외들은 유지하되, 점검 모드가 우선
+        };
       }
-    ),
-    {
-      name: "admin-store",
+
+      return {
+        ...state,
+        [exception]: newValue,
+        activePreset: null, // 수동 조정시 프리셋 해제
+      };
+    });
+  },
+
+
+  // 화폐 재고 업데이트 (전체 재고 교체)
+  updateCashInventory: (newInventory: Record<CashDenomination, number>) => {
+    set({ cashInventory: newInventory });
+  },
+
+  // 개별 화폐 수량 조정
+  adjustCashCount: (denomination: CashDenomination, change: number) => {
+    set((state) => ({
+      cashInventory: {
+        ...state.cashInventory,
+        [denomination]: Math.max(
+          0,
+          state.cashInventory[denomination] + change
+        ),
+      },
+    }));
+  },
+
+  // 재고 초기화 (관리자 리셋)
+  resetCashInventory: () => {
+    set({
+      cashInventory: defaultCashInventory,
+    });
+  },
+
+  // ===== 프리셋 관리 =====
+
+  loadPreset: (_preset: PresetName) => {
+    // 프리셋 기능 제거: no-op
+    return;
+  },
+
+  saveCustomPreset: (name: string, settings: TaskAdminSettings) => {
+    // 실제로는 서버나 로컬스토리지에 저장
+    // 여기서는 콘솔에만 출력
+    console.log(`Custom preset "${name}" saved:`, settings);
+  },
+
+  resetToDefault: () => {
+    set({
+      ...defaultSettings,
+      cashInventory: defaultCashInventory,
+      activePreset: "normal",
+      // UI 상태와 모니터링 상태는 유지
+    });
+  },
+
+  // ===== 모니터링 =====
+
+  incrementTransactionCount: () => {
+    set((state: TaskAdminStore) => ({
+      totalTransactions: state.totalTransactions + 1,
+    }));
+  },
+
+  recordError: (type: ErrorType, message: string) => {
+    set((state: TaskAdminStore) => ({
+      errorCount: state.errorCount + 1,
+      lastError: {
+        type,
+        message,
+        timestamp: Date.now(),
+      },
+    }));
+  },
+
+  clearErrorLog: () => {
+    set({
+      errorCount: 0,
+      lastError: null,
+    });
+  },
+
+  // ===== 시뮬레이션 제어 =====
+
+  triggerException: (type: ErrorType) => {
+    // 해당 예외를 즉시 발생시키는 로직
+    const exceptionMap: Partial<Record<ErrorType, keyof TaskAdminSettings>> = {
+      change_shortage: "changeShortageMode",
+      fake_money_detected: "fakeMoneyDetection",
+      bill_jam: "billJamMode",
+      coin_jam: "coinJamMode",
+      dispense_failure: "dispenseFaultMode",
+      card_reader_fault: "cardReaderFault",
+      network_error: "networkErrorMode",
+      system_maintenance: "systemMaintenanceMode",
+      timeout_occurred: "timeoutMode",
+      dispense_blocked: "dispenseBlockedMode",
+      temperature_error: "temperatureErrorMode",
+      power_unstable: "powerUnstableMode",
+      admin_intervention: "adminInterventionMode",
+    };
+
+    const settingKey = exceptionMap[type];
+    if (settingKey) {
+      get().toggleException(settingKey);
     }
-  )
-);
+
+    // 에러 기록
+    get().recordError(type, `관리자가 ${type} 예외를 트리거했습니다`);
+  },
+
+  simulateNetworkDelay: async () => {
+    // 네트워크 지연 시뮬레이션 비활성화
+    set({ networkErrorMode: true });
+    set({ networkErrorMode: false });
+  },
+}));
 
 // 관리자 스토어 셀렉터들
 export const adminSelectors = {
