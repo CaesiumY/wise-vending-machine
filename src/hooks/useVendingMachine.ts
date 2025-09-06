@@ -39,7 +39,7 @@ export function useCashPayment() {
 
       return false;
     } catch {
-      setError("max_amount_exceeded", "투입 처리 중 오류가 발생했습니다.");
+      setError("dispense_failure", "투입 처리 중 오류가 발생했습니다.");
       return false;
     }
   };

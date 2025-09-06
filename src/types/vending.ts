@@ -127,7 +127,6 @@ export interface VendingActions {
   
   // 내부 헬퍼 메서드
   processCashTransaction: (productId: ProductType) => void
-  getErrorMessage: (errorType: ErrorType) => string
   
   // 시스템 제어
   setStatus: (status: VendingStatus) => void

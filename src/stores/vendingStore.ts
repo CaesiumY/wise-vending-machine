@@ -13,10 +13,10 @@ import type {
 } from "@/types";
 import { PRODUCTS } from "@/constants/products";
 import { calculateOptimalChange } from "@/utils/changeCalculator";
+import { getErrorMessage } from "@/constants/errorMessages";
 import { INITIAL_CHANGE_STOCK } from "@/constants/denominations";
 import {
   validateCashDenomination,
-  validateMaxCashInput,
   validateInsertionState,
 } from "@/utils/validators";
 import { formatSuccessMessage } from "@/utils/formatters";
@@ -195,16 +195,8 @@ export const useVendingStore = create<VendingStore>()(
             return { success: false, error: stateValidation.reason };
           }
 
-          // 2. 최대 금액 검증 (50,000원 제한)
-          if (!validateMaxCashInput(currentBalance, denomination)) {
-            get().setError(
-              "max_amount_exceeded",
-              "최대 투입 금액(50,000원)을 초과했습니다."
-            );
-            return { success: false, errorType: "max_amount_exceeded" };
-          }
 
-          // 3. 연속 투입 간격 검증 (1초 간격) - 화폐 인식 시간 시뮬레이션
+          // 2. 연속 투입 간격 검증 (1초 간격) - 화폐 인식 시간 시뮬레이션
           if (Date.now() - lastInsertTime < 1000) {
             // 사용자에게 화폐 반환 안내 토스트 표시
             toast.warning("화폐가 반환되었습니다. 천천히 다시 투입해주세요.");
@@ -215,9 +207,9 @@ export const useVendingStore = create<VendingStore>()(
             };
           }
 
-          // 4. AdminStore 예외 상황 확인 (현재 사용되지 않음)
+          // 3. AdminStore 예외 상황 확인 (현재 사용되지 않음)
 
-          // 5. 정상 투입 처리
+          // 4. 정상 투입 처리
           const newBalance = currentBalance + denomination;
           const newInsertedCash = [...insertedCash, denomination];
 
@@ -358,7 +350,7 @@ export const useVendingStore = create<VendingStore>()(
             error instanceof Error ? error.message : "unknown_error";
           const errorType = errorMessage as ErrorType;
 
-          get().setError(errorType, get().getErrorMessage(errorType));
+          get().setError(errorType, getErrorMessage(errorType));
 
           set({
             status: "product_select", // 재선택 가능
@@ -530,7 +522,7 @@ export const useVendingStore = create<VendingStore>()(
       setCardInfo: (cardInfo) => set({ cardInfo }),
 
       setError: (errorType: ErrorType, message?: string) => {
-        const errorMessage = message || get().getErrorMessage(errorType);
+        const errorMessage = message || getErrorMessage(errorType);
         set({
           currentError: errorType,
           errorMessage: errorMessage,
@@ -545,20 +537,6 @@ export const useVendingStore = create<VendingStore>()(
 
 
       // ===== 유틸리티 메서드 =====
-
-      getErrorMessage: (errorType: ErrorType): string => {
-        const errorMessages: Record<ErrorType, string> = {
-          // 실제 사용되는 오류 타입들만 유지
-          change_shortage: "거스름돈이 부족합니다. 정확한 금액을 투입해주세요.",
-          out_of_stock: "선택하신 음료가 품절되었습니다.",
-          dispense_failure: "음료 배출에 실패했습니다. 잠시 후 다시 시도해주세요.",
-          card_reader_fault: "카드를 인식할 수 없습니다. 다시 삽입해주세요.",
-          card_payment_reject: "카드 결제가 거부되었습니다. 다른 카드를 사용해주세요.",
-          max_amount_exceeded: "최대 투입 금액을 초과했습니다.",
-        };
-
-        return errorMessages[errorType] || "알 수 없는 오류가 발생했습니다.";
-      },
     }),
     {
       name: "useVendingStore", // Redux DevTools에서 표시될 이름

@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { useVendingStore } from "@/stores/vendingStore";
 import { useAdminStore } from "@/stores/adminStore";
+import { getErrorMessage } from "@/constants/errorMessages";
 import type { ErrorType, ProductType, PaymentMethod } from "@/types";
 
 interface ExceptionContext {
@@ -158,7 +159,7 @@ export function useExceptionHandler() {
     (errorType: ErrorType) => {
       const exception: ExceptionResult = {
         type: errorType,
-        message: vendingStore.getErrorMessage(errorType),
+        message: getErrorMessage(errorType),
         recovery: "default",
         shouldBlock: true,
       };

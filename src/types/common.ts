@@ -21,7 +21,6 @@ export type ErrorType =
   | 'dispense_failure'    // 배출 실패
   | 'card_reader_fault'   // 카드 리더기 오류
   | 'card_payment_reject' // 카드 결제 거부
-  | 'max_amount_exceeded' // 최대 투입 금액 초과
 
 // 거래 상태
 export type TransactionStatus = 'pending' | 'success' | 'failed' | 'cancelled'
