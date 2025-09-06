@@ -7,7 +7,7 @@ import {
 import { cn } from "@/shared/utils/ui";
 import { ChevronDown, Settings } from "lucide-react";
 import { ExceptionToggles } from "./ExceptionToggles";
-import { CashInventoryDisplay } from "./CashInventoryDisplay";
+import { CashReserveDisplay } from "./CashReserveDisplay";
 
 interface AdminPanelProps {
   className?: string;
@@ -35,7 +35,7 @@ export function AdminPanel({ className }: AdminPanelProps) {
 
         <CollapsibleContent className="mt-2 space-y-3">
           {/* 화폐 재고 표시 */}
-          <CashInventoryDisplay />
+          <CashReserveDisplay />
           
           {/* 예외 상황 토글 */}
           <ExceptionToggles />

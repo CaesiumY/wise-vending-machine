@@ -130,7 +130,7 @@ export function calculateOptimalChangeDP(
 }
 
 // 3. 거스름돈 지급 후 재고 업데이트
-export function updateCashInventoryAfterChange(
+export function updateCashReserveAfterChange(
   inventory: Record<CashDenomination, number>,
   changeBreakdown: { [K in CashDenomination]: number }
 ): Record<CashDenomination, number> {
@@ -173,7 +173,7 @@ export function simulateChangeShortage(
 }
 
 // 6. 화폐별 보유량 확인
-export function checkCashInventoryStatus(inventory: Record<CashDenomination, number>): {
+export function checkCashReserveStatus(inventory: Record<CashDenomination, number>): {
   totalValue: number;
   totalCount: number;
   shortageWarning: boolean;

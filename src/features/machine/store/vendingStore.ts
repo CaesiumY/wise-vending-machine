@@ -432,12 +432,12 @@ export const useVendingStore = create<VendingStore>()(
         // 거스름돈 계산 - 실시간 재고 사용
         const changeAmount = currentBalance - product.price;
         const adminState = useAdminStore.getState();
-        const currentCashInventory = adminState.cashInventory;
+        const currentCashReserve = adminState.cashReserve;
 
         // 실제 보유 화폐로 거스름돈 계산
         const changeResult = calculateOptimalChange(
           changeAmount,
-          currentCashInventory
+          currentCashReserve
         );
 
         // 거스름돈 부족 체크 (실시간 재고 기반만 사용)
@@ -508,7 +508,7 @@ export const useVendingStore = create<VendingStore>()(
 
       calculateChange: (amount: number): ChangeBreakdown => {
         const adminState = useAdminStore.getState();
-        return calculateOptimalChange(amount, adminState.cashInventory);
+        return calculateOptimalChange(amount, adminState.cashReserve);
       },
 
       cancelTransaction: (): ActionResult => {

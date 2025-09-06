@@ -12,8 +12,8 @@ export interface CashPayment {
   rejectedDenominations: CashDenomination[]
 }
 
-// 현금 보관함 상태 (간소화)
-export type CashInventory = Record<CashDenomination, number>
+// 자판기 화폐 보유량 (거스름돈용)
+export type CashReserve = Record<CashDenomination, number>
 
 // 결제 검증 결과
 export interface PaymentValidationResult {

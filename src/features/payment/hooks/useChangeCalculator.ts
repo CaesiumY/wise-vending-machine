@@ -4,9 +4,9 @@ import type { CashDenomination } from '@/features/payment/types/payment.types';
 import type { ChangeCalculationResult } from '@/features/machine/types/vending.types';
 import {
   calculateOptimalChange,
-  updateCashInventoryAfterChange,
+  updateCashReserveAfterChange,
   addCashToInventory,
-  checkCashInventoryStatus,
+  checkCashReserveStatus,
   generateChangeDispenseSequence
 } from '@/features/payment/utils/changeCalculator';
 
@@ -14,7 +14,7 @@ export function useChangeCalculator() {
   const [isCalculating, setIsCalculating] = useState(false);
   const [lastCalculation, setLastCalculation] = useState<ChangeCalculationResult | null>(null);
   
-  const { cashInventory, updateCashInventory } = useAdminStore();
+  const { cashReserve, updateCashReserve } = useAdminStore();
 
   // 거스름돈 계산 및 지급 가능 여부 확인
   const calculateChange = useCallback(
@@ -23,7 +23,7 @@ export function useChangeCalculator() {
 
       try {
         // 실시간 재고 기반 계산 수행
-        const result = calculateOptimalChange(changeAmount, cashInventory);
+        const result = calculateOptimalChange(changeAmount, cashReserve);
         setLastCalculation(result);
         
         return result;
@@ -32,7 +32,7 @@ export function useChangeCalculator() {
         setIsCalculating(false);
       }
     },
-    [cashInventory]
+    [cashReserve]
   );
 
   // 거스름돈 지급 실행 (애니메이션 포함)
@@ -49,30 +49,30 @@ export function useChangeCalculator() {
       // 실제로는 하드웨어 배출 처리
 
       // 재고 업데이트
-      const newInventory = updateCashInventoryAfterChange(
-        cashInventory,
+      const newInventory = updateCashReserveAfterChange(
+        cashReserve,
         calculation.breakdown
       );
-      updateCashInventory(newInventory);
+      updateCashReserve(newInventory);
 
       return true;
     },
-    [calculateChange, cashInventory, updateCashInventory]
+    [calculateChange, cashReserve, updateCashReserve]
   );
 
   // 현금 투입 시 재고 추가
   const addCashToInventoryHook = useCallback(
     (denomination: CashDenomination, count: number = 1) => {
-      const newInventory = addCashToInventory(cashInventory, denomination, count);
-      updateCashInventory(newInventory);
+      const newInventory = addCashToInventory(cashReserve, denomination, count);
+      updateCashReserve(newInventory);
     },
-    [cashInventory, updateCashInventory]
+    [cashReserve, updateCashReserve]
   );
 
   // 재고 상태 확인
   const getInventoryStatus = useCallback(() => {
-    return checkCashInventoryStatus(cashInventory);
-  }, [cashInventory]);
+    return checkCashReserveStatus(cashReserve);
+  }, [cashReserve]);
 
   return {
     calculateChange,
@@ -81,6 +81,6 @@ export function useChangeCalculator() {
     getInventoryStatus,
     isCalculating,
     lastCalculation,
-    currentInventory: cashInventory
+    currentReserve: cashReserve
   };
 }

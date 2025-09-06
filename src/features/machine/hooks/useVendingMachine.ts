@@ -17,7 +17,7 @@ export function useCashPayment() {
   } = useVendingStore();
 
   const {
-    cashInventory,
+    cashReserve,
   } = useAdminStore();
 
   /**
@@ -89,7 +89,7 @@ export function useCashPayment() {
       // 실시간 재고 기반 거스름돈 계산
       const changeResult = calculateOptimalChange(
         returnAmount,
-        cashInventory
+        cashReserve
       );
 
       if (!changeResult.possible) {

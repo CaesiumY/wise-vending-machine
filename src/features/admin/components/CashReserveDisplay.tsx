@@ -18,8 +18,8 @@ const getStockStatusColor = (count: number): string => {
   return "text-foreground";
 };
 
-export function CashInventoryDisplay() {
-  const { cashInventory } = useAdminStore();
+export function CashReserveDisplay() {
+  const { cashReserve } = useAdminStore();
 
   return (
     <Card>
@@ -32,7 +32,7 @@ export function CashInventoryDisplay() {
       <CardContent className="pt-0">
         <div className="space-y-2">
           {CASH_DENOMINATIONS.map((denomination) => {
-            const count = cashInventory[denomination] || 0;
+            const count = cashReserve[denomination] || 0;
             return (
               <div
                 key={denomination}
@@ -55,7 +55,7 @@ export function CashInventoryDisplay() {
             <span className="text-muted-foreground">총 보유 금액</span>
             <span className="font-medium">
               {CASH_DENOMINATIONS.reduce((total, denomination) => {
-                return total + (cashInventory[denomination] || 0) * denomination;
+                return total + (cashReserve[denomination] || 0) * denomination;
               }, 0).toLocaleString()}원
             </span>
           </div>

@@ -11,7 +11,7 @@ const defaultSettings: AdminSettings = {
 };
 
 // 기본 화폐 보유량 (각 3개씩 - 거스름돈 부족 테스트용)
-const defaultCashInventory: Record<CashDenomination, number> = {
+const defaultCashReserve: Record<CashDenomination, number> = {
   100: 3,
   500: 3,
   1000: 3,
@@ -23,7 +23,7 @@ export const useAdminStore = create(
   combine(
     {
       ...defaultSettings,
-      cashInventory: defaultCashInventory,
+      cashReserve: defaultCashReserve,
     },
     (set) => ({
       // ===== 예외 설정 =====
@@ -38,18 +38,18 @@ export const useAdminStore = create(
       // ===== 화폐 재고 관리 =====
 
       // 화폐 재고 업데이트 (전체 재고 교체)
-      updateCashInventory: (newInventory: Record<CashDenomination, number>) => {
-        set({ cashInventory: newInventory });
+      updateCashReserve: (newReserve: Record<CashDenomination, number>) => {
+        set({ cashReserve: newReserve });
       },
 
       // 개별 화폐 수량 조정
       adjustCashCount: (denomination: CashDenomination, change: number) => {
         set((state) => ({
-          cashInventory: {
-            ...state.cashInventory,
+          cashReserve: {
+            ...state.cashReserve,
             [denomination]: Math.max(
               0,
-              state.cashInventory[denomination] + change
+              state.cashReserve[denomination] + change
             ),
           },
         }));
