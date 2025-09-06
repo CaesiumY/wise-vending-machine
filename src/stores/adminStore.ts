@@ -155,25 +155,6 @@ export const adminSelectors = {
     return activeExceptions;
   },
 
-  // 시스템 상태 요약
-  getSystemStatus: () => {
-    const activeExceptions = adminSelectors.getActiveExceptions();
-
-    if (activeExceptions.length === 0) {
-      return { status: "normal", count: 0 };
-    }
-
-    const criticalExceptions = ["dispense_failure", "admin_intervention"];
-    const hasCritical = activeExceptions.some((e) =>
-      criticalExceptions.includes(e)
-    );
-
-    return {
-      status: hasCritical ? "critical" : "warning",
-      count: activeExceptions.length,
-    };
-  },
-
   // 특정 예외 발생 확률 계산 (3개 시스템 예외)
   getExceptionProbability: (type: ErrorType): number => {
     const state = useAdminStore.getState();

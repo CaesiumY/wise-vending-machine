@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -18,11 +17,8 @@ interface AdminPanelProps {
 export function AdminPanel({ className }: AdminPanelProps) {
   const { errorCount, lastError } = useAdminStore();
 
-  // const { triggerException } = useExceptionHandler(); // 현재 미사용
-
   // 활성화된 예외 목록 가져오기
   const activeExceptions = adminSelectors.getActiveExceptions();
-  const systemStatus = adminSelectors.getSystemStatus();
 
   return (
     <div className={cn("mt-auto", className)}>
@@ -33,20 +29,6 @@ export function AdminPanel({ className }: AdminPanelProps) {
               <div className="flex items-center gap-2">
                 <Settings className="h-4 w-4" />
                 <span className="font-medium text-sm">테스트 패널</span>
-                <Badge
-                  variant={
-                    systemStatus.status === "critical"
-                      ? "destructive"
-                      : "secondary"
-                  }
-                  className="text-xs"
-                  style={{
-                    display:
-                      activeExceptions.length > 0 ? "inline-flex" : "none",
-                  }}
-                >
-                  {activeExceptions.length}개 활성
-                </Badge>
               </div>
               <div className="flex items-center gap-1 text-xs">
                 <ChevronDown className="h-4 w-4" />

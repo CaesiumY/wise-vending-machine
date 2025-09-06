@@ -137,7 +137,6 @@ export interface AdminActions {
   clearLogs: () => void
   
   // 모니터링
-  getSystemStatus: () => MonitoringInfo
   resetCounters: () => void
   
   // 로그 관리
