@@ -48,9 +48,7 @@ export function useCashPayment() {
         }
       }
 
-      // 정상 투입 처리 (800ms 인식 시간)
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
+      // 정상 투입 처리
       const result = storeInsertCash(amount);
       if (result.success) {
         const newBalance = currentBalance + amount;
@@ -123,9 +121,6 @@ export function useCashPayment() {
         }
       }
 
-      // 현금 반환 애니메이션 (1.5초)
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
       // 상태 초기화
       reset();
       

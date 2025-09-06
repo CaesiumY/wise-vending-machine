@@ -34,9 +34,7 @@ export function ValidationStatus() {
     };
 
     updateStockStatus();
-    const interval = setInterval(updateStockStatus, 2000); // 2초마다 업데이트
-    
-    return () => clearInterval(interval);
+    // 실시간 업데이트 비활성화
   }, [checkStock]);
 
   const adminException = checkAdminExceptions();

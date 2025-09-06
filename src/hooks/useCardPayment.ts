@@ -42,8 +42,7 @@ export function useCardPayment() {
     showDialog('success', '카드 처리', '카드를 삽입해주세요...');
 
     try {
-      // 카드 인식 시뮬레이션 (2초 대기)
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // 카드 인식 처리
 
       // 카드 리더기 오류 모드
       if (cardReaderFault && Math.random() < 0.4) {
@@ -85,8 +84,7 @@ export function useCardPayment() {
         throw new Error('network_error');
       }
 
-      // 결제 처리 시뮬레이션 (3초 대기)
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      // 결제 처리
 
       // 카드 결제 거부 모드
       if (cardPaymentReject && Math.random() < 0.5) {
@@ -138,10 +136,8 @@ export function useCardPayment() {
         showDialog('success', '구매 완료', '음료가 배출되었습니다.\n감사합니다!');
         
         // 거래 완료 후 상태 초기화
-        setTimeout(() => {
-          resetCardPayment();
-          useVendingStore.getState().reset();
-        }, 3000);
+        resetCardPayment();
+        useVendingStore.getState().reset();
         
         return true;
       } else {
@@ -161,8 +157,7 @@ export function useCardPayment() {
     showDialog('error', '결제 취소', '결제를 취소합니다...');
 
     try {
-      // 취소 처리 시뮬레이션 (2초)
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // 취소 처리
       
       // 재고 복구
       const product = products[productId];
@@ -186,15 +181,9 @@ export function useCardPayment() {
     setIsProcessing(false);
   };
 
-  // 타임아웃 처리 (카드 삽입 후 60초)
+  // 타임아웃 처리 비활성화
   const startCardTimeout = () => {
-    return setTimeout(() => {
-      if (cardInfo && cardInfo.transactionId) {
-        showDialog('error', '시간 초과', '시간 초과로 거래를 취소합니다.');
-        resetCardPayment();
-        useVendingStore.getState().reset();
-      }
-    }, 60000); // 60초 타임아웃
+    return null;
   };
 
   return {

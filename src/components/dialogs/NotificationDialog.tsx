@@ -57,13 +57,7 @@ export function NotificationDialog({
   const config = NOTIFICATION_CONFIGS[type];
 
   useEffect(() => {
-    if (open && autoClose) {
-      const timer = setTimeout(() => {
-        onOpenChange(false);
-      }, autoCloseDelay);
-
-      return () => clearTimeout(timer);
-    }
+    // 자동 닫힘 기능 비활성화
   }, [open, autoClose, autoCloseDelay, onOpenChange]);
 
   return (

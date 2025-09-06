@@ -191,12 +191,10 @@ export function useExceptionHandler() {
     switch (exception.recovery) {
       case 'return_money':
         // 투입된 금액 반환 로직
-        setTimeout(() => {
-          if (currentBalance > 0) {
-            vendingStore.showDialog('info', '반환 완료', `${currentBalance}원이 반환되었습니다.`)
-          }
-          reset()
-        }, 2000)
+        if (currentBalance > 0) {
+          vendingStore.showDialog('info', '반환 완료', `${currentBalance}원이 반환되었습니다.`)
+        }
+        reset()
         break
         
       case 'restore_payment':
@@ -229,9 +227,7 @@ export function useExceptionHandler() {
         
       case 'auto_return':
         // 자동 반환 처리
-        setTimeout(() => {
-          vendingStore.cancelTransaction()
-        }, 1000)
+        vendingStore.cancelTransaction()
         break
         
       case 'limited_service':
@@ -246,9 +242,7 @@ export function useExceptionHandler() {
         
       default:
         // 기본 복구 동작 - 대기 상태로 복원
-        setTimeout(() => {
-          reset()
-        }, 3000)
+        reset()
         break
     }
   }, [vendingStore, adminStore])

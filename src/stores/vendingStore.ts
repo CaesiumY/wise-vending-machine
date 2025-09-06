@@ -255,9 +255,6 @@ export const useVendingStore = create<VendingStore>()(
           // adminStore 설정 확인
           const adminState = useAdminStore.getState()
           
-          // 카드 인식 시뮬레이션
-          await new Promise(resolve => setTimeout(resolve, 1000))
-          
           // 카드 인식 실패 시뮬레이션
           if (adminState.cardReaderFault) {
             throw new Error('card_reader_fault')
@@ -267,9 +264,6 @@ export const useVendingStore = create<VendingStore>()(
           if (adminState.networkErrorMode && Math.random() < 0.3) {
             throw new Error('network_error')
           }
-          
-          // 결제 승인 시뮬레이션
-          await new Promise(resolve => setTimeout(resolve, 1500))
           
           // 결제 거부 시뮬레이션
           if (adminState.cardPaymentReject && Math.random() < 0.15) {
@@ -329,7 +323,7 @@ export const useVendingStore = create<VendingStore>()(
       
       // 배출 시뮬레이션
       dispenseProduct: async (): Promise<boolean> => {
-        const { selectedProduct } = get()
+        const { selectedProduct, currentBalance, paymentMethod } = get()
         const adminState = useAdminStore.getState()
         
         if (!selectedProduct) return false
@@ -356,10 +350,24 @@ export const useVendingStore = create<VendingStore>()(
           return false
         }
 
-        // 배출 시뮬레이션 (2초)
-        await new Promise(resolve => setTimeout(resolve, 2000))
-        
+        // 즉시 배출 처리
         set({ status: 'completing' })
+        
+        // 거래 완료 처리
+        get().showDialog('success', '배출 완료', `${get().products[selectedProduct].name}이(가) 배출되었습니다.`)
+        
+        // 잔액이 있을 때 연속 구매 안내 (현금 결제만)
+        if (paymentMethod === 'cash' && currentBalance >= 600) {
+          // 다음 구매로 진행
+          set({ 
+            selectedProduct: null,
+            status: 'product_select'
+          })
+        } else {
+          // 완전히 거래 종료 - 대기 상태로 복귀
+          get().reset()
+        }
+        
         return true
       },
 
@@ -442,10 +450,8 @@ export const useVendingStore = create<VendingStore>()(
             selectedProduct: null 
           })
         } else {
-          // 잔액 부족시 자동 반환 후 대기 상태
-          setTimeout(() => {
-            get().reset()
-          }, 3000)
+          // 잔액 부족시 대기 상태로 전환
+          get().reset()
         }
         
         return { success: true }
@@ -509,9 +515,8 @@ export const useVendingStore = create<VendingStore>()(
       
       shutdown: () => set({ status: 'maintenance', isOperational: false }),
       
-      startTimeout: (duration, callback) => {
-        const timeoutId = window.setTimeout(callback, duration * 1000)
-        set({ timeoutId, operationStartTime: new Date() })
+      startTimeout: () => {
+        // 타임아웃 기능 비활성화
       },
       
       clearTimeout: () => {

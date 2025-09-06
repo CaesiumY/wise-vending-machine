@@ -290,12 +290,9 @@ export const useAdminStore = create<TaskAdminStore>()(
           get().recordError(type, `관리자가 ${type} 예외를 트리거했습니다`);
         },
 
-        simulateNetworkDelay: async (delayMs: number) => {
-          // 네트워크 지연 시뮬레이션
+        simulateNetworkDelay: async () => {
+          // 네트워크 지연 시뮬레이션 비활성화
           set({ networkErrorMode: true });
-          
-          await new Promise(resolve => setTimeout(resolve, delayMs));
-          
           set({ networkErrorMode: false });
         },
 

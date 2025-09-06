@@ -75,10 +75,8 @@ export function useChangeCalculator() {
       // 지급 시퀀스 생성
       const sequence = generateChangeDispenseSequence(calculation.breakdown);
       
-      // 애니메이션 실행
+      // 즉시 실행
       for (const step of sequence) {
-        await new Promise(resolve => setTimeout(resolve, step.delay));
-        
         // 각 단계별 알림 (선택적)
         console.log(`${step.denomination}원 ${step.count}개 배출`);
       }
