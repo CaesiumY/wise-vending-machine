@@ -17,10 +17,6 @@ import type { ActionResult } from "@/shared/types/utility.types";
 import { PRODUCTS } from "@/features/products/constants/products";
 import { calculateOptimalChange } from "@/features/payment/utils/changeCalculator";
 import { getErrorMessage } from "../constants/errorMessages";
-import {
-  validateCashDenomination,
-  validateInsertionState,
-} from "@/shared/utils/validators";
 import { formatSuccessMessage } from "@/shared/utils/formatters";
 import { useAdminStore } from "@/features/admin/store/adminStore";
 
@@ -33,7 +29,6 @@ export const useVendingStore = create<VendingStore>()(
     selectedProduct: null,
     paymentMethod: null,
     status: "idle",
-    isOperational: true,
 
     // 카드 결제 관련
     selectedProductForCard: null,
@@ -128,7 +123,6 @@ export const useVendingStore = create<VendingStore>()(
           selectedProduct: null,
           paymentMethod: null,
           status: "idle",
-          isOperational: true,
           selectedProductForCard: null,
           showPaymentConfirm: false,
           insertedCash: [],
@@ -180,9 +174,7 @@ export const useVendingStore = create<VendingStore>()(
 
       insertCash: (denomination: CashDenomination): ActionResult => {
         const {
-          status,
           currentBalance,
-          isOperational,
           insertedCash,
           lastInsertTime,
         } = get();
@@ -190,17 +182,7 @@ export const useVendingStore = create<VendingStore>()(
         set({ isLoading: true });
 
         try {
-          // 1. 기본 검증
-          if (!validateCashDenomination(denomination)) {
-            return { success: false, error: "유효하지 않은 화폐 단위입니다." };
-          }
-
-          const stateValidation = validateInsertionState(status, isOperational);
-          if (!stateValidation.canInsert) {
-            return { success: false, error: stateValidation.reason };
-          }
-
-          // 2. 연속 투입 간격 검증 (1초 간격) - 화폐 인식 시간 시뮬레이션
+          // 1. 연속 투입 간격 검증 (1초 간격) - 화폐 인식 시간 시뮬레이션
           if (Date.now() - lastInsertTime < 1000) {
             // 사용자에게 화폐 반환 안내 토스트 표시
             toast.warning("화폐가 반환되었습니다. 천천히 다시 투입해주세요.");
