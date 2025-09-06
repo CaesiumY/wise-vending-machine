@@ -169,6 +169,20 @@ export const useVendingStore = create<VendingStore>()(
             get().setError(jamType, `${isBill ? '지폐' : '동전'}가 걸렸습니다. 다시 투입해주세요.`)
             return { success: false, errorType: jamType }
           }
+
+          // 4-3. 시스템 점검 모드 확인
+          if (adminState.systemMaintenanceMode) {
+            get().setError('system_maintenance', '시스템 점검 중입니다. 잠시 후 이용해주세요.')
+            get().setStatus('maintenance')
+            return { success: false, errorType: 'system_maintenance' }
+          }
+
+          // 4-4. 전원 불안정 모드 확인
+          if (adminState.powerUnstableMode && Math.random() < 0.15) {
+            get().setError('power_unstable', '전원이 불안정합니다. 안전 모드로 전환됩니다.')
+            get().setStatus('maintenance')
+            return { success: false, errorType: 'power_unstable' }
+          }
           
           // 5. 정상 투입 처리
           const newBalance = currentBalance + denomination
@@ -190,9 +204,9 @@ export const useVendingStore = create<VendingStore>()(
           
           // 7. 타임아웃 시작 (관리자 설정에 따라)
           if (adminState.timeoutMode) {
-            get().startTimeout(30, () => {
+            get().startTimeout(15, () => {
+              get().setError('timeout_occurred', '시간이 초과되었습니다. 투입된 금액을 반환합니다.')
               get().cancelTransaction()
-              get().showDialog('error', '시간 초과', '시간 초과로 인해 현금을 반환합니다.')
             })
           }
           
@@ -248,6 +262,11 @@ export const useVendingStore = create<VendingStore>()(
           if (adminState.cardReaderFault) {
             throw new Error('card_reader_fault')
           }
+
+          // 네트워크 오류 시뮬레이션
+          if (adminState.networkErrorMode && Math.random() < 0.3) {
+            throw new Error('network_error')
+          }
           
           // 결제 승인 시뮬레이션
           await new Promise(resolve => setTimeout(resolve, 1500))
@@ -255,6 +274,11 @@ export const useVendingStore = create<VendingStore>()(
           // 결제 거부 시뮬레이션
           if (adminState.cardPaymentReject && Math.random() < 0.15) {
             throw new Error('card_payment_reject')
+          }
+
+          // 관리자 개입 필요 시뮬레이션
+          if (adminState.adminInterventionMode && Math.random() < 0.1) {
+            throw new Error('admin_intervention')
           }
           
           // 결제 성공 - 거래 생성
@@ -306,14 +330,28 @@ export const useVendingStore = create<VendingStore>()(
       // 배출 시뮬레이션
       dispenseProduct: async (): Promise<boolean> => {
         const { selectedProduct } = get()
-        const { dispenseFaultMode } = useAdminStore.getState()
+        const adminState = useAdminStore.getState()
         
         if (!selectedProduct) return false
 
         set({ status: 'dispensing' })
         
+        // 배출구 막힘 체크
+        if (adminState.dispenseBlockedMode && Math.random() < 0.4) {
+          get().setError('dispense_blocked', '배출구가 막혔습니다. 관리자에게 문의하세요.')
+          set({ status: 'maintenance' })
+          return false
+        }
+
+        // 온도 이상 체크
+        if (adminState.temperatureErrorMode && Math.random() < 0.2) {
+          get().setError('temperature_error', '냉각 시스템 이상으로 서비스가 제한됩니다.')
+          return false
+        }
+        
         // 배출 실패 모드 체크
-        if (dispenseFaultMode && Math.random() < 0.3) {
+        if (adminState.dispenseFaultMode && Math.random() < 0.3) {
+          get().setError('dispense_failure', '음료 배출에 실패했습니다. 잠시 후 다시 시도해주세요.')
           set({ status: 'idle' })
           return false
         }

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,52 +5,34 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Plus, Minus } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAdminStore } from '@/stores/adminStore';
+import type { ProductType } from '@/types';
 
 interface Product {
-  id: 'cola' | 'water' | 'coffee';
+  id: ProductType;
   name: string;
   price: number;
-  stock: number;
   icon: string;
 }
 
-const INITIAL_PRODUCTS: Product[] = [
-  { id: 'cola', name: '콜라', price: 1100, icon: '🥤', stock: 5 },
-  { id: 'water', name: '물', price: 600, icon: '💧', stock: 3 },
-  { id: 'coffee', name: '커피', price: 700, icon: '☕', stock: 2 },
+const PRODUCTS: Product[] = [
+  { id: 'cola', name: '콜라', price: 1100, icon: '🥤' },
+  { id: 'water', name: '물', price: 600, icon: '💧' },
+  { id: 'coffee', name: '커피', price: 700, icon: '☕' },
 ];
 
-interface StockControlsProps {
-  onStockChange?: (productId: string, stock: number) => void;
-}
+export function StockControls() {
+  const { stockLevels, updateStockLevel } = useAdminStore();
 
-export function StockControls({ onStockChange }: StockControlsProps) {
-  const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
-
-  const updateStock = (productId: string, change: number) => {
-    setProducts(prev => 
-      prev.map(product => {
-        if (product.id === productId) {
-          const newStock = Math.max(0, Math.min(99, product.stock + change));
-          onStockChange?.(productId, newStock);
-          return { ...product, stock: newStock };
-        }
-        return product;
-      })
-    );
+  const updateStock = (productId: ProductType, change: number) => {
+    const currentStock = stockLevels[productId];
+    const newStock = Math.max(0, Math.min(99, currentStock + change));
+    updateStockLevel(productId, newStock);
   };
 
-  const setStock = (productId: string, stock: number) => {
+  const setStock = (productId: ProductType, stock: number) => {
     const numStock = Math.max(0, Math.min(99, parseInt(String(stock)) || 0));
-    setProducts(prev => 
-      prev.map(product => {
-        if (product.id === productId) {
-          onStockChange?.(productId, numStock);
-          return { ...product, stock: numStock };
-        }
-        return product;
-      })
-    );
+    updateStockLevel(productId, numStock);
   };
 
   const getStockStatus = (stock: number) => {
@@ -71,8 +52,9 @@ export function StockControls({ onStockChange }: StockControlsProps) {
       </div>
 
       <div className="space-y-3">
-        {products.map((product) => {
-          const status = getStockStatus(product.stock);
+        {PRODUCTS.map((product) => {
+          const currentStock = stockLevels[product.id];
+          const status = getStockStatus(currentStock);
           
           return (
             <Card key={product.id} className="p-3 bg-white border">
@@ -98,7 +80,7 @@ export function StockControls({ onStockChange }: StockControlsProps) {
                   size="sm"
                   className="h-8 w-8 p-0"
                   onClick={() => updateStock(product.id, -1)}
-                  disabled={product.stock === 0}
+                  disabled={currentStock === 0}
                 >
                   <Minus className="h-3 w-3" />
                 </Button>
@@ -109,7 +91,7 @@ export function StockControls({ onStockChange }: StockControlsProps) {
                     type="number"
                     min="0"
                     max="99"
-                    value={product.stock}
+                    value={currentStock}
                     onChange={(e) => setStock(product.id, parseInt(e.target.value) || 0)}
                     className="h-8 text-center text-sm"
                   />
@@ -121,7 +103,7 @@ export function StockControls({ onStockChange }: StockControlsProps) {
                   size="sm"
                   className="h-8 w-8 p-0"
                   onClick={() => updateStock(product.id, 1)}
-                  disabled={product.stock >= 99}
+                  disabled={currentStock >= 99}
                 >
                   <Plus className="h-3 w-3" />
                 </Button>

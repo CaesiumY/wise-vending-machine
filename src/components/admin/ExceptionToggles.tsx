@@ -1,9 +1,10 @@
-import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { useAdminStore } from '@/stores/adminStore';
+import type { ErrorType, TaskAdminSettings } from '@/types';
 
 // 15가지 예외 상황 정의
 const EXCEPTION_CATEGORIES = {
@@ -42,21 +43,17 @@ const EXCEPTION_CATEGORIES = {
 };
 
 interface ExceptionTogglesProps {
-  onToggleChange?: (activeExceptions: string[]) => void;
+  activeExceptions?: ErrorType[];
 }
 
-export function ExceptionToggles({ onToggleChange }: ExceptionTogglesProps) {
-  const [toggleStates, setToggleStates] = useState<Record<string, boolean>>({});
+export function ExceptionToggles({ activeExceptions = [] }: ExceptionTogglesProps) {
+  const adminStore = useAdminStore();
 
-  const handleToggle = (exceptionId: string, checked: boolean) => {
-    const newStates = { ...toggleStates, [exceptionId]: checked };
-    setToggleStates(newStates);
-    
-    const activeExceptions = Object.keys(newStates).filter(id => newStates[id]);
-    onToggleChange?.(activeExceptions);
+  const handleToggle = (exceptionKey: keyof TaskAdminSettings, _checked: boolean) => {
+    adminStore.toggleException(exceptionKey);
   };
 
-  const activeCount = Object.values(toggleStates).filter(Boolean).length;
+  const activeCount = activeExceptions.length;
 
   return (
     <Card className="p-4">
@@ -83,8 +80,8 @@ export function ExceptionToggles({ onToggleChange }: ExceptionTogglesProps) {
                   </Label>
                   <Switch
                     id={exception.id}
-                    checked={toggleStates[exception.id] || false}
-                    onCheckedChange={(checked) => handleToggle(exception.id, checked)}
+                    checked={adminStore[exception.id as keyof TaskAdminSettings] as boolean || false}
+                    onCheckedChange={(checked) => handleToggle(exception.id as keyof TaskAdminSettings, checked)}
                     className="scale-75"
                   />
                 </div>
