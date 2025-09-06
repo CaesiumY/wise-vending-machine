@@ -39,7 +39,7 @@ export function useCardPayment() {
       // 카드 인식 처리
 
       // 카드 리더기 오류 모드
-      if (cardReaderFault && Math.random() < 0.4) {
+      if (cardReaderFault) {
         setError(
           "card_reader_fault",
           "카드를 인식할 수 없습니다. 다시 삽입해주세요."
@@ -93,7 +93,7 @@ export function useCardPayment() {
       // (삭제) 네트워크 오류 시뮬레이션 제거
 
       // 카드 결제 거부 모드
-      if (cardPaymentReject && Math.random() < 0.5) {
+      if (cardPaymentReject) {
         toast.dismiss(processingToast);
         setError(
           "card_payment_reject",
@@ -163,7 +163,7 @@ export function useCardPayment() {
       });
 
       // 배출 시뮬레이션
-      const dispenseSuccess = await dispenseProduct();
+      const dispenseSuccess = dispenseProduct();
 
       if (dispenseSuccess) {
         // 배출 진행 토스트 닫기
@@ -277,9 +277,9 @@ export function useCardPayment() {
   };
 
   // 자동 카드 인식 (PaymentSelector에서 사용)
-  const autoRecognizeCard = async (): Promise<boolean> => {
-    // 카드 리더기 오류 체크 (간단한 버전)
-    if (cardReaderFault && Math.random() < 0.2) {
+  const autoRecognizeCard = (): boolean => {
+    // 카드 리더기 오류 체크
+    if (cardReaderFault) {
       setError(
         "card_reader_fault", 
         "카드를 인식할 수 없습니다."

@@ -309,7 +309,7 @@ export const useVendingStore = create<VendingStore>()(
           // (삭제) 네트워크 오류 시뮬레이션 제거
 
           // 결제 거부 시뮬레이션
-          if (adminState.cardPaymentReject && Math.random() < 0.15) {
+          if (adminState.cardPaymentReject) {
             toast.error("결제 거부 ❌");
             throw new Error("card_payment_reject");
           }
@@ -342,7 +342,7 @@ export const useVendingStore = create<VendingStore>()(
           });
 
           // 배출 처리
-          await get().dispenseProduct();
+          get().dispenseProduct();
 
           return { success: true };
         } catch (error) {
@@ -363,7 +363,7 @@ export const useVendingStore = create<VendingStore>()(
       // ===== 배출 관련 액션 =====
 
       // 배출 시뮬레이션
-      dispenseProduct: async (): Promise<boolean> => {
+      dispenseProduct: (): boolean => {
         const { selectedProduct, paymentMethod, products } = get();
         const adminState = useAdminStore.getState();
 
@@ -374,12 +374,33 @@ export const useVendingStore = create<VendingStore>()(
         // (삭제) 배출구 막힘/온도 이상 시뮬레이션 제거
 
         // 배출 실패 모드 체크
-        if (adminState.dispenseFaultMode && Math.random() < 0.3) {
-          get().setError(
-            "dispense_failure",
-            "음료 배출에 실패했습니다. 잠시 후 다시 시도해주세요."
-          );
-          set({ status: "idle" });
+        if (adminState.dispenseFaultMode) {
+          const product = products[selectedProduct];
+          
+          // 현금 결제인 경우 잔액 복구 및 적절한 상태 전환
+          if (paymentMethod === "cash") {
+            set((state) => ({ 
+              currentBalance: state.currentBalance + product.price, // 잔액 복구
+              status: "product_select", // 다시 선택 가능 상태로
+              selectedProduct: null,
+              currentError: "dispense_failure", // 에러 상태 설정 (토스트 없이)
+              errorMessage: "음료 배출에 실패했습니다."
+            }));
+            
+            toast.error("🚫 음료 배출 실패", {
+              description: "배출에 실패했습니다. 잔액이 복구되었습니다. 다시 선택해주세요.",
+              duration: 4000
+            });
+          } else {
+            // 카드 결제는 별도 취소 처리가 있으므로 idle 상태로
+            set({ status: "idle" });
+            
+            // 카드 결제는 기존 setError 방식 유지
+            get().setError(
+              "dispense_failure",
+              "음료 배출에 실패했습니다. 잠시 후 다시 시도해주세요."
+            );
+          }
           return false;
         }
 
@@ -468,19 +489,7 @@ export const useVendingStore = create<VendingStore>()(
           return;
         }
 
-        // 거스름돈 지급 후 adminStore 재고 차감
-        if (changeAmount > 0) {
-          Object.entries(changeResult.breakdown).forEach(
-            ([denomStr, count]) => {
-              const denomination = parseInt(denomStr) as CashDenomination;
-              if (count > 0) {
-                adminState.adjustCashCount(denomination, -count);
-              }
-            }
-          );
-        }
-
-        // 거래 정보 생성
+        // 거래 정보 생성 (배출 전)
         const transaction: Transaction = {
           id: Date.now().toString(),
           productId: product.id,
@@ -493,14 +502,35 @@ export const useVendingStore = create<VendingStore>()(
           status: "pending",
         };
 
+        // 임시로 거스름돈 차감 정보 저장 (롤백용)
+        const changeAdjustments: Array<{ denomination: CashDenomination; count: number }> = [];
+        if (changeAmount > 0) {
+          Object.entries(changeResult.breakdown).forEach(
+            ([denomStr, count]) => {
+              const denomination = parseInt(denomStr) as CashDenomination;
+              if (count > 0) {
+                changeAdjustments.push({ denomination, count });
+                adminState.adjustCashCount(denomination, -count);
+              }
+            }
+          );
+        }
+
         set({
           lastTransaction: transaction,
           currentBalance: currentBalance - product.price, // 상품 가격만큼 차감 (거스름돈이나 0원)
           status: "dispensing",
         });
 
-        // 배출 시작
-        get().dispenseProduct();
+        // 배출 시도
+        const dispenseSuccess = get().dispenseProduct();
+        
+        // 배출 실패 시 거스름돈 차감 롤백
+        if (!dispenseSuccess) {
+          changeAdjustments.forEach(({ denomination, count }) => {
+            adminState.adjustCashCount(denomination, count); // 차감했던 거스름돈 복구
+          });
+        }
       },
 
       // ===== 유틸리티 메서드 =====

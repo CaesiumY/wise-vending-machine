@@ -120,7 +120,7 @@ export interface VendingActions {
   calculateChange: (amount: number) => ChangeBreakdown
   
   // 음료 배출
-  dispenseProduct: () => Promise<boolean>
+  dispenseProduct: () => boolean
   
   // 거래 관리
   cancelTransaction: () => ActionResult

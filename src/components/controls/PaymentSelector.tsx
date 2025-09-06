@@ -20,7 +20,7 @@ export function PaymentSelector({ className }: PaymentSelectorProps) {
   const shouldShowCancelButton = paymentMethod !== null && status !== "idle";
 
   // 결제 방식 선택 핸들러
-  const handlePaymentSelect = async (method: PaymentMethod) => {
+  const handlePaymentSelect = (method: PaymentMethod) => {
     if (isSelectionDisabled) return;
 
     const result = setPaymentMethod(method);
@@ -30,7 +30,7 @@ export function PaymentSelector({ className }: PaymentSelectorProps) {
 
     // 카드 결제 선택 시 자동으로 카드 인식
     if (method === "card") {
-      await autoRecognizeCard();
+      autoRecognizeCard();
     }
   };
 

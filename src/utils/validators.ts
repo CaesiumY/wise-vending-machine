@@ -282,7 +282,7 @@ export function validateDispensing(productId: ProductType): {
 
   // 배출 실패 모드 체크
   const { dispenseFaultMode } = useAdminStore.getState();
-  if (dispenseFaultMode && Math.random() < 0.3) {
+  if (dispenseFaultMode) {
     return {
       canDispense: false,
       reason: "음료 배출에 실패했습니다. 차액을 반환합니다.",
