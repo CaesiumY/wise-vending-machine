@@ -27,10 +27,11 @@ export const useAdminStore = create(
     },
     (set) => ({
       // ===== 예외 설정 =====
-      toggleException: (exception: keyof AdminSettings) => {
+      // 예외 설정을 직접 값으로 설정
+      setException: (exception: keyof AdminSettings, value: boolean) => {
         set((state) => ({
           ...state,
-          [exception]: !state[exception],
+          [exception]: value,
         }));
       },
 

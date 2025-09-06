@@ -10,9 +10,9 @@ export function ExceptionToggles() {
 
   const handleToggle = (
     exceptionKey: keyof AdminSettings,
-    _checked: boolean
+    checked: boolean
   ) => {
-    adminStore.toggleException(exceptionKey);
+    adminStore.setException(exceptionKey, checked);
   };
 
   return (
