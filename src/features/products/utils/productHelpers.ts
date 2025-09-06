@@ -30,7 +30,7 @@ export const getProductState = (
   }
 
   // 음료 선택 가능한 상태인지 확인
-  if (status === "product_select" || status === "card_process") {
+  if (status === "productSelect" || status === "cardProcess") {
     return ButtonState.AVAILABLE;
   }
 

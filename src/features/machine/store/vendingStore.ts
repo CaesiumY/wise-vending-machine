@@ -62,7 +62,7 @@ export const useVendingStore = create<VendingStore>()(
 
         set({
           paymentMethod: method,
-          status: method === "cash" ? "cash_input" : "card_process",
+          status: method === "cash" ? "cashInput" : "cardProcess",
         });
 
         return { success: true };
@@ -72,7 +72,7 @@ export const useVendingStore = create<VendingStore>()(
         const { status, currentBalance, products, paymentMethod } = get();
 
         // 음료 선택 가능한 상태인지 확인
-        if (status !== "product_select" && status !== "card_process") {
+        if (status !== "productSelect" && status !== "cardProcess") {
           return { success: false, error: "음료를 선택할 수 없는 상태입니다." };
         }
 
@@ -83,7 +83,7 @@ export const useVendingStore = create<VendingStore>()(
 
         // 재고 확인
         if (product.stock <= 0) {
-          get().setError("out_of_stock", `${product.name}이(가) 품절되었습니다.`);
+          get().setError("outOfStock", `${product.name}이(가) 품절되었습니다.`);
           return {
             success: false,
             error: `${product.name}이(가) 품절되었습니다.`,
@@ -93,7 +93,7 @@ export const useVendingStore = create<VendingStore>()(
         // 현금 결제시 잔액 확인
         if (paymentMethod === "cash" && currentBalance < product.price) {
           get().setError(
-            "change_shortage",
+            "changeShortage",
             `잔액이 부족합니다. (필요: ${product.price}원, 보유: ${currentBalance}원)`
           );
           return { success: false, error: "잔액이 부족합니다." };
@@ -204,7 +204,7 @@ export const useVendingStore = create<VendingStore>()(
             currentBalance: newBalance,
             insertedCash: newInsertedCash,
             lastInsertTime: Date.now(),
-            status: "product_select", // 음료 선택 가능 상태로 전환
+            status: "productSelect", // 음료 선택 가능 상태로 전환
           });
 
           // 5. 성공 메시지 표시
@@ -269,7 +269,7 @@ export const useVendingStore = create<VendingStore>()(
 
         const product = products[selectedProduct];
 
-        set({ status: "card_process" });
+        set({ status: "cardProcess" });
 
         try {
           // adminStore 설정 확인
@@ -278,13 +278,13 @@ export const useVendingStore = create<VendingStore>()(
           // 카드 인식 실패 시뮬레이션
           if (adminState.cardReaderFault) {
             toast.error("카드 인식 실패 ❌");
-            throw new Error("card_reader_fault");
+            throw new Error("cardReaderFault");
           }
 
           // 결제 거부 시뮬레이션
           if (adminState.cardPaymentReject) {
             toast.error("결제 거부 ❌");
-            throw new Error("card_payment_reject");
+            throw new Error("cardPaymentReject");
           }
 
           // 결제 성공 - 거래 생성
@@ -321,7 +321,7 @@ export const useVendingStore = create<VendingStore>()(
           get().setError(errorType, getErrorMessage(errorType));
 
           set({
-            status: "product_select", // 재선택 가능
+            status: "productSelect", // 재선택 가능
           });
 
           return { success: false, errorType };
@@ -347,7 +347,7 @@ export const useVendingStore = create<VendingStore>()(
           if (paymentMethod === "cash") {
             set((state) => ({
               currentBalance: state.currentBalance + product.price, // 잔액 복구
-              status: "product_select", // 다시 선택 가능 상태로
+              status: "productSelect", // 다시 선택 가능 상태로
               selectedProduct: null,
             }));
 
@@ -361,10 +361,7 @@ export const useVendingStore = create<VendingStore>()(
             set({ status: "idle" });
 
             // 카드 결제는 기존 setError 방식 유지
-            get().setError(
-              "dispense_failure",
-              "음료 배출에 실패했습니다. 잠시 후 다시 시도해주세요."
-            );
+            get().setError("dispenseFailure");
           }
           return false;
         }
@@ -400,7 +397,7 @@ export const useVendingStore = create<VendingStore>()(
           if (currentBalance > 0) {
             // 잔액이 0원이 아닌 경우 → 음료 선택 가능 상태로 (연속 구매)
             set({
-              status: "product_select",
+              status: "productSelect",
               selectedProduct: null,
             });
 
@@ -441,10 +438,7 @@ export const useVendingStore = create<VendingStore>()(
         const shouldFailChange = !changeResult.canProvideChange;
 
         if (shouldFailChange) {
-          get().setError(
-            "change_shortage",
-            "거스름돈이 부족합니다. 정확한 금액을 투입해주세요."
-          );
+          get().setError("changeShortage");
           return;
         }
 

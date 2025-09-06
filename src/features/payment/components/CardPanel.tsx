@@ -35,7 +35,7 @@ export function CardPanel() {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">        
-        {status === "card_process" && !showPaymentConfirm && (
+        {status === "cardProcess" && !showPaymentConfirm && (
           <div className="space-y-2">
             <p className="text-sm text-muted-foreground">카드 인식 완료</p>
             <p className="text-sm text-center py-4 text-muted-foreground border rounded-lg bg-muted/30">

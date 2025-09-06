@@ -30,7 +30,7 @@ export function useCardPayment() {
 
   // 2단계: 카드 인식 시뮬레이션
   const recognizeCard = async (): Promise<boolean> => {
-    setStatus("card_process");
+    setStatus("cardProcess");
     toast.info("💳 카드를 삽입해주세요...");
 
     try {
@@ -38,10 +38,7 @@ export function useCardPayment() {
 
       // 카드 리더기 오류 모드
       if (cardReaderFault) {
-        setError(
-          "card_reader_fault",
-          "카드를 인식할 수 없습니다. 다시 삽입해주세요."
-        );
+        setError("cardReaderFault");
 
         // sonner 토스트로 에러 알림
         toast.error("카드 인식 실패 ❌");
@@ -54,7 +51,7 @@ export function useCardPayment() {
 
       return true;
     } catch {
-      setError("card_reader_fault", "카드 인식 중 오류가 발생했습니다.");
+      setError("cardReaderFault", "카드 인식 중 오류가 발생했습니다.");
       return false;
     }
   };
@@ -84,10 +81,7 @@ export function useCardPayment() {
       // 카드 결제 거부 모드
       if (cardPaymentReject) {
         toast.dismiss(processingToast);
-        setError(
-          "card_payment_reject",
-          "카드 결제가 거부되었습니다. 다른 결제 방법을 이용해주세요."
-        );
+        setError("cardPaymentReject");
 
         // sonner 토스트로 결제 거부 알림
         toast.error("💳 결제 거부 ❌", {
@@ -116,7 +110,7 @@ export function useCardPayment() {
 
       // (단순화) 기타 오류는 카드 인식 오류로 처리
       if (error instanceof Error) {
-        setError("card_reader_fault", "결제 처리 중 오류가 발생했습니다.");
+        setError("cardReaderFault", "결제 처리 중 오류가 발생했습니다.");
         toast.error("💳 결제 처리 오류 ❌", {
           description: "결제 처리 중 문제가 발생했습니다.",
           duration: 4000,
@@ -197,7 +191,7 @@ export function useCardPayment() {
   const cancelCardPayment = async (productId: ProductType): Promise<void> => {
     const product = products[productId];
 
-    setStatus("card_process");
+    setStatus("cardProcess");
 
     // 결제 취소 진행 토스트
     const cancelToast = toast.loading("↩️ 결제 취소 처리 중...", {
@@ -220,14 +214,14 @@ export function useCardPayment() {
         duration: 4000,
       });
 
-      setError("dispense_failure", "배출 실패로 인해 결제를 취소했습니다.");
+      setError("dispenseFailure", "배출 실패로 인해 결제를 취소했습니다.");
     } catch {
       toast.dismiss(cancelToast);
       toast.error("🚫 취소 처리 오류", {
         description: "결제 취소 처리 중 문제가 발생했습니다.",
         duration: 4000,
       });
-      setError("card_payment_reject", "취소 처리 중 오류가 발생했습니다.");
+      setError("cardPaymentReject", "취소 처리 중 오류가 발생했습니다.");
     } finally {
       resetCardPayment();
     }
@@ -254,14 +248,14 @@ export function useCardPayment() {
     // 카드 리더기 오류 체크
     if (cardReaderFault) {
       setError(
-        "card_reader_fault", 
+        "cardReaderFault", 
         "카드를 인식할 수 없습니다."
       );
       return false;
     }
 
     // 카드 상태로 전환
-    setStatus("card_process");
+    setStatus("cardProcess");
     
     return true;
   };

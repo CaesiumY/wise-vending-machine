@@ -36,7 +36,7 @@ export function CashPanel({ className }: CashPanelProps) {
     status === "dispensing" ||
     status === "completing" ||
     status === "maintenance";
-  const canInsertCash = status === "cash_input" || status === "product_select";
+  const canInsertCash = status === "cashInput" || status === "productSelect";
 
   // 현금 투입 핸들러
   const handleCashInsert = (amount: CashDenomination) => {

@@ -29,11 +29,11 @@ export function StatusDisplay({ className }: StatusDisplayProps) {
     switch (status) {
       case "idle":
         return "음료를 선택해주세요";
-      case "cash_input":
+      case "cashInput":
         return "현금을 투입해주세요";
-      case "product_select":
+      case "productSelect":
         return "구매할 음료를 선택해주세요";
-      case "card_process":
+      case "cardProcess":
         return "카드를 삽입해주세요";
       case "dispensing":
         return "음료를 배출하고 있습니다...";

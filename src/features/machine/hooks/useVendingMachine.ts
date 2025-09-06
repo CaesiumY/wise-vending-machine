@@ -38,7 +38,7 @@ export function useCashPayment() {
 
       return false;
     } catch {
-      setError("dispense_failure", "투입 처리 중 오류가 발생했습니다.");
+      setError("dispenseFailure", "투입 처리 중 오류가 발생했습니다.");
       return false;
     }
   };
@@ -93,10 +93,7 @@ export function useCashPayment() {
       );
 
       if (!changeResult.canProvideChange) {
-        setError(
-          "change_shortage",
-          "거스름돈이 부족합니다. 정확한 금액을 투입해주세요."
-        );
+        setError("changeShortage");
         toast.error("거스름돈 부족으로 반환할 수 없습니다.");
         return false;
       }
@@ -107,7 +104,7 @@ export function useCashPayment() {
       toast.success(`반환 완료: ${returnAmount}원을 반환했습니다.`);
       return true;
     } catch {
-      setError("change_shortage", "반환 처리 중 오류가 발생했습니다.");
+      setError("changeShortage", "반환 처리 중 오류가 발생했습니다.");
       return false;
     }
   };

@@ -5,21 +5,21 @@ import type { PaymentMethod, CashDenomination, TransactionStatus } from '@/featu
 // 자판기 상태 타입
 export type VendingStatus = 
   | 'idle'              // 대기 상태
-  | 'payment_select'    // 결제 방식 선택
-  | 'cash_input'        // 현금 투입 중
-  | 'card_process'      // 카드 처리 중
-  | 'product_select'    // 음료 선택 중
+  | 'paymentSelect'     // 결제 방식 선택
+  | 'cashInput'         // 현금 투입 중
+  | 'cardProcess'       // 카드 처리 중
+  | 'productSelect'     // 음료 선택 중
   | 'dispensing'        // 배출 진행 중
   | 'completing'        // 거스름돈 처리 중
   | 'maintenance'       // 점검 모드
 
 // 오류 타입 (시뮬레이션)
 export type ErrorType = 
-  | 'change_shortage'      // 거스름돈 부족
-  | 'out_of_stock'        // 재고 부족  
-  | 'dispense_failure'    // 음료 배출 실패
-  | 'card_reader_fault'   // 카드 인식 실패 (시뮬레이션)
-  | 'card_payment_reject' // 카드 결제 거부 (시뮬레이션)
+  | 'changeShortage'      // 거스름돈 부족
+  | 'outOfStock'          // 재고 부족  
+  | 'dispenseFailure'     // 음료 배출 실패
+  | 'cardReaderFault'     // 카드 인식 실패 (시뮬레이션)
+  | 'cardPaymentReject'   // 카드 결제 거부 (시뮬레이션)
 
 // ===== 핵심 타입 정의 =====
 
