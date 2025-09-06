@@ -3,17 +3,14 @@ import { toast } from "sonner";
 import { useVendingStore } from "@/features/machine/store/vendingStore";
 import { useAdminStore } from "@/features/admin/store/adminStore";
 import type { ProductType } from "@/features/products/types/product.types";
-import type { CardPayment } from "@/features/payment/types/payment.types";
 
 export function useCardPayment() {
   const [isProcessing, setIsProcessing] = useState(false);
-  const [cardInfo, setCardInfo] = useState<Partial<CardPayment> | null>(null);
 
   const {
     products,
     setError,
     setStatus,
-    setCardInfo: setVendingCardInfo,
     dispenseProduct,
     updateProductStock,
   } = useVendingStore();
@@ -53,14 +50,7 @@ export function useCardPayment() {
       }
 
       // 정상 인식
-      const mockCardInfo: Partial<CardPayment> = {
-        cardType: Math.random() > 0.5 ? "credit" : "debit",
-        cardNumber: "**** **** **** " + Math.floor(1000 + Math.random() * 9000),
-        transactionId: "TXN" + Date.now().toString().slice(-6),
-      };
-
-      setCardInfo(mockCardInfo);
-      toast.success(`💳 카드 인식 완료\n${mockCardInfo.cardNumber}`);
+      toast.success("💳 카드 인식 완료");
 
       return true;
     } catch {
@@ -73,8 +63,6 @@ export function useCardPayment() {
   const processCardPayment = async (
     productId: ProductType
   ): Promise<boolean> => {
-    if (!cardInfo) return false;
-
     const product = products[productId];
     if (!product) return false;
 
@@ -111,24 +99,13 @@ export function useCardPayment() {
         return false;
       }
 
-      // 결제 승인 성공
-      const approvalNumber = "AP" + Date.now().toString().slice(-6);
-
-      const completedPayment: CardPayment = {
-        ...(cardInfo as CardPayment),
-        approvalCode: approvalNumber,
-        networkResponseTime: Math.floor(Math.random() * 1000) + 500,
-      };
-
-      setCardInfo(completedPayment);
-
       // 재고 감소
       updateProductStock(productId, product.stock - 1);
 
       // 진행 중 토스트를 성공 토스트로 업데이트
       toast.dismiss(processingToast);
       toast.success("💳 결제 승인 완료! ✅", {
-        description: `${product.name} 결제가 승인되었습니다.\n승인번호: ${approvalNumber}`,
+        description: `${product.name} 결제가 승인되었습니다.`,
         duration: 3000,
       });
 
@@ -173,11 +150,7 @@ export function useCardPayment() {
 
         // sonner 토스트로 최종 완료 정보 표시
         toast.success("🎉 구매 완료!", {
-          description: `${
-            product?.name
-          } (${product?.price.toLocaleString()}원)\n${
-            cardInfo?.cardNumber
-          }\n승인번호: ${cardInfo?.approvalCode}\n\n음료를 가져가세요! 🥤`,
+          description: `${product?.name} (${product?.price.toLocaleString()}원)\n\n음료를 가져가세요! 🥤`,
           duration: 6000,
           style: {
             background: "hsl(var(--primary))",
@@ -262,7 +235,6 @@ export function useCardPayment() {
 
   // 카드 결제 상태 초기화
   const resetCardPayment = () => {
-    setCardInfo(null);
     setIsProcessing(false);
   };
 
@@ -288,15 +260,7 @@ export function useCardPayment() {
       return false;
     }
 
-    // 카드 정보 자동 생성
-    const mockCardInfo: Partial<CardPayment> = {
-      cardType: Math.random() > 0.5 ? "credit" : "debit",
-      cardNumber: "**** **** **** " + Math.floor(1000 + Math.random() * 9000),
-      transactionId: "TXN" + Date.now().toString().slice(-6),
-    };
-
-    setCardInfo(mockCardInfo);
-    setVendingCardInfo(mockCardInfo);
+    // 카드 상태로 전환
     setStatus("card_process");
     
     return true;
@@ -313,6 +277,5 @@ export function useCardPayment() {
     startCardTimeout,
     resetCardPayment,
     isProcessing,
-    cardInfo,
   };
 }

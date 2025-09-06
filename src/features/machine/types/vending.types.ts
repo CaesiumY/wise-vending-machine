@@ -1,6 +1,6 @@
 import type { Nullable, ActionResult } from '@/shared/types/utility.types'
 import type { ProductType, Product } from '@/features/products/types/product.types'
-import type { PaymentMethod, CashDenomination, TransactionStatus, CardPayment } from '@/features/payment/types/payment.types'
+import type { PaymentMethod, CashDenomination, TransactionStatus } from '@/features/payment/types/payment.types'
 
 // 자판기 상태 타입
 export type VendingStatus = 
@@ -50,15 +50,12 @@ export interface Transaction {
   changeBreakdown?: ChangeBreakdown
   timestamp: Date
   status: TransactionStatus
-  cardInfo?: Partial<CardPayment>
   refundReason?: string
   isRefund?: boolean
 }
 
-// 자판기 스토어 타입 (상태 + 액션 통합)
-export interface VendingStore {
-  // ===== 상태 =====
-  
+// 자판기 상태 타입 (state만)
+export interface VendingState {
   // 기본 상태
   products: Record<ProductType, Product>
   currentBalance: number
@@ -70,7 +67,6 @@ export interface VendingStore {
   // 카드 결제 관련
   selectedProductForCard: Nullable<ProductType>
   showPaymentConfirm: boolean
-  cardInfo: Nullable<Partial<CardPayment>>
   
   // 현금 투입 관련
   insertedCash: CashDenomination[]
@@ -84,8 +80,10 @@ export interface VendingStore {
   currentError: Nullable<ErrorType>
   errorMessage: string
   isLoading: boolean
-  
-  // ===== 액션 =====
+}
+
+// 자판기 액션 타입 (actions만)
+export interface VendingActions {
   
   // 상품 관리
   selectProduct: (productId: ProductType) => ActionResult
@@ -99,7 +97,6 @@ export interface VendingStore {
   insertCash: (denomination: CashDenomination) => ActionResult
   
   // 카드 결제
-  setCardInfo: (info: Partial<CardPayment>) => void
   confirmCardPayment: () => Promise<ActionResult>
   cancelCardPayment: () => void
   processCardPayment: (amount: number) => Promise<ActionResult>
@@ -121,3 +118,6 @@ export interface VendingStore {
   calculateChange: (amount: number) => ChangeBreakdown
   updateStock: (productId: ProductType, change: number) => void
 }
+
+// 호환성을 위한 통합 타입
+export type VendingStore = VendingState & VendingActions
