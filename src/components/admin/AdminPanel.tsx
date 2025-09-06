@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { adminSelectors } from "@/stores/adminStore";
 import { ChevronDown, Settings } from "lucide-react";
 import { ExceptionToggles } from "./ExceptionToggles";
+import { CashInventoryDisplay } from "./CashInventoryDisplay";
 
 interface AdminPanelProps {
   className?: string;
@@ -36,6 +37,9 @@ export function AdminPanel({ className }: AdminPanelProps) {
         </CollapsibleTrigger>
 
         <CollapsibleContent className="mt-2 space-y-3">
+          {/* 화폐 재고 표시 */}
+          <CashInventoryDisplay />
+          
           {/* 예외 상황 토글 */}
           <ExceptionToggles activeExceptions={activeExceptions} />
         </CollapsibleContent>
