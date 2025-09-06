@@ -9,4 +9,23 @@ export interface Product {
   stock: number
 }
 
+// 버튼 상태 타입
+export const ButtonState = {
+  OUT_OF_STOCK: 'out-of-stock',
+  SELECTED: 'selected', 
+  INSUFFICIENT_FUNDS: 'insufficient-funds',
+  AVAILABLE: 'available',
+  DISABLED: 'disabled',
+} as const;
+
+export type ButtonStateType = typeof ButtonState[keyof typeof ButtonState];
+
+// 자판기 상태 컨텍스트 타입
+export interface VendingContext {
+  selectedProduct: ProductType | null;
+  paymentMethod: 'cash' | 'card' | null;
+  status: string; // VendingStatus 타입을 import하지 않고 string으로 유지
+  currentBalance: number;
+}
+
 
