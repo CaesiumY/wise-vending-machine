@@ -156,16 +156,10 @@ export interface TaskAdminSettings {
   fakeMoneyDetection: boolean
   
   
-  // 시스템 예외 (9가지)  
-  dispenseFaultMode: boolean
+  // 시스템 예외 (3가지)  
   cardReaderFault: boolean
   cardPaymentReject: boolean
-  networkErrorMode: boolean
-  systemMaintenanceMode: boolean
-  dispenseBlockedMode: boolean
-  temperatureErrorMode: boolean
-  powerUnstableMode: boolean
-  adminInterventionMode: boolean
+  dispenseFaultMode: boolean
 }
 
 // Task-3용 AdminStore 타입 (Zustand 스토어용)
@@ -199,7 +193,6 @@ export interface TaskAdminStore extends TaskAdminSettings {
   
   loadPreset: (preset: PresetName) => void
   saveCustomPreset: (name: string, settings: TaskAdminSettings) => void
-  resetToDefault: () => void
   incrementTransactionCount: () => void
   recordError: (type: ErrorType, message: string) => void
   clearErrorLog: () => void

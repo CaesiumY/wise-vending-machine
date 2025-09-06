@@ -13,7 +13,6 @@ export function useCardPayment() {
     setError,
     setStatus,
     setCardInfo: setVendingCardInfo,
-    showDialog,
     dispenseProduct,
     updateProductStock,
   } = useVendingStore();
@@ -34,7 +33,7 @@ export function useCardPayment() {
   // 2단계: 카드 인식 시뮬레이션
   const recognizeCard = async (): Promise<boolean> => {
     setStatus("card_process");
-    showDialog("success", "카드 처리", "카드를 삽입해주세요...");
+    toast.info("💳 카드를 삽입해주세요...");
 
     try {
       // 카드 인식 처리
@@ -45,7 +44,6 @@ export function useCardPayment() {
           "card_reader_fault",
           "카드를 인식할 수 없습니다. 다시 삽입해주세요."
         );
-        showDialog("error", "카드 인식 실패!", "카드를 다시 삽입해주세요.");
 
         // sonner 토스트로 에러 알림
         toast.error("카드 인식 실패 ❌");
@@ -61,11 +59,7 @@ export function useCardPayment() {
       };
 
       setCardInfo(mockCardInfo);
-      showDialog(
-        "success",
-        "카드 인식 완료",
-        `카드 인식 완료\n${mockCardInfo.cardNumber}`
-      );
+      toast.success(`💳 카드 인식 완료\n${mockCardInfo.cardNumber}`);
 
       return true;
     } catch {
@@ -84,7 +78,6 @@ export function useCardPayment() {
     if (!product) return false;
 
     setIsProcessing(true);
-    showDialog("success", "결제 처리", "결제 처리중...");
 
     // 카드 결제 진행 중 토스트 표시
     const processingToast = toast.loading("💳 카드 결제 진행 중...", {
@@ -105,11 +98,6 @@ export function useCardPayment() {
         setError(
           "card_payment_reject",
           "카드 결제가 거부되었습니다. 다른 결제 방법을 이용해주세요."
-        );
-        showDialog(
-          "error",
-          "결제 거부!",
-          "다른 카드 또는 현금을 이용해주세요."
         );
 
         // sonner 토스트로 결제 거부 알림
@@ -143,11 +131,6 @@ export function useCardPayment() {
         duration: 3000,
       });
 
-      showDialog(
-        "success",
-        "결제 승인 완료!",
-        `결제 승인 완료!\n승인번호: ${approvalNumber}`
-      );
 
       return true;
     } catch (error) {
@@ -172,7 +155,6 @@ export function useCardPayment() {
     const product = products[productId];
 
     try {
-      showDialog("success", "배출 진행", "음료 배출중...");
 
       // 배출 진행 중 토스트 표시
       const dispenseToast = toast.loading("🥤 음료 배출 중...", {
@@ -187,12 +169,6 @@ export function useCardPayment() {
         // 배출 진행 토스트 닫기
         toast.dismiss(dispenseToast);
 
-        // 기존 다이얼로그도 유지
-        showDialog(
-          "success",
-          "구매 완료",
-          "음료가 배출되었습니다.\n감사합니다!"
-        );
 
         // sonner 토스트로 최종 완료 정보 표시
         toast.success("🎉 구매 완료!", {
@@ -248,7 +224,6 @@ export function useCardPayment() {
     const product = products[productId];
 
     setStatus("card_process");
-    showDialog("error", "결제 취소", "결제를 취소합니다...");
 
     // 결제 취소 진행 토스트
     const cancelToast = toast.loading("↩️ 결제 취소 처리 중...", {
@@ -272,7 +247,6 @@ export function useCardPayment() {
       });
 
       setError("dispense_failure", "배출 실패로 인해 결제를 취소했습니다.");
-      showDialog("error", "배출 실패!", "결제가 취소되었습니다.");
     } catch {
       toast.dismiss(cancelToast);
       toast.error("🚫 취소 처리 오류", {

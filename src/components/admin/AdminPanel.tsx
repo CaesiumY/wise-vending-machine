@@ -16,8 +16,7 @@ interface AdminPanelProps {
 }
 
 export function AdminPanel({ className }: AdminPanelProps) {
-  const { isPanelOpen, resetToDefault, errorCount, lastError } =
-    useAdminStore();
+  const { isPanelOpen, errorCount, lastError } = useAdminStore();
 
   // const { triggerException } = useExceptionHandler(); // 현재 미사용
 
@@ -66,27 +65,6 @@ export function AdminPanel({ className }: AdminPanelProps) {
           {/* 예외 상황 토글 */}
           <ExceptionToggles activeExceptions={activeExceptions} />
 
-          {/* 설정 초기화 */}
-          <Card className="p-3">
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex-1 text-xs"
-                onClick={() => {
-                  resetToDefault();
-                  useAdminStore
-                    .getState()
-                    .recordError(
-                      "change_shortage",
-                      "설정이 초기화되었습니다"
-                    );
-                }}
-              >
-                설정 초기화
-              </Button>
-            </div>
-          </Card>
 
           {/* 시스템 상태 표시 */}
           {(errorCount > 0 || lastError) && (

@@ -46,14 +46,10 @@ const initialState = {
   transactionHistory: [],
 
   // UI 상태
-  dialog: { isOpen: false, type: "info" as const, title: "", message: "" },
   currentError: null,
   errorMessage: "",
   isLoading: false,
 
-  // 타이머 관련
-  timeoutId: null,
-  operationStartTime: null,
 };
 
 export const useVendingStore = create<VendingStore>()(
@@ -133,8 +129,6 @@ export const useVendingStore = create<VendingStore>()(
       },
 
       reset: () => {
-        // 타이머 정리
-        get().clearTimeout();
         set({
           ...initialState,
           selectedProductForCard: null,
@@ -159,11 +153,7 @@ export const useVendingStore = create<VendingStore>()(
 
         // 현금이 투입된 상태라면 반환 처리
         if (currentBalance > 0) {
-          get().showDialog(
-            "info",
-            "현금 반환",
-            `${currentBalance}원이 반환되었습니다.`
-          );
+          toast.info(`${currentBalance}원이 반환되었습니다.`);
         }
 
         set({
@@ -243,7 +233,7 @@ export const useVendingStore = create<VendingStore>()(
             amount: denomination,
             balance: newBalance,
           });
-          get().showDialog("success", "투입 완료", successMessage);
+          toast.success(successMessage);
 
 
           return { success: true };
@@ -417,12 +407,7 @@ export const useVendingStore = create<VendingStore>()(
           products: updatedProducts,
         });
 
-        // 거래 완료 처리
-        get().showDialog(
-          "success",
-          "배출 완료",
-          `${products[selectedProduct].name}이(가) 배출되었습니다.`
-        );
+        // 거래 완료 처리 - 이미 아래에서 toast로 처리함
 
         // 모든 결제 방식에서 배출 완료 토스트 표시
         toast.success(
@@ -447,11 +432,7 @@ export const useVendingStore = create<VendingStore>()(
               selectedProduct: null,
             });
 
-            get().showDialog(
-              "info",
-              "연속 구매 가능",
-              `잔액 ${currentBalance}원이 남아있습니다. 추가 구매가 가능합니다.`
-            );
+            toast.info(`잔액 ${currentBalance}원이 남아있습니다. 추가 구매가 가능합니다.`);
             return true;
           } else {
             // 잔액이 0원인 경우 → 대기 상태로 전환
@@ -555,34 +536,13 @@ export const useVendingStore = create<VendingStore>()(
           errorMessage: errorMessage,
         });
 
-        get().showDialog("error", "오류 발생", errorMessage);
+        toast.error(errorMessage);
       },
 
       clearError: () => set({ currentError: null, errorMessage: "" }),
 
-      showDialog: (type, title, message, data) =>
-        set({
-          dialog: { isOpen: true, type, title, message, data },
-        }),
 
-      hideDialog: () =>
-        set({
-          dialog: { isOpen: false, type: "info", title: "", message: "" },
-        }),
 
-      shutdown: () => set({ status: "maintenance", isOperational: false }),
-
-      startTimeout: () => {
-        // 타임아웃 기능 비활성화
-      },
-
-      clearTimeout: () => {
-        const { timeoutId } = get();
-        if (timeoutId) {
-          window.clearTimeout(timeoutId);
-          set({ timeoutId: null, operationStartTime: null });
-        }
-      },
 
       // ===== 유틸리티 메서드 =====
 

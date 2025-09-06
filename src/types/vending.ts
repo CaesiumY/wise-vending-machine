@@ -90,16 +90,12 @@ export interface VendingMachineState {
   transactionHistory: Transaction[]
   
   // UI 상태
-  dialog: DialogState
   isLoading: boolean
   
   // 오류 상태
   currentError: Nullable<ErrorType>
   errorMessage: string
   
-  // 타이머 관련
-  timeoutId: Nullable<number>
-  operationStartTime: Nullable<Date>
 }
 
 // 자판기 액션 인터페이스
@@ -139,17 +135,8 @@ export interface VendingActions {
   setError: (errorType: ErrorType, message?: string) => void
   clearError: () => void
   
-  // 대화상자 관리
-  showDialog: (type: DialogType, title: string, message: string, data?: unknown) => void
-  hideDialog: () => void
-  
   // 시스템 초기화
   reset: () => void
-  shutdown: () => void
-  
-  // 타이머 관리
-  startTimeout: (duration: number, callback: () => void) => void
-  clearTimeout: () => void
 }
 
 // Zustand 스토어 통합 타입

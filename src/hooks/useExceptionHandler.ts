@@ -16,17 +16,10 @@ interface ExceptionResult {
   recovery:
     | "return_money"
     | "restore_payment"
-    | "maintenance_mode"
-    | "safe_mode"
-    | "retry_insertion"
-    | "select_other"
     | "use_cash"
     | "try_other_payment"
     | "request_exact_amount"
-    | "return_excess"
     | "auto_return"
-    | "limited_service"
-    | "service_unavailable"
     | "default";
   shouldBlock: boolean;
 }
@@ -51,10 +44,7 @@ export function useExceptionHandler() {
         });
       }
 
-      // (삭제) 위조화폐 감지 시나리오 제거
-
-
-      // 5. 품절 상황
+      // 2. 품절 상황
       if (operation === "select_product" && context?.productType) {
         const vendingState = useVendingStore.getState();
         const product =
@@ -63,13 +53,13 @@ export function useExceptionHandler() {
           exceptions.push({
             type: "out_of_stock",
             message: `${context.productType}가 품절되었습니다. 다른 음료를 선택해주세요.`,
-            recovery: "select_other",
+            recovery: "default",
             shouldBlock: true,
           });
         }
       }
 
-      // 6. 배출 실패
+      // 3. 배출 실패
       if (adminState.dispenseFaultMode && operation === "dispense") {
         exceptions.push({
           type: "dispense_failure",
@@ -79,12 +69,12 @@ export function useExceptionHandler() {
         });
       }
 
-      // 7-8. 카드 관련 오류
+      // 4-5. 카드 관련 오류
       if (operation === "card_recognition" && adminState.cardReaderFault) {
         exceptions.push({
           type: "card_reader_fault",
           message: "카드를 인식할 수 없습니다. 카드를 다시 삽입해주세요.",
-          recovery: "retry_insertion",
+          recovery: "try_other_payment",
           shouldBlock: true,
         });
       }
@@ -98,18 +88,6 @@ export function useExceptionHandler() {
         });
       }
 
-      // (삭제) 네트워크 오류 시나리오 제거
-
-      // (삭제) 시스템 점검 시나리오 제거
-
-      // (삭제) 최대 투입금액 초과 예외 시나리오 제거 (별도 검증 경로 유지)
-
-
-      // (삭제) 배출구 막힘 시나리오 제거
-
-      // (삭제) 온도 이상 시나리오 제거
-
-      // (삭제) 전원 불안정 시나리오 제거
 
       return exceptions;
     },
@@ -119,7 +97,7 @@ export function useExceptionHandler() {
   // 예외 처리 실행
   const handleException = useCallback(
     (exception: ExceptionResult) => {
-      const { setError, setStatus, reset, currentBalance } = vendingStore;
+      const { setError, setStatus, reset } = vendingStore;
 
       // 오류 설정 및 다이얼로그 표시
       setError(exception.type, exception.message);
@@ -130,74 +108,24 @@ export function useExceptionHandler() {
       // 복구 로직 실행
       switch (exception.recovery) {
         case "return_money":
-          // 투입된 금액 반환 로직
-          if (currentBalance > 0) {
-            vendingStore.showDialog(
-              "info",
-              "반환 완료",
-              `${currentBalance}원이 반환되었습니다.`
-            );
-          }
-          reset();
+        case "auto_return":
+          // 투입된 금액 반환 및 취소 처리
+          vendingStore.cancelTransaction();
           break;
 
         case "restore_payment":
           // 결제 복구 및 재고 복원
           setStatus("product_select");
-          vendingStore.showDialog(
-            "info",
-            "결제 복구",
-            "결제를 취소하고 금액을 복구했습니다."
-          );
-          break;
-
-        case "maintenance_mode":
-        case "safe_mode":
-          setStatus("maintenance");
-          vendingStore.shutdown();
           break;
 
         case "use_cash":
-          // 카드 결제 비활성화, 현금 결제로 유도
-          setStatus("idle");
-          vendingStore.showDialog(
-            "info",
-            "결제 방법 안내",
-            "현금 결제를 이용해주세요."
-          );
-          break;
-
         case "try_other_payment":
-          // 다른 카드 사용 안내
-          setStatus("product_select");
+          // 다른 결제 방법 안내
+          setStatus("idle");
           break;
 
         case "request_exact_amount":
-          // 정확한 금액 투입 안내
-          vendingStore.showDialog(
-            "info",
-            "정확한 금액",
-            "정확한 금액을 투입해주세요."
-          );
-          break;
-
-        case "auto_return":
-          // 자동 반환 처리
-          vendingStore.cancelTransaction();
-          break;
-
-        case "limited_service":
-          // 서비스 제한 안내
-          vendingStore.showDialog(
-            "error",
-            "서비스 제한",
-            "일부 기능이 제한될 수 있습니다."
-          );
-          break;
-
-        case "service_unavailable":
-          // 서비스 중단
-          setStatus("maintenance");
+          // 정확한 금액 투입을 위해 현재 상태 유지
           break;
 
         default:

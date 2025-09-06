@@ -1,6 +1,7 @@
 import { useVendingStore } from "@/stores/vendingStore";
 import { useAdminStore } from "@/stores/adminStore";
 import { calculateOptimalChange } from "@/utils/changeCalculator";
+import { toast } from "sonner";
 import type { CashDenomination } from "@/types";
 
 /**
@@ -12,7 +13,6 @@ export function useCashPayment() {
     products,
     insertCash: storeInsertCash,
     setError,
-    showDialog,
     reset,
   } = useVendingStore();
 
@@ -33,11 +33,7 @@ export function useCashPayment() {
       const result = storeInsertCash(amount);
       if (result.success) {
         const newBalance = currentBalance + amount;
-        showDialog(
-          "success",
-          "투입 완료",
-          `${amount}원이 투입되었습니다.\n현재 잔액: ${newBalance}원`
-        );
+        toast.success(`${amount}원이 투입되었습니다. 현재 잔액: ${newBalance}원`);
         return true;
       }
 
@@ -73,10 +69,10 @@ export function useCashPayment() {
   };
 
   /**
-   * 4단계: 타임아웃 처리 (제거됨)
+   * 4단계: 타임아웃 처리
    */
   const startPaymentTimeout = () => {
-    // 타임아웃 기능 제거됨
+    // 타임아웃 기능
     return null;
   };
 
@@ -103,11 +99,7 @@ export function useCashPayment() {
             "change_shortage",
             "거스름돈이 부족합니다. 정확한 금액을 투입해주세요."
           );
-          showDialog(
-            "error",
-            `거스름돈 부족!`,
-            `${changeResult.shortage ? "일부" : "전액"} 반환할 수 없습니다.`
-          );
+          toast.error(`거스름돈 부족! ${changeResult.shortage ? "일부" : "전액"} 반환할 수 없습니다.`);
           return false;
         }
       }
@@ -115,7 +107,7 @@ export function useCashPayment() {
       // 상태 초기화
       reset();
 
-      showDialog("success", "반환 완료", `${returnAmount}원을 반환했습니다.`);
+      toast.success(`반환 완료: ${returnAmount}원을 반환했습니다.`);
       return true;
     } catch {
       setError("change_shortage", "반환 처리 중 오류가 발생했습니다.");
@@ -159,7 +151,7 @@ export function useAdmin() {
         isNormal: activeExceptions.length === 0,
         activeCount: activeExceptions.length,
         criticalErrors: activeExceptions.filter((key) =>
-          ["dispenseFaultMode", "systemMaintenanceMode"].includes(key)
+          ["dispenseFaultMode"].includes(key)
         ).length,
       };
     },

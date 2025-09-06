@@ -27,14 +27,7 @@ export const EXCEPTION_TOGGLES: ExceptionToggleItem[] = [
     severity: 'high',
   },
   
-  // 시스템 예외 (9가지)
-  {
-    key: 'dispenseFaultMode',
-    label: '배출 실패',
-    description: '음료 배출 과정에서 실패가 발생합니다',
-    category: 'system',
-    severity: 'critical',
-  },
+  // 시스템 예외 (3가지)
   {
     key: 'cardReaderFault',
     label: '카드 인식 실패',
@@ -50,44 +43,9 @@ export const EXCEPTION_TOGGLES: ExceptionToggleItem[] = [
     severity: 'medium',
   },
   {
-    key: 'networkErrorMode',
-    label: '네트워크 오류',
-    description: '카드 결제시 네트워크 연결 오류가 발생합니다',
-    category: 'system',
-    severity: 'high',
-  },
-  {
-    key: 'systemMaintenanceMode',
-    label: '시스템 점검',
-    description: '전체 시스템을 점검 모드로 전환합니다',
-    category: 'system',
-    severity: 'critical',
-  },
-  {
-    key: 'dispenseBlockedMode',
-    label: '배출구 막힘',
-    description: '음료 배출구가 막혀있는 상황을 시뮬레이션합니다',
-    category: 'system',
-    severity: 'critical',
-  },
-  {
-    key: 'temperatureErrorMode',
-    label: '온도 이상',
-    description: '자판기 내부 온도 이상으로 서비스가 제한됩니다',
-    category: 'system',
-    severity: 'medium',
-  },
-  {
-    key: 'powerUnstableMode',
-    label: '전원 불안정',
-    description: '전력 공급이 불안정한 상황을 시뮬레이션합니다',
-    category: 'system',
-    severity: 'high',
-  },
-  {
-    key: 'adminInterventionMode',
-    label: '관리자 개입 필요',
-    description: '관리자의 직접적인 개입이 필요한 상황입니다',
+    key: 'dispenseFaultMode',
+    label: '배출 실패',
+    description: '음료 배출 과정에서 실패가 발생합니다',
     category: 'system',
     severity: 'critical',
   },

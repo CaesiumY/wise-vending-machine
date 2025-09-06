@@ -14,16 +14,10 @@ const defaultSettings: TaskAdminSettings = {
   changeShortageMode: false,
   fakeMoneyDetection: false,
 
-  // 시스템 예외 (9가지)
-  dispenseFaultMode: false,
+  // 시스템 예외 (3가지)
   cardReaderFault: false,
   cardPaymentReject: false,
-  networkErrorMode: false, // (미사용)
-  systemMaintenanceMode: false, // (미사용)
-  dispenseBlockedMode: false, // (미사용)
-  temperatureErrorMode: false, // (미사용)
-  powerUnstableMode: false, // (미사용)
-  adminInterventionMode: false, // (미사용)
+  dispenseFaultMode: false,
 };
 
 // 기본 화폐 보유량
@@ -35,7 +29,6 @@ const defaultCashInventory = {
   10000: 5,
 };
 
-// 시나리오 프리셋 제거됨
 
 export const useAdminStore = create<TaskAdminStore>((set, get) => ({
   // 초기 상태
@@ -70,25 +63,11 @@ export const useAdminStore = create<TaskAdminStore>((set, get) => ({
   // ===== 예외 설정 =====
 
   toggleException: (exception: keyof TaskAdminSettings) => {
-    set((state: TaskAdminStore) => {
-      const newValue = !state[exception];
-
-      // 시스템 점검 모드가 활성화되면 다른 모든 예외 비활성화
-      if (exception === "systemMaintenanceMode" && newValue) {
-        return {
-          ...state,
-          [exception]: newValue,
-          activePreset: null, // 프리셋 해제
-          // 다른 예외들은 유지하되, 점검 모드가 우선
-        };
-      }
-
-      return {
-        ...state,
-        [exception]: newValue,
-        activePreset: null, // 수동 조정시 프리셋 해제
-      };
-    });
+    set((state: TaskAdminStore) => ({
+      ...state,
+      [exception]: !state[exception],
+      activePreset: null, // 수동 조정시 프리셋 해제
+    }));
   },
 
   // 화폐 재고 업데이트 (전체 재고 교체)
@@ -125,14 +104,6 @@ export const useAdminStore = create<TaskAdminStore>((set, get) => ({
     // 여기서는 시뮬레이션으로만 처리
   },
 
-  resetToDefault: () => {
-    set({
-      ...defaultSettings,
-      cashInventory: defaultCashInventory,
-      activePreset: "normal",
-      // UI 상태와 모니터링 상태는 유지
-    });
-  },
 
   // ===== 모니터링 =====
 
@@ -180,9 +151,7 @@ export const useAdminStore = create<TaskAdminStore>((set, get) => ({
   },
 
   simulateNetworkDelay: async () => {
-    // 네트워크 지연 시뮬레이션 비활성화
-    set({ networkErrorMode: true });
-    set({ networkErrorMode: false });
+    // 네트워크 지연 시뮬레이션
   },
 }));
 
@@ -210,12 +179,8 @@ export const adminSelectors = {
 
   // 시스템 상태 요약
   getSystemStatus: () => {
-    const state = useAdminStore.getState();
     const activeExceptions = adminSelectors.getActiveExceptions();
 
-    if (state.systemMaintenanceMode) {
-      return { status: "maintenance", severity: "critical", count: 0 };
-    }
 
     if (activeExceptions.length === 0) {
       return { status: "normal", severity: "none", count: 0 };
@@ -253,4 +218,3 @@ export const adminSelectors = {
 };
 
 // 프리셋 목록 내보내기
-// 프리셋 제거됨

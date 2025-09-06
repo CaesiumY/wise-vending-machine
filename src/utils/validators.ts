@@ -371,16 +371,6 @@ export function validatePurchase(
   }
 
   // 4. 카드 결제 추가 검증
-  if (paymentMethod === "card") {
-    const { networkErrorMode } = useAdminStore.getState();
-    if (networkErrorMode && Math.random() < 0.3) {
-      return {
-        isValid: false,
-        reason: "네트워크 오류가 발생했습니다. 현금 결제를 이용해주세요.",
-        canProceed: false,
-      };
-    }
-  }
 
   return {
     isValid: true,
