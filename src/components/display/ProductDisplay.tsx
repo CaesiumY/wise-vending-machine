@@ -50,21 +50,15 @@ export function ProductDisplay({ className }: ProductDisplayProps) {
   // 버튼 스타일 반환 함수
   const getButtonStyle = (state: string) => {
     const baseClasses =
-      "h-32 w-full flex flex-col items-center justify-center gap-2";
-
-    switch (state) {
-      case "out-of-stock":
-        return cn(baseClasses, "opacity-50 cursor-not-allowed");
-      case "insufficient-funds":
-        return cn(baseClasses, "opacity-75 cursor-not-allowed");
-      case "selected":
-        return cn(baseClasses, "ring-2");
-      case "available":
-        return cn(baseClasses);
-      case "disabled":
-      default:
-        return cn(baseClasses, "cursor-not-allowed");
+      "h-28 w-full flex flex-col items-center justify-center gap-2";
+    if (
+      state === "disabled" ||
+      state === "out-of-stock" ||
+      state === "insufficient-funds"
+    ) {
+      return cn(baseClasses);
     }
+    return cn(baseClasses);
   };
 
   // 음료 선택 핸들러
@@ -84,7 +78,7 @@ export function ProductDisplay({ className }: ProductDisplayProps) {
   };
 
   return (
-    <div className={cn("grid grid-cols-1 sm:grid-cols-3 gap-4", className)}>
+    <div className={cn("grid grid-cols-3 gap-3", className)}>
       {Object.entries(products).map(([productId, product]) => {
         const buttonState = getButtonState(productId as ProductType);
         const adminStock = stockLevels[productId as ProductType];
@@ -124,9 +118,7 @@ export function ProductDisplay({ className }: ProductDisplayProps) {
                   </Badge>
                 )}
                 {buttonState === "selected" && (
-                  <Badge variant="default" className="text-xs">
-                    선택됨
-                  </Badge>
+                  <Badge className="text-xs">선택됨</Badge>
                 )}
                 {/* 재고 표시 (재고가 적을 때만) */}
                 {adminStock > 0 &&

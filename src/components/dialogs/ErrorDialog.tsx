@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertTriangle, X, RefreshCw } from "lucide-react";
+import { X, RefreshCw } from "lucide-react";
 
 interface ErrorDialogProps {
   open: boolean;
@@ -21,54 +21,7 @@ interface ErrorDialogProps {
 }
 
 const ERROR_CONFIGS = {
-  insufficient_funds: {
-    icon: "",
-    color: "text-orange-600",
-    bgColor: "bg-orange-50",
-    borderColor: "border-orange-200",
-  },
-  out_of_stock: {
-    icon: "",
-    color: "text-red-600",
-    bgColor: "bg-red-50",
-    borderColor: "border-red-200",
-  },
-  change_shortage: {
-    icon: "",
-    color: "text-yellow-600",
-    bgColor: "bg-yellow-50",
-    borderColor: "border-yellow-200",
-  },
-  fake_money: {
-    icon: "🚫",
-    color: "text-red-600",
-    bgColor: "bg-red-50",
-    borderColor: "border-red-200",
-  },
-  card_error: {
-    icon: "",
-    color: "text-purple-600",
-    bgColor: "bg-purple-50",
-    borderColor: "border-purple-200",
-  },
-  network_error: {
-    icon: "",
-    color: "text-blue-600",
-    bgColor: "bg-blue-50",
-    borderColor: "border-blue-200",
-  },
-  system_maintenance: {
-    icon: "",
-    color: "text-gray-600",
-    bgColor: "bg-gray-50",
-    borderColor: "border-gray-200",
-  },
-  default: {
-    icon: "",
-    color: "text-red-600",
-    bgColor: "bg-red-50",
-    borderColor: "border-red-200",
-  },
+  default: {},
 };
 
 export function ErrorDialog({
@@ -80,9 +33,7 @@ export function ErrorDialog({
   onRetry,
   canRetry = false,
 }: ErrorDialogProps) {
-  const config =
-    ERROR_CONFIGS[errorType as keyof typeof ERROR_CONFIGS] ||
-    ERROR_CONFIGS.default;
+  const config = ERROR_CONFIGS.default;
 
   const getActionMessage = () => {
     switch (errorType) {
@@ -107,20 +58,17 @@ export function ErrorDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={`sm:max-w-md ${config.borderColor}`}>
+      <DialogContent className={`sm:max-w-md`}>
         <DialogHeader className="text-center">
-          <DialogTitle className={`text-lg ${config.color}`}>
-            {title}
-          </DialogTitle>
+          <DialogTitle className={`text-lg`}>{title}</DialogTitle>
           <DialogDescription className="text-center pt-2">
             {message}
           </DialogDescription>
         </DialogHeader>
 
         <div className="py-4">
-          <Alert className={`${config.borderColor} ${config.bgColor}`}>
-            <AlertTriangle className={`h-4 w-4 ${config.color}`} />
-            <AlertDescription className={config.color}>
+          <Alert>
+            <AlertDescription>
               <strong>해결 방법:</strong>
               <br />
               {getActionMessage()}

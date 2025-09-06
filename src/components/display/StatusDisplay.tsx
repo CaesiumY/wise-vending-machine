@@ -24,7 +24,7 @@ export function StatusDisplay({ className }: StatusDisplayProps) {
     ? products[selectedProduct]
     : null;
 
-  // 상태별 색상 반환
+  // 상태별 색상 반환 (중립 톤, 상태 강조만 배지로)
   const getStatusColor = (_status: VendingStatus) => "";
 
   // 상태별 메시지 반환
@@ -64,7 +64,7 @@ export function StatusDisplay({ className }: StatusDisplayProps) {
         </div>
 
         {/* 투입 금액 표시 */}
-        <div className="flex justify-between items-center rounded p-3">
+        <div className="flex justify-between items-center rounded-md p-3 border border-border bg-background">
           <span>투입금액</span>
           <span className="text-2xl font-bold">
             {currentBalance.toLocaleString()}원
@@ -73,7 +73,7 @@ export function StatusDisplay({ className }: StatusDisplayProps) {
 
         {/* 선택된 음료 정보 */}
         {selectedProductInfo && (
-          <div className="flex justify-between items-center rounded p-3">
+          <div className="flex justify-between items-center rounded-md p-3 border border-border bg-background">
             <span>선택한 음료</span>
             <div className="text-right">
               <div className="text-lg font-semibold">
@@ -88,7 +88,7 @@ export function StatusDisplay({ className }: StatusDisplayProps) {
         {paymentMethod === "cash" &&
           selectedProductInfo &&
           currentBalance >= selectedProductInfo.price && (
-            <div className="flex justify-between items-center rounded p-3">
+            <div className="flex justify-between items-center rounded-md p-3 border border-border bg-background">
               <span>거스름돈</span>
               <div className="text-right">
                 <div className="text-lg font-semibold">
@@ -119,7 +119,7 @@ export function StatusDisplay({ className }: StatusDisplayProps) {
 
         {/* 에러 상태 표시 */}
         {currentError && (
-          <div className="rounded p-3 border">
+          <div className="rounded-md p-3 border border-destructive/30 bg-destructive/5">
             <div className="flex items-center gap-2">
               <span className="text-sm">오류 발생</span>
             </div>
@@ -128,7 +128,7 @@ export function StatusDisplay({ className }: StatusDisplayProps) {
 
         {/* 진행 상태 표시 (배출 중일 때) */}
         {(status === "dispensing" || status === "completing") && (
-          <div className="rounded p-3">
+          <div className="rounded-md p-3 border border-border bg-background">
             <div className="flex items-center gap-3">
               <span className="text-sm">
                 {status === "dispensing"

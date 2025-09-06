@@ -35,7 +35,7 @@ export function DispenseArea({ className }: DispenseAreaProps) {
           <div className="text-sm mb-2">음료 배출구</div>
           <div
             className={cn(
-              "h-20 rounded-lg border-2",
+              "h-20 rounded-md border",
               "flex items-center justify-center",
               isDispensing && "",
               isCompleting && ""
@@ -75,7 +75,7 @@ export function DispenseArea({ className }: DispenseAreaProps) {
           <div className="text-sm mb-2">거스름돈 반환구</div>
           <div
             className={cn(
-              "h-20 rounded-lg border-2",
+              "h-20 rounded-md border",
               "flex items-center justify-center",
               "",
               shouldShowChange && ""

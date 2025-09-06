@@ -100,10 +100,10 @@ export function CashPanel({ className }: CashPanelProps) {
         </div>
 
         {/* 현재 잔액 표시 */}
-        <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+        <div className="rounded-md p-3 border">
           <div className="flex justify-between items-center">
-            <span className="text-green-700 font-medium">현재 투입금액</span>
-            <Badge className="bg-green-500 text-white text-lg px-3 py-1">
+            <span className="font-medium">현재 투입금액</span>
+            <Badge className="text-lg px-3 py-1">
               {currentBalance.toLocaleString()}원
             </Badge>
           </div>

@@ -45,7 +45,7 @@ export function NotificationDialog({
           </DialogDescription>
         </DialogHeader>
 
-        {/* 미니멀 UI: 자동 닫힘 프로그레스 바 제거 */}
+        {/* 기본 디자인 유지: 추가 장식 제거 */}
       </DialogContent>
     </Dialog>
   );

@@ -31,10 +31,7 @@ export function PaymentSelector({ className }: PaymentSelectorProps) {
         {/* 현금 결제 버튼 */}
         <Button
           variant={paymentMethod === "cash" ? "default" : "outline"}
-          className={cn(
-            "h-20 flex flex-col items-center gap-2",
-            paymentMethod === "cash" && "ring-2"
-          )}
+          className={cn("h-16 flex flex-col items-center gap-1")}
           onClick={() => handlePaymentSelect("cash")}
           disabled={isSelectionDisabled}
         >
@@ -47,10 +44,7 @@ export function PaymentSelector({ className }: PaymentSelectorProps) {
         {/* 카드 결제 버튼 */}
         <Button
           variant={paymentMethod === "card" ? "default" : "outline"}
-          className={cn(
-            "h-20 flex flex-col items-center gap-2",
-            paymentMethod === "card" && "ring-2"
-          )}
+          className={cn("h-16 flex flex-col items-center gap-1")}
           onClick={() => handlePaymentSelect("card")}
           disabled={isSelectionDisabled}
         >

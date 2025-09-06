@@ -61,7 +61,7 @@ export function DispenseDialog({
         {/* 배출 성공 시 상세 정보 */}
         {isSuccess && product && (
           <div className="space-y-3 py-4">
-            <div className="rounded-lg p-4">
+            <div className="rounded-md p-4 border">
               <div className="flex justify-between items-center mb-2">
                 <span className="font-medium">구매한 음료</span>
                 <Badge>{product.name}</Badge>
@@ -72,7 +72,7 @@ export function DispenseDialog({
             </div>
 
             {changeAmount > 0 && (
-              <div className="rounded-lg p-4">
+              <div className="rounded-md p-4 border">
                 <div className="flex justify-between items-center">
                   <span className="font-medium">거스름돈</span>
                   <Badge className="text-lg">
@@ -90,7 +90,7 @@ export function DispenseDialog({
         {/* 배출 실패 시 복구 안내 */}
         {!isSuccess && (
           <div className="py-4">
-            <div className="rounded-lg p-4">
+            <div className="rounded-md p-4 border">
               <h4 className="font-medium mb-2">복구 안내</h4>
               <ul className="text-sm space-y-1">
                 <li>• 투입하신 금액은 자동으로 반환됩니다</li>

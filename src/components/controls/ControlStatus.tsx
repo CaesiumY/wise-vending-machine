@@ -135,7 +135,7 @@ export function ControlStatus({ className }: ControlStatusProps) {
           status === "completing" ||
           status === "card_process") && (
           <div className="flex items-center justify-center gap-2 py-1">
-            <span className="text-xs text-blue-600">
+            <span className="text-xs">
               {status === "dispensing"
                 ? "배출 중"
                 : status === "completing"
