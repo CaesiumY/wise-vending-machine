@@ -1,13 +1,13 @@
 import { create } from "zustand";
 import type {
-  TaskAdminStore,
-  TaskAdminSettings,
+  AdminStore,
+  AdminSettings,
 } from "@/features/admin/types/admin.types";
 import type { ErrorType } from "@/features/machine/types/vending.types";
 import type { CashDenomination } from "@/features/payment/types/payment.types";
 
 // 기본 관리자 설정 (모든 예외 비활성화)
-const defaultSettings: TaskAdminSettings = {
+const defaultSettings: AdminSettings = {
   // 시스템 예외 (3가지)
   cardReaderFault: false,
   cardPaymentReject: false,
@@ -24,7 +24,7 @@ const defaultCashInventory = {
 };
 
 
-export const useAdminStore = create<TaskAdminStore>((set, get) => ({
+export const useAdminStore = create<AdminStore>((set, get) => ({
   // 초기 상태
   ...defaultSettings,
 
@@ -40,8 +40,8 @@ export const useAdminStore = create<TaskAdminStore>((set, get) => ({
 
   // ===== 예외 설정 =====
 
-  toggleException: (exception: keyof TaskAdminSettings) => {
-    set((state: TaskAdminStore) => ({
+  toggleException: (exception: keyof AdminSettings) => {
+    set((state: AdminStore) => ({
       ...state,
       [exception]: !state[exception],
       activePreset: null, // 수동 조정시 프리셋 해제
@@ -77,7 +77,7 @@ export const useAdminStore = create<TaskAdminStore>((set, get) => ({
     return;
   },
 
-  saveCustomPreset: (_name: string, _settings: TaskAdminSettings) => {
+  saveCustomPreset: (_name: string, _settings: AdminSettings) => {
     // 실제로는 서버나 로컬스토리지에 저장
     // 여기서는 시뮬레이션으로만 처리
   },
@@ -86,7 +86,7 @@ export const useAdminStore = create<TaskAdminStore>((set, get) => ({
   // ===== 모니터링 =====
 
   incrementTransactionCount: () => {
-    set((state: TaskAdminStore) => ({
+    set((state: AdminStore) => ({
       totalTransactions: state.totalTransactions + 1,
     }));
   },
@@ -96,7 +96,7 @@ export const useAdminStore = create<TaskAdminStore>((set, get) => ({
 
   triggerException: (type: ErrorType) => {
     // 해당 예외를 즉시 발생시키는 로직
-    const exceptionMap: Partial<Record<ErrorType, keyof TaskAdminSettings>> = {
+    const exceptionMap: Partial<Record<ErrorType, keyof AdminSettings>> = {
       dispense_failure: "dispenseFaultMode",
       card_reader_fault: "cardReaderFault",
     };

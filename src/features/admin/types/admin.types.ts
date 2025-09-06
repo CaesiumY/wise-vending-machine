@@ -1,16 +1,16 @@
 import type { CashDenomination } from '@/features/payment/types/payment.types'
 import type { ErrorType } from '@/features/machine/types/vending.types'
 
-// Task-3에서 사용하는 간소화된 AdminSettings (3가지 예외 시뮬레이터용)
-export interface TaskAdminSettings {
+// 간소화된 AdminSettings (3가지 예외 시뮬레이터용)
+export interface AdminSettings {
   // 시스템 예외 (3가지)  
   cardReaderFault: boolean
   cardPaymentReject: boolean
   dispenseFaultMode: boolean
 }
 
-// Task-3용 AdminStore 타입 (Zustand 스토어용)
-export interface TaskAdminStore extends TaskAdminSettings {
+// AdminStore 타입 (Zustand 스토어용)
+export interface AdminStore extends AdminSettings {
   // 모니터링 상태
   totalTransactions: number
   
@@ -18,7 +18,7 @@ export interface TaskAdminStore extends TaskAdminSettings {
   cashInventory: Record<CashDenomination, number>
 
   // 액션들
-  toggleException: (exception: keyof TaskAdminSettings) => void
+  toggleException: (exception: keyof AdminSettings) => void
   
   // 화폐 재고 관리
   updateCashInventory: (newInventory: Record<CashDenomination, number>) => void
@@ -26,7 +26,7 @@ export interface TaskAdminStore extends TaskAdminSettings {
   resetCashInventory: () => void
   
   loadPreset: () => void
-  saveCustomPreset: (name: string, settings: TaskAdminSettings) => void
+  saveCustomPreset: (name: string, settings: AdminSettings) => void
   incrementTransactionCount: () => void
   triggerException: (type: ErrorType) => void
   simulateNetworkDelay: (delayMs: number) => Promise<void>

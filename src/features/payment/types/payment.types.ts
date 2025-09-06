@@ -69,7 +69,7 @@ export interface PaymentValidation {
   networkTimeout: number
 }
 
-// 결제 검증 결과 (Task 3 추가)
+// 결제 검증 결과
 export interface PaymentValidationResult {
   isValid: boolean
   canProceed: boolean

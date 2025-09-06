@@ -37,7 +37,7 @@ export interface ChangeBreakdown {
   breakdown: { [K in CashDenomination]: number }
 }
 
-// 거스름돈 계산 결과 (Task 4) - ChangeBreakdown과 동일
+// 거스름돈 계산 결과 - ChangeBreakdown과 동일
 export type ChangeCalculationResult = ChangeBreakdown
 
 // 향상된 거래 정보

@@ -4,7 +4,7 @@ import { Switch } from "@/shared/components/ui/switch";
 import { EXCEPTION_TOGGLES } from "@/features/admin/constants/adminConfig";
 import { useAdminStore } from "@/features/admin/store/adminStore";
 import type { ErrorType } from "@/features/machine/types/vending.types";
-import type { TaskAdminSettings } from "@/features/admin/types/admin.types";
+import type { AdminSettings } from "@/features/admin/types/admin.types";
 
 interface ExceptionTogglesProps {
   activeExceptions?: ErrorType[];
@@ -16,7 +16,7 @@ export function ExceptionToggles({
   const adminStore = useAdminStore();
 
   const handleToggle = (
-    exceptionKey: keyof TaskAdminSettings,
+    exceptionKey: keyof AdminSettings,
     _checked: boolean
   ) => {
     adminStore.toggleException(exceptionKey);
@@ -46,11 +46,11 @@ export function ExceptionToggles({
               id={toggle.key}
               checked={
                 (adminStore[
-                  toggle.key as keyof TaskAdminSettings
+                  toggle.key as keyof AdminSettings
                 ] as boolean) || false
               }
               onCheckedChange={(checked) =>
-                handleToggle(toggle.key as keyof TaskAdminSettings, checked)
+                handleToggle(toggle.key as keyof AdminSettings, checked)
               }
               className="scale-75"
             />
