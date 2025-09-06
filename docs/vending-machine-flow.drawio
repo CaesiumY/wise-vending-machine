@@ -1,407 +1,442 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36" version="28.1.2">
-  <diagram id="vending-machine-flow" name="자판기 음료 구매 프로세스">
-    <mxGraphModel dx="1501" dy="782" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1600" math="0" shadow="0">
-      <root>
-        <mxCell id="0" />
-        <mxCell id="1" parent="0" />
-        <mxCell id="title" value="자판기 음료 구매 프로세스" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1;" parent="1" vertex="1">
-          <mxGeometry x="560" y="40" width="400" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="start" value="대기 상태&#xa;(자판기 대기)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
-          <mxGeometry x="700" y="120" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="6Mz6F5-ylSfaVTRymdz9-33" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=1;exitDx=0;exitDy=0;" parent="1" source="payment-method" target="cash-label" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="735" y="280" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="6Mz6F5-ylSfaVTRymdz9-35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=1;exitDx=0;exitDy=0;" parent="1" source="payment-method" target="card-label" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="785" y="280" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="payment-method" value="결제 방식 선택" style="rhombus;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
-          <mxGeometry x="710" y="220" width="100" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="cash-payment" value="현금 결제 선택" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
-          <mxGeometry x="450" y="340" width="100" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="6Mz6F5-ylSfaVTRymdz9-19" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="cash-input" target="6Mz6F5-ylSfaVTRymdz9-18" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="cash-input" value="현금 투입&#xa;지폐/동전" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
-          <mxGeometry x="440" y="410" width="120" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="9" value="" style="edgeStyle=none;html=1;" parent="1" source="cash-accumulate" target="button-activation" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="cash-accumulate" value="투입 금액 누적" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
-          <mxGeometry x="440" y="615" width="120" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="amount-display" value="투입금액 표시&#xa;&quot;XXX원 투입됨&quot;" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
-          <mxGeometry x="250" y="615" width="120" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="6" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="button-activation" target="water-600" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="500" y="845" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="7" style="edgeStyle=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="button-activation" target="coffee-700" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="500" y="935" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="8" style="edgeStyle=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="button-activation" target="cola-1100" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="500" y="1025" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="11" style="edgeStyle=none;html=1;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="button-activation" target="cash-input" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="730" y="420" as="targetPoint" />
-            <Array as="points">
-              <mxPoint x="700" y="695" />
-              <mxPoint x="700" y="435" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="button-activation" value="투입 금액별&#xa;음료 버튼 활성화" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
-          <mxGeometry x="440" y="695" width="120" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="SynDEJKTAf8im9LBMsMd-38" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="cash-drink-selection" target="dispense-start" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="cash-drink-selection" value="활성화된&#xa;음료 버튼 선택" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
-          <mxGeometry x="440" y="1100" width="120" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="water-600" value="물 (600원)&lt;br&gt;잔액 600원 이상 &amp;amp;&amp;amp; 재고 1개 이상일 때&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&amp;nbsp;활성화&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
-          <mxGeometry x="290" y="810" width="100" height="70" as="geometry" />
-        </mxCell>
-        <mxCell id="coffee-700" value="커피 (700원)&lt;br&gt;잔액 700원 이상 &amp;amp;&amp;amp; 재고 1개 이상일 때&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255)); background-color: transparent;&quot;&gt;&amp;nbsp;활성화&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
-          <mxGeometry x="290" y="900" width="100" height="70" as="geometry" />
-        </mxCell>
-        <mxCell id="cola-1100" value="콜라 (1,100원)&lt;br&gt;잔액 1100원 이상 &amp;amp;&amp;amp; 재고 1개 이상일 때&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255)); background-color: transparent;&quot;&gt;&amp;nbsp;활성화&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
-          <mxGeometry x="290" y="990" width="100" height="70" as="geometry" />
-        </mxCell>
-        <mxCell id="31" style="edgeStyle=none;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="cash-return" target="28" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="cash-return" value="반환 버튼" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
-          <mxGeometry x="60" y="695" width="100" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="10" value="" style="edgeStyle=none;html=1;" parent="1" source="dispense-start" target="dispense-check" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="dispense-start" value="잔액 감소 및&lt;br&gt;재고 감소" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
-          <mxGeometry x="440" y="1230" width="120" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="25" value="" style="edgeStyle=none;html=1;" parent="1" source="dispense-check" target="dispense-fail" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="27" value="" style="edgeStyle=none;html=1;" parent="1" source="dispense-check" target="26" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="dispense-check" value="배출 시작" style="rhombus;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
-          <mxGeometry x="450" y="1360" width="100" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="15" value="" style="edgeStyle=none;html=1;" parent="1" source="dispense-fail" target="14" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="dispense-fail" value="배출 실패" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
-          <mxGeometry x="617" y="1360" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="edge1" parent="1" source="start" target="payment-method" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="edge11" parent="1" source="cash-label" target="cash-payment" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="edge2" parent="1" source="cash-payment" target="cash-input" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="edge5" style="exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="6Mz6F5-ylSfaVTRymdz9-18" target="cash-accumulate" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="500.0000000000002" y="585" as="sourcePoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="edge6" parent="1" source="cash-accumulate" target="amount-display" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="edge7" parent="1" source="button-activation" target="cash-drink-selection" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="edge13" parent="1" source="SynDEJKTAf8im9LBMsMd-40" target="cash-return" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="legend-start" value="시작/종료" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
-          <mxGeometry x="1840" y="20" width="80" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="legend-process" value="프로세스" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
-          <mxGeometry x="1840" y="60" width="80" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="legend-decision" value="결정" style="rhombus;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
-          <mxGeometry x="1840" y="100" width="80" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="legend-error" value="에러/예외" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
-          <mxGeometry x="1840" y="150" width="80" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="legend-input-output" value="입출력" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
-          <mxGeometry x="1840" y="190" width="80" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="legend-card" value="카드 프로세스" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce5cd;strokeColor=#d79b00;" parent="1" vertex="1">
-          <mxGeometry x="1840" y="230" width="80" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="cash-label" value="현금 결제 플로우" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#9673a6;" parent="1" vertex="1">
-          <mxGeometry x="430" y="270" width="140" height="20" as="geometry" />
-        </mxCell>
-        <mxCell id="card-label" value="카드 결제 플로우" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#d79b00;" parent="1" vertex="1">
-          <mxGeometry x="1260" y="270" width="140" height="20" as="geometry" />
-        </mxCell>
-        <mxCell id="edge-card-payment" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-label" target="card-payment" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="edge-card-inventory" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-payment" target="card-inventory-check" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="edge-card-buttons1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-inventory-check" target="card-water-600" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="edge-card-buttons2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-inventory-check" target="card-coffee-700" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="1330" y="480" />
-              <mxPoint x="1330" y="480" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="edge-card-buttons3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-inventory-check" target="card-cola-1100" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="edge-card-selection1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-water-600" target="card-drink-selection" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="edge-card-selection3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-cola-1100" target="card-drink-selection" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="edge-card-guide" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-drink-selection" target="card-payment-guide" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="edge-card-recognition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-payment-guide" target="card-recognition" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="edge-recognition-fail" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-recognition" target="card-recognition-fail" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="edge-recognition-success" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-recognition" target="payment-approval" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="edge-payment-fail" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="payment-approval" target="payment-failure-guide" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="edge-payment-success-card" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="payment-approval" target="card-stock-decrease" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="edge-card-stock-dispense" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-stock-decrease" target="card-dispense-check" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="edge-card-dispense-success" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-dispense-check" target="card-dispense-success" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="edge-card-dispense-fail" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-dispense-check" target="card-dispense-fail" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="edge-card-cancel" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-dispense-fail" target="card-payment-cancel" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="GUCFuzj2RUA5XUl93MCB-39" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="6Mz6F5-ylSfaVTRymdz9-18" target="6Mz6F5-ylSfaVTRymdz9-22" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="6Mz6F5-ylSfaVTRymdz9-18" value="화폐 인식 및&amp;nbsp;&lt;div&gt;진위 확인&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
-          <mxGeometry x="440" y="490" width="120" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="GUCFuzj2RUA5XUl93MCB-40" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="6Mz6F5-ylSfaVTRymdz9-22" target="cash-input" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="640" y="435" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="6Mz6F5-ylSfaVTRymdz9-22" value="투입 화폐 반환" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
-          <mxGeometry x="590" y="505" width="100" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="GUCFuzj2RUA5XUl93MCB-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="6Mz6F5-ylSfaVTRymdz9-24" target="start" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="110" y="150" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="6Mz6F5-ylSfaVTRymdz9-24" value="잔액 환불" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
-          <mxGeometry x="60" y="210" width="100" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="SynDEJKTAf8im9LBMsMd-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="14" target="button-activation" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="870" y="720" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="14" value="차액 복구 및 &lt;br&gt;재고 업데이트" style="whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;rounded=1;" parent="1" vertex="1">
-          <mxGeometry x="820" y="1367.5" width="100" height="45" as="geometry" />
-        </mxCell>
-        <mxCell id="SynDEJKTAf8im9LBMsMd-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="26" target="start" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="40" y="146.36363636363637" as="targetPoint" />
-            <Array as="points">
-              <mxPoint x="40" y="1530" />
-              <mxPoint x="40" y="150" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="SynDEJKTAf8im9LBMsMd-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="26" target="button-activation" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="960" y="1530" />
-              <mxPoint x="960" y="720" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="26" value="잔액 확인" style="rhombus;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
-          <mxGeometry x="450" y="1500" width="100" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="SynDEJKTAf8im9LBMsMd-32" value="0원일 경우" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
-          <mxGeometry x="370" y="1500" width="60" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="SynDEJKTAf8im9LBMsMd-35" value="0원이 아닐 경우" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
-          <mxGeometry x="550" y="1500" width="103" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="SynDEJKTAf8im9LBMsMd-41" value="" parent="1" source="button-activation" target="SynDEJKTAf8im9LBMsMd-40" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="440" y="720" as="sourcePoint" />
-            <mxPoint x="310" y="720" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="SynDEJKTAf8im9LBMsMd-40" value="유저 입력 or 타임아웃" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
-          <mxGeometry x="240" y="705" width="120" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="32" style="edgeStyle=none;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="28" target="6Mz6F5-ylSfaVTRymdz9-24" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="GUCFuzj2RUA5XUl93MCB-34" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="28" target="GUCFuzj2RUA5XUl93MCB-33" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="28" value="거스름돈의&lt;br&gt;화폐 수 확인" style="rhombus;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;rounded=1;" parent="1" vertex="1">
-          <mxGeometry x="50" y="320" width="120" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="GUCFuzj2RUA5XUl93MCB-37" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" parent="1" source="GUCFuzj2RUA5XUl93MCB-33" target="cash-accumulate" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="400" y="360" />
-              <mxPoint x="400" y="615" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="GUCFuzj2RUA5XUl93MCB-33" value="잔돈 부족 안내 표시" style="whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;rounded=1;" parent="1" vertex="1">
-          <mxGeometry x="250" y="330" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="card-payment" value="카드 결제 선택" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce5cd;strokeColor=#d79b00;" parent="1" vertex="1">
-          <mxGeometry x="1280" y="340" width="100" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="card-inventory-check" value="재고 확인 및&#xa;버튼 활성화" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce5cd;strokeColor=#d79b00;" parent="1" vertex="1">
-          <mxGeometry x="1270" y="410" width="120" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="card-water-600" value="물 (600원)&#xa;재고 1개 이상일 때 활성화" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
-          <mxGeometry x="1120" y="520" width="100" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="card-coffee-700" value="커피 (700원)&#xa;재고 1개 이상일 때 활성화" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
-          <mxGeometry x="1280" y="520" width="100" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="card-cola-1100" value="콜라 (1,100원)&#xa;재고 1개 이상일 때 활성화" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
-          <mxGeometry x="1440" y="520" width="100" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="card-drink-selection" value="음료 선택" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce5cd;strokeColor=#d79b00;" parent="1" vertex="1">
-          <mxGeometry x="1270" y="620" width="120" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="bCsJ1rRkcrmho4hADfNT-44" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="card-payment-guide" target="bCsJ1rRkcrmho4hADfNT-34">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="card-payment-guide" value="카드 결제 안내" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fillColor=#fce5cd;strokeColor=#d79b00;" parent="1" vertex="1">
-          <mxGeometry x="1270" y="700" width="120" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="card-recognition" value="카드 인식" style="rhombus;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
-          <mxGeometry x="1280" y="790" width="100" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="bCsJ1rRkcrmho4hADfNT-46" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="card-recognition-fail">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1040" y="820" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="card-recognition-fail" value="카드 인식 실패&#xa;안내" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
-          <mxGeometry x="1090" y="790" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="payment-approval" value="결제 승인" style="rhombus;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
-          <mxGeometry x="1280" y="900" width="100" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="bCsJ1rRkcrmho4hADfNT-39" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="payment-failure-guide">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1286" y="725" as="targetPoint" />
-            <Array as="points">
-              <mxPoint x="1040" y="930" />
-              <mxPoint x="1040" y="725" />
-              <mxPoint x="1286" y="725" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="payment-failure-guide" value="결제 실패 안내" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
-          <mxGeometry x="1090" y="900" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="card-stock-decrease" value="재고 감소" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce5cd;strokeColor=#d79b00;" parent="1" vertex="1">
-          <mxGeometry x="1270" y="1020" width="120" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="card-dispense-check" value="배출 시작" style="rhombus;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
-          <mxGeometry x="1280" y="1110" width="100" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="bCsJ1rRkcrmho4hADfNT-33" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="card-dispense-success">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1800" y="1140" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="card-dispense-success" value="배출 성공&#xa;거래 완료" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
-          <mxGeometry x="1270" y="1220" width="120" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="card-dispense-fail" value="배출 실패" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
-          <mxGeometry x="1470" y="1110" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="bCsJ1rRkcrmho4hADfNT-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="card-payment-cancel" target="start">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="1800" y="1140" />
-              <mxPoint x="1800" y="150" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="card-payment-cancel" value="결제 취소 및&#xa;재고 복구" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
-          <mxGeometry x="1654" y="1115" width="120" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="bCsJ1rRkcrmho4hADfNT-45" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="bCsJ1rRkcrmho4hADfNT-34">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1800" y="725" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="bCsJ1rRkcrmho4hADfNT-34" value="취소 선택 or&lt;br&gt;타임 아웃" style="whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
-          <mxGeometry x="1510" y="695" width="120" height="60" as="geometry" />
-        </mxCell>
-      </root>
-    </mxGraphModel>
-  </diagram>
+<mxfile host="65bd71144e">
+    <diagram id="vending-machine-flow" name="자판기 음료 구매 프로세스">
+        <mxGraphModel dx="893" dy="922" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1600" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="title" value="자판기 음료 구매 프로세스" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="560" y="40" width="400" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="start" value="대기 상태&#xa;(자판기 대기)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+                    <mxGeometry x="700" y="120" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6Mz6F5-ylSfaVTRymdz9-33" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=1;exitDx=0;exitDy=0;" parent="1" source="payment-method" target="cash-label" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="735" y="280"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="6Mz6F5-ylSfaVTRymdz9-35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=1;exitDx=0;exitDy=0;" parent="1" source="payment-method" target="card-label" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="785" y="280"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="payment-method" value="결제 방식 선택" style="rhombus;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="710" y="220" width="100" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="37" style="edgeStyle=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="cash-input" target="35">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="420" y="435"/>
+                            <mxPoint x="420" y="360"/>
+                            <mxPoint x="420" y="220"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="cash-payment" value="현금 결제 선택" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+                    <mxGeometry x="450" y="340" width="100" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="6Mz6F5-ylSfaVTRymdz9-19" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="cash-input" target="6Mz6F5-ylSfaVTRymdz9-18" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="cash-input" value="현금 투입&#xa;지폐/동전" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+                    <mxGeometry x="440" y="410" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="" style="edgeStyle=none;html=1;" parent="1" source="cash-accumulate" target="button-activation" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="cash-accumulate" value="투입 금액 누적" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="440" y="615" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="amount-display" value="투입금액 표시&#xa;&quot;XXX원 투입됨&quot;" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="250" y="615" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="button-activation" target="water-600" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="500" y="845"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="7" style="edgeStyle=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="button-activation" target="coffee-700" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="500" y="935"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="8" style="edgeStyle=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="button-activation" target="cola-1100" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="500" y="1025"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="11" style="edgeStyle=none;html=1;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="button-activation" target="cash-input" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="730" y="420" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="700" y="695"/>
+                            <mxPoint x="700" y="435"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="button-activation" value="투입 금액별&#xa;음료 버튼 활성화" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="440" y="695" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="SynDEJKTAf8im9LBMsMd-38" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="cash-drink-selection" target="dispense-start" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="cash-drink-selection" value="활성화된&#xa;음료 버튼 선택" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="440" y="1100" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="water-600" value="물 (600원)&lt;br&gt;잔액 600원 이상 &amp;amp;&amp;amp; 재고 1개 이상일 때&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&amp;nbsp;활성화&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+                    <mxGeometry x="290" y="810" width="100" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="coffee-700" value="커피 (700원)&lt;br&gt;잔액 700원 이상 &amp;amp;&amp;amp; 재고 1개 이상일 때&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255)); background-color: transparent;&quot;&gt;&amp;nbsp;활성화&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+                    <mxGeometry x="290" y="900" width="100" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="cola-1100" value="콜라 (1,100원)&lt;br&gt;잔액 1100원 이상 &amp;amp;&amp;amp; 재고 1개 이상일 때&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255)); background-color: transparent;&quot;&gt;&amp;nbsp;활성화&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+                    <mxGeometry x="290" y="990" width="100" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" style="edgeStyle=none;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="cash-return" target="28" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="cash-return" value="반환 버튼" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="695" width="100" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="" style="edgeStyle=none;html=1;" parent="1" source="dispense-start" target="dispense-check" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dispense-start" value="잔액 감소 및&lt;br&gt;재고 감소" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="440" y="1230" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="" style="edgeStyle=none;html=1;" parent="1" source="dispense-check" target="dispense-fail" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="" style="edgeStyle=none;html=1;" parent="1" source="dispense-check" target="26" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dispense-check" value="배출 시작" style="rhombus;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="450" y="1360" width="100" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="" style="edgeStyle=none;html=1;" parent="1" source="dispense-fail" target="14" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dispense-fail" value="배출 실패" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+                    <mxGeometry x="617" y="1360" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge1" parent="1" source="start" target="payment-method" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge11" parent="1" source="cash-label" target="cash-payment" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge2" parent="1" source="cash-payment" target="cash-input" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge5" style="exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="6Mz6F5-ylSfaVTRymdz9-18" target="cash-accumulate" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="500.0000000000002" y="585" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="edge6" parent="1" source="cash-accumulate" target="amount-display" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge7" parent="1" source="button-activation" target="cash-drink-selection" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge13" parent="1" source="SynDEJKTAf8im9LBMsMd-40" target="cash-return" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-start" value="시작/종료" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+                    <mxGeometry x="1840" y="20" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-process" value="프로세스" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="1840" y="60" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-decision" value="결정" style="rhombus;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="1840" y="100" width="80" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-error" value="에러/예외" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+                    <mxGeometry x="1840" y="150" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-input-output" value="입출력" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="1840" y="190" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-card" value="카드 프로세스" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce5cd;strokeColor=#d79b00;" parent="1" vertex="1">
+                    <mxGeometry x="1840" y="230" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="cash-label" value="현금 결제 플로우" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#9673a6;" parent="1" vertex="1">
+                    <mxGeometry x="430" y="270" width="140" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="card-label" value="카드 결제 플로우" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#d79b00;" parent="1" vertex="1">
+                    <mxGeometry x="1260" y="270" width="140" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-card-payment" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-label" target="card-payment" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-card-inventory" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-payment" target="card-inventory-check" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-card-buttons1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-inventory-check" target="card-water-600" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-card-buttons2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-inventory-check" target="card-coffee-700" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1330" y="480"/>
+                            <mxPoint x="1330" y="480"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="edge-card-buttons3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-inventory-check" target="card-cola-1100" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-card-selection1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-water-600" target="card-drink-selection" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-card-selection3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-cola-1100" target="card-drink-selection" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-card-guide" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-drink-selection" target="card-payment-guide" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-card-recognition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-payment-guide" target="card-recognition" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-recognition-fail" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-recognition" target="card-recognition-fail" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-recognition-success" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-recognition" target="payment-approval" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-payment-fail" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="payment-approval" target="payment-failure-guide" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-payment-success-card" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="payment-approval" target="card-stock-decrease" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-card-stock-dispense" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-stock-decrease" target="card-dispense-check" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-card-dispense-success" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-dispense-check" target="card-dispense-success" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-card-dispense-fail" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-dispense-check" target="card-dispense-fail" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge-card-cancel" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-dispense-fail" target="card-payment-cancel" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="GUCFuzj2RUA5XUl93MCB-39" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="6Mz6F5-ylSfaVTRymdz9-18" target="6Mz6F5-ylSfaVTRymdz9-22" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="6Mz6F5-ylSfaVTRymdz9-18" value="화폐 인식 및&amp;nbsp;&lt;div&gt;진위 확인&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+                    <mxGeometry x="440" y="490" width="120" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="GUCFuzj2RUA5XUl93MCB-40" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="6Mz6F5-ylSfaVTRymdz9-22" target="cash-input" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="640" y="435"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="6Mz6F5-ylSfaVTRymdz9-22" value="투입 화폐 반환" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+                    <mxGeometry x="590" y="505" width="100" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="GUCFuzj2RUA5XUl93MCB-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="6Mz6F5-ylSfaVTRymdz9-24" target="start" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="110" y="150"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="6Mz6F5-ylSfaVTRymdz9-24" value="잔액 환불" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="210" width="100" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="SynDEJKTAf8im9LBMsMd-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="14" target="button-activation" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="870" y="720"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="14" value="차액 복구 및 &lt;br&gt;재고 업데이트" style="whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="820" y="1367.5" width="100" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="SynDEJKTAf8im9LBMsMd-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="26" target="start" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="40" y="146.36363636363637" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="40" y="1530"/>
+                            <mxPoint x="40" y="150"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SynDEJKTAf8im9LBMsMd-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="26" target="button-activation" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="960" y="1530"/>
+                            <mxPoint x="960" y="720"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="26" value="잔액 확인" style="rhombus;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="450" y="1500" width="100" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="SynDEJKTAf8im9LBMsMd-32" value="0원일 경우" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="370" y="1500" width="60" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="SynDEJKTAf8im9LBMsMd-35" value="0원이 아닐 경우" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="550" y="1500" width="103" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="SynDEJKTAf8im9LBMsMd-41" value="" parent="1" source="button-activation" target="SynDEJKTAf8im9LBMsMd-40" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="440" y="720" as="sourcePoint"/>
+                        <mxPoint x="310" y="720" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SynDEJKTAf8im9LBMsMd-40" value="유저 입력 or 타임아웃" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="240" y="705" width="120" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" style="edgeStyle=none;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="28" target="6Mz6F5-ylSfaVTRymdz9-24" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="GUCFuzj2RUA5XUl93MCB-34" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="28" target="GUCFuzj2RUA5XUl93MCB-33" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="거스름돈의&lt;br&gt;화폐 수 확인" style="rhombus;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="50" y="320" width="120" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="GUCFuzj2RUA5XUl93MCB-37" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" parent="1" source="GUCFuzj2RUA5XUl93MCB-33" target="cash-accumulate" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="400" y="360"/>
+                            <mxPoint x="400" y="615"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="GUCFuzj2RUA5XUl93MCB-33" value="잔돈 부족 안내 표시&lt;br&gt;및 관리자 연락" style="whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="250" y="330" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" value="" style="edgeStyle=none;html=1;exitX=1;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="card-inventory-check" target="39">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="card-payment" value="카드 결제 선택" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce5cd;strokeColor=#d79b00;" parent="1" vertex="1">
+                    <mxGeometry x="1280" y="340" width="100" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="card-inventory-check" value="재고 확인 및&#xa;버튼 활성화" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce5cd;strokeColor=#d79b00;" parent="1" vertex="1">
+                    <mxGeometry x="1270" y="410" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="card-water-600" value="물 (600원)&#xa;재고 1개 이상일 때 활성화" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+                    <mxGeometry x="1120" y="520" width="100" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="card-coffee-700" value="커피 (700원)&#xa;재고 1개 이상일 때 활성화" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+                    <mxGeometry x="1280" y="520" width="100" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="card-cola-1100" value="콜라 (1,100원)&#xa;재고 1개 이상일 때 활성화" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+                    <mxGeometry x="1440" y="520" width="100" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="card-drink-selection" target="bCsJ1rRkcrmho4hADfNT-34">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1570" y="645"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="card-drink-selection" value="음료 선택" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce5cd;strokeColor=#d79b00;" parent="1" vertex="1">
+                    <mxGeometry x="1270" y="620" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="bCsJ1rRkcrmho4hADfNT-44" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-payment-guide" target="bCsJ1rRkcrmho4hADfNT-34" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="card-payment-guide" value="카드 결제 안내" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fillColor=#fce5cd;strokeColor=#d79b00;" parent="1" vertex="1">
+                    <mxGeometry x="1270" y="700" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="card-recognition" value="카드 인식" style="rhombus;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="1280" y="790" width="100" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="bCsJ1rRkcrmho4hADfNT-46" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-recognition-fail" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1040" y="820" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="card-recognition-fail" value="카드 인식 실패&#xa;안내" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+                    <mxGeometry x="1090" y="790" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="payment-approval" value="결제 승인" style="rhombus;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="1280" y="900" width="100" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="bCsJ1rRkcrmho4hADfNT-39" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="payment-failure-guide" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1286" y="725" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="1040" y="930"/>
+                            <mxPoint x="1040" y="725"/>
+                            <mxPoint x="1286" y="725"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="payment-failure-guide" value="결제 실패 안내" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+                    <mxGeometry x="1090" y="900" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="card-stock-decrease" value="재고 감소" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce5cd;strokeColor=#d79b00;" parent="1" vertex="1">
+                    <mxGeometry x="1270" y="1020" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="card-dispense-check" value="배출 시작" style="rhombus;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="1280" y="1110" width="100" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="bCsJ1rRkcrmho4hADfNT-33" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="card-dispense-success" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1800" y="1140" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="card-dispense-success" value="배출 성공&#xa;거래 완료" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="1270" y="1220" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="card-dispense-fail" value="배출 실패" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+                    <mxGeometry x="1470" y="1110" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="bCsJ1rRkcrmho4hADfNT-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="card-payment-cancel" target="start" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1800" y="1140"/>
+                            <mxPoint x="1800" y="150"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="card-payment-cancel" value="결제 취소 및&#xa;재고 복구" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+                    <mxGeometry x="1654" y="1115" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="bCsJ1rRkcrmho4hADfNT-45" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="bCsJ1rRkcrmho4hADfNT-34" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1800" y="725" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="bCsJ1rRkcrmho4hADfNT-34" value="취소 선택 or&lt;br&gt;타임 아웃" style="whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+                    <mxGeometry x="1510" y="695" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" style="edgeStyle=none;html=1;" edge="1" parent="1" source="35">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="310" y="150" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="35" value="현금 결제 취소 선택" style="whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="250" y="190" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" style="edgeStyle=none;html=1;" edge="1" parent="1" source="39">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1510" y="150" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="39" value="카드 결제 취소" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+                    <mxGeometry x="1460" y="340" width="100" height="40" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
 </mxfile>
