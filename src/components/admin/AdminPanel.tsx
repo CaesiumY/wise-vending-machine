@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
   Collapsible,
@@ -6,7 +5,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { cn } from "@/lib/utils";
-import { adminSelectors, useAdminStore } from "@/stores/adminStore";
+import { adminSelectors } from "@/stores/adminStore";
 import { ChevronDown, Settings } from "lucide-react";
 import { ExceptionToggles } from "./ExceptionToggles";
 

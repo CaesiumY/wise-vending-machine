@@ -108,8 +108,8 @@ export const useAdminStore = create<TaskAdminStore>((set, get) => ({
       get().toggleException(settingKey);
     }
 
-    // 에러 기록
-    get().recordError(type, `관리자가 ${type} 예외를 트리거했습니다`);
+    // 로그 출력
+    console.log(`관리자가 ${type} 예외를 트리거했습니다`);
   },
 
   simulateNetworkDelay: async () => {

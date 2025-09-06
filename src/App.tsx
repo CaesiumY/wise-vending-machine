@@ -10,6 +10,7 @@ import { useVendingStore } from "@/stores/vendingStore";
 
 function App() {
   const { paymentMethod } = useVendingStore();
+
   return (
     <MainLayout>
       <VendingLayout
