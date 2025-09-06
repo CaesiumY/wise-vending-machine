@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useVendingStore } from "@/stores/vendingStore";
-import { useAdminStore } from "@/stores/adminStore";
 import type { ProductType } from "@/types";
 
 interface ProductDisplayProps {
@@ -117,11 +116,11 @@ export function ProductDisplay({ className }: ProductDisplayProps) {
                   <Badge className="text-xs">선택됨</Badge>
                 )}
                 {/* 재고 표시 (재고가 적을 때만) */}
-                {adminStock > 0 &&
-                  adminStock <= 2 &&
+                {product.stock > 0 &&
+                  product.stock <= 2 &&
                   buttonState !== "out-of-stock" && (
                     <Badge variant="outline" className="text-xs">
-                      재고 {adminStock}
+                      재고 {product.stock}
                     </Badge>
                   )}
               </div>
