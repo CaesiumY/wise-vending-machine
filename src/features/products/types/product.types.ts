@@ -7,10 +7,6 @@ export interface Product {
   name: string
   price: number
   stock: number
-  minStock: number
-  maxStock: number
-  image?: string
-  available: boolean
 }
 
 
