@@ -3,16 +3,9 @@ import { Label } from "@/shared/components/ui/label";
 import { Switch } from "@/shared/components/ui/switch";
 import { EXCEPTION_TOGGLES } from "@/features/admin/constants/adminConfig";
 import { useAdminStore } from "@/features/admin/store/adminStore";
-import type { ErrorType } from "@/features/machine/types/vending.types";
 import type { AdminSettings } from "@/features/admin/types/admin.types";
 
-interface ExceptionTogglesProps {
-  activeExceptions?: ErrorType[];
-}
-
-export function ExceptionToggles({
-  activeExceptions: _activeExceptions = [],
-}: ExceptionTogglesProps) {
+export function ExceptionToggles() {
   const adminStore = useAdminStore();
 
   const handleToggle = (

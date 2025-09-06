@@ -153,12 +153,5 @@ export function useAdmin() {
       };
     },
 
-    /**
-     * 빠른 테스트를 위한 시나리오 실행
-     */
-    runTestScenario: (scenarioName: string) => {
-      adminStore.loadPreset();
-      return `${scenarioName} 시나리오가 활성화되었습니다.`;
-    },
   };
 }

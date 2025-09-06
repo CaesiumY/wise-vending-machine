@@ -5,7 +5,6 @@ import {
   CollapsibleTrigger,
 } from "@/shared/components/ui/collapsible";
 import { cn } from "@/shared/utils/ui";
-import { adminSelectors } from "@/features/admin/store/adminStore";
 import { ChevronDown, Settings } from "lucide-react";
 import { ExceptionToggles } from "./ExceptionToggles";
 import { CashInventoryDisplay } from "./CashInventoryDisplay";
@@ -16,8 +15,6 @@ interface AdminPanelProps {
 
 export function AdminPanel({ className }: AdminPanelProps) {
 
-  // 활성화된 예외 목록 가져오기
-  const activeExceptions = adminSelectors.getActiveExceptions();
 
   return (
     <div className={cn("mt-auto", className)}>
@@ -41,7 +38,7 @@ export function AdminPanel({ className }: AdminPanelProps) {
           <CashInventoryDisplay />
           
           {/* 예외 상황 토글 */}
-          <ExceptionToggles activeExceptions={activeExceptions} />
+          <ExceptionToggles />
         </CollapsibleContent>
       </Collapsible>
     </div>
