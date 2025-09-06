@@ -123,10 +123,9 @@ export const useAdminStore = create<TaskAdminStore>((set, get) => ({
     return;
   },
 
-  saveCustomPreset: (name: string, settings: TaskAdminSettings) => {
+  saveCustomPreset: (_name: string, _settings: TaskAdminSettings) => {
     // 실제로는 서버나 로컬스토리지에 저장
-    // 여기서는 콘솔에만 출력
-    console.log(`Custom preset "${name}" saved:`, settings);
+    // 여기서는 시뮬레이션으로만 처리
   },
 
   resetToDefault: () => {

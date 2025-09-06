@@ -25,7 +25,6 @@ export function PaymentSelector({ className }: PaymentSelectorProps) {
 
     const result = setPaymentMethod(method);
     if (!result.success) {
-      console.warn("결제 방식 설정 실패:", result.error);
       return;
     }
 
@@ -37,10 +36,7 @@ export function PaymentSelector({ className }: PaymentSelectorProps) {
 
   // 결제 방식 취소 핸들러
   const handlePaymentCancel = () => {
-    const result = resetPaymentMethod();
-    if (!result.success) {
-      console.warn("결제 방식 취소 실패:", result.error);
-    }
+    resetPaymentMethod();
   };
 
   return (

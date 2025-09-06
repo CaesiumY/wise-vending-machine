@@ -2,7 +2,6 @@ import { AdminPanel } from "@/components/admin/AdminPanel";
 import { CashPanel } from "@/components/controls/CashPanel";
 import { CardPanel } from "@/components/controls/CardPanel";
 import { PaymentSelector } from "@/components/controls/PaymentSelector";
-import { DispenseArea } from "@/components/display/DispenseArea";
 import { ProductDisplay } from "@/components/display/ProductDisplay";
 import { StatusDisplay } from "@/components/display/StatusDisplay";
 import { MainLayout, VendingLayout } from "@/components/layout/MainLayout";
@@ -23,9 +22,6 @@ function App() {
             <div className="flex-1 flex items-center justify-center">
               <ProductDisplay />
             </div>
-
-            {/* 배출구 영역 */}
-            <DispenseArea />
           </div>
         }
         controlPanel={

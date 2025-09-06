@@ -18,11 +18,8 @@ export function CardPanel() {
 
   // 결제 확인
   const handlePaymentConfirm = async () => {
-    const result = await confirmCardPayment();
-    if (!result.success) {
-      // 오류 처리는 useVendingStore에서 처리
-      console.error("결제 실패:", result.error);
-    }
+    await confirmCardPayment();
+    // 오류 처리는 useVendingStore에서 처리
   };
 
   // 결제 취소

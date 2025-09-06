@@ -13,13 +13,12 @@ interface CashPanelProps {
 const cashDenominations: Array<{
   value: CashDenomination;
   label: string;
-  color: string;
 }> = [
-  { value: 10000, label: "1만원", color: "" },
-  { value: 5000, label: "5천원", color: "" },
-  { value: 1000, label: "1천원", color: "" },
-  { value: 500, label: "500원", color: "" },
-  { value: 100, label: "100원", color: "" },
+  { value: 10000, label: "1만원" },
+  { value: 5000, label: "5천원" },
+  { value: 1000, label: "1천원" },
+  { value: 500, label: "500원" },
+  { value: 100, label: "100원" },
 ];
 
 export function CashPanel({ className }: CashPanelProps) {
@@ -43,10 +42,7 @@ export function CashPanel({ className }: CashPanelProps) {
   const handleCashInsert = (amount: CashDenomination) => {
     if (!canInsertCash) return;
 
-    const result = insertCash(amount);
-    if (!result.success) {
-      console.warn("현금 투입 실패:", result.error);
-    }
+    insertCash(amount);
   };
 
   // 반환 버튼 핸들러
@@ -74,8 +70,7 @@ export function CashPanel({ className }: CashPanelProps) {
               key={cash.value}
               className={cn(
                 "h-16 flex flex-col items-center justify-center gap-1",
-                "font-bold",
-                cash.color
+                "font-bold"
               )}
               onClick={() => handleCashInsert(cash.value)}
               disabled={isDisabled || !canInsertCash}

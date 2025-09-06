@@ -72,14 +72,9 @@ export function useChangeCalculator() {
         return false;
       }
 
-      // 지급 시퀀스 생성
-      const sequence = generateChangeDispenseSequence(calculation.breakdown);
-      
-      // 즉시 실행
-      for (const step of sequence) {
-        // 각 단계별 알림 (선택적)
-        console.log(`${step.denomination}원 ${step.count}개 배출`);
-      }
+      // 지급 시퀀스 생성 및 처리
+      generateChangeDispenseSequence(calculation.breakdown);
+      // 실제로는 하드웨어 배출 처리
 
       // 재고 업데이트
       const newInventory = updateCashInventoryAfterChange(

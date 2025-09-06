@@ -10,7 +10,6 @@ import { ChevronDown, ChevronUp, Settings } from "lucide-react";
 import { ExceptionToggles } from "./ExceptionToggles";
 import { cn } from "@/lib/utils";
 import { useAdminStore, adminSelectors } from "@/stores/adminStore";
-// import { useExceptionHandler } from '@/hooks/useExceptionHandler';
 
 interface AdminPanelProps {
   className?: string;
