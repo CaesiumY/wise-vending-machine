@@ -6,6 +6,10 @@ interface MainLayoutProps {
   className?: string;
 }
 
+/**
+ * MainLayout - 애플리케이션 전체 레이아웃
+ * 자판기 컨테이너의 외부 껍데기를 담당
+ */
 export function MainLayout({ children, className }: MainLayoutProps) {
   return (
     <div
@@ -22,56 +26,10 @@ export function MainLayout({ children, className }: MainLayoutProps) {
           "rounded-2xl shadow-2xl overflow-hidden",
           // 중립 톤의 카드형 컨테이너
           "bg-card text-card-foreground",
-          "border border-border",
-          // 반응형 크기 조정
-          ""
+          "border border-border"
         )}
       >
         {children}
-      </div>
-    </div>
-  );
-}
-
-interface VendingLayoutProps {
-  vendingDisplay: ReactNode;
-  controlPanel: ReactNode;
-}
-
-export function VendingLayout({
-  vendingDisplay,
-  controlPanel,
-}: VendingLayoutProps) {
-  return (
-    <div
-      className={cn(
-        // 메인 패널 - 2분할 그리드
-        "grid grid-cols-2 min-h-[600px]"
-      )}
-    >
-      {/* 자판기 본체 */}
-      <div
-        className={cn(
-          // 자판기 디스플레이 영역
-          "bg-muted",
-          "p-6",
-          "border-r border-border",
-          "flex flex-col justify-between"
-        )}
-      >
-        {vendingDisplay}
-      </div>
-
-      {/* 컨트롤 패널 */}
-      <div
-        className={cn(
-          // 컨트롤 패널 영역
-          "bg-background",
-          "p-6",
-          "flex flex-col gap-4"
-        )}
-      >
-        {controlPanel}
       </div>
     </div>
   );
