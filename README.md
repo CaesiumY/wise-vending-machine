@@ -15,6 +15,9 @@ React + TypeScript로 구현한 자판기 시스템
 
 **다이어그램 내용**: 현금/카드 결제 플로우, 예외 처리 분기, 상태 전환 다이어그램
 
+### 다이어그램 관련 문서 참고
+- [docs/flow-explain.md](./docs/flow-explain.md)
+
 ## 기술 스택
 
 - Frontend: React, TypeScript
