@@ -31,9 +31,13 @@ export function PaymentSelector({ className }: PaymentSelectorProps) {
         {/* 현금 결제 버튼 */}
         <Button
           variant={paymentMethod === "cash" ? "default" : "outline"}
-          className={cn("h-16 flex flex-col items-center gap-1")}
+          className={cn(
+            "h-16 flex flex-col items-center gap-1 relative transition",
+            paymentMethod === "cash" && "ring-2 ring-offset-2 ring-primary"
+          )}
           onClick={() => handlePaymentSelect("cash")}
           disabled={isSelectionDisabled}
+          aria-pressed={paymentMethod === "cash"}
         >
           <div className="text-center">
             <div className="font-semibold">현금 결제</div>
@@ -44,39 +48,19 @@ export function PaymentSelector({ className }: PaymentSelectorProps) {
         {/* 카드 결제 버튼 */}
         <Button
           variant={paymentMethod === "card" ? "default" : "outline"}
-          className={cn("h-16 flex flex-col items-center gap-1")}
+          className={cn(
+            "h-16 flex flex-col items-center gap-1 relative transition",
+            paymentMethod === "card" && "ring-2 ring-offset-2 ring-primary"
+          )}
           onClick={() => handlePaymentSelect("card")}
           disabled={isSelectionDisabled}
+          aria-pressed={paymentMethod === "card"}
         >
           <div className="text-center">
             <div className="font-semibold">카드 결제</div>
             <div className="text-xs opacity-75">신용/체크카드</div>
           </div>
         </Button>
-      </div>
-
-      {/* 선택된 결제 방식 안내 */}
-      {paymentMethod && (
-        <div className="mt-3 p-2 rounded text-center">
-          <span className="text-sm">
-            {paymentMethod === "cash"
-              ? "현금 결제가 선택되었습니다"
-              : "카드 결제가 선택되었습니다"}
-          </span>
-        </div>
-      )}
-
-      {/* 상태 메시지 */}
-      <div className="mt-3 text-center">
-        {isSelectionDisabled ? (
-          <p className="text-sm">
-            {paymentMethod
-              ? `${paymentMethod === "cash" ? "현금" : "카드"} 결제 진행 중`
-              : "처리 중..."}
-          </p>
-        ) : !paymentMethod ? (
-          <p className="text-sm">결제 방식을 선택해주세요</p>
-        ) : null}
       </div>
     </Card>
   );

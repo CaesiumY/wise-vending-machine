@@ -9,7 +9,6 @@ import { Badge } from "@/components/ui/badge";
 import { ChevronDown, ChevronUp, Settings } from "lucide-react";
 import { ExceptionToggles } from "./ExceptionToggles";
 import { StockControls } from "./StockControls";
-import { PresetButtons } from "./PresetButtons";
 import { cn } from "@/lib/utils";
 import { useAdminStore, adminSelectors } from "@/stores/adminStore";
 // import { useExceptionHandler } from '@/hooks/useExceptionHandler';
@@ -19,14 +18,8 @@ interface AdminPanelProps {
 }
 
 export function AdminPanel({ className }: AdminPanelProps) {
-  const {
-    isPanelOpen,
-    activePreset,
-    loadPreset,
-    resetToDefault,
-    errorCount,
-    lastError,
-  } = useAdminStore();
+  const { isPanelOpen, resetToDefault, errorCount, lastError } =
+    useAdminStore();
 
   // const { triggerException } = useExceptionHandler(); // 현재 미사용
 
@@ -58,11 +51,6 @@ export function AdminPanel({ className }: AdminPanelProps) {
                     {activeExceptions.length}개 활성
                   </Badge>
                 )}
-                {activePreset && (
-                  <Badge variant="outline" className="text-xs">
-                    {activePreset}
-                  </Badge>
-                )}
               </div>
               <div className="flex items-center gap-1 text-xs">
                 <span>{isPanelOpen ? "접기" : "펼치기"}</span>
@@ -77,12 +65,6 @@ export function AdminPanel({ className }: AdminPanelProps) {
         </CollapsibleTrigger>
 
         <CollapsibleContent className="mt-2 space-y-3">
-          {/* 시나리오 프리셋 */}
-          <PresetButtons
-            onPresetSelect={loadPreset}
-            activePreset={activePreset}
-          />
-
           {/* 예외 상황 토글 */}
           <ExceptionToggles activeExceptions={activeExceptions} />
 

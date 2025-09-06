@@ -75,7 +75,7 @@ export function ControlStatus({ className }: ControlStatusProps) {
         </div>
 
         {/* 상태 정보 */}
-        <div className="flex justify-between items-center text-xs">
+        <div className="flex justify-center items-center text-xs">
           <div className="flex gap-2">
             <Badge variant={paymentMethod === "cash" ? "default" : "secondary"}>
               💵 현금
@@ -83,14 +83,6 @@ export function ControlStatus({ className }: ControlStatusProps) {
             <Badge variant={paymentMethod === "card" ? "default" : "secondary"}>
               💳 카드
             </Badge>
-          </div>
-
-          <div className="text-right">
-            {currentBalance > 0 && (
-              <div className="font-medium">
-                {currentBalance.toLocaleString()}원
-              </div>
-            )}
           </div>
         </div>
 

@@ -6,16 +6,28 @@ import { Separator } from "@/components/ui/separator";
 import { useAdminStore } from "@/stores/adminStore";
 import type { ErrorType, TaskAdminSettings } from "@/types";
 
-// 15가지 예외 상황 정의
+// 요구사항: 관리자 패널에 남길 오류 케이스 6개만 노출
+// - 거스름돈 부족
+// - 동전/지폐 인식 실패 (동전/지폐 걸림으로 대표)
+// - 카드 인식 실패
+// - 카드 결제 실패
+// - 배출 실패
+// - 타임아웃
 const EXCEPTION_CATEGORIES = {
   payment: {
     title: "결제 예외",
     color: "",
     exceptions: [
       { id: "changeShortageMode", name: "거스름돈 부족", icon: "" },
-      { id: "fakeMoneyDetection", name: "위조화폐 감지", icon: "🚫" },
-      { id: "billJamMode", name: "지폐 걸림", icon: "📄" },
-      { id: "coinJamMode", name: "동전 걸림", icon: "🪙" },
+      { id: "cashRecognitionFault", name: "동전/지폐 인식 실패", icon: "🪙" },
+    ],
+  },
+  card: {
+    title: "카드 예외",
+    color: "",
+    exceptions: [
+      { id: "cardReaderFault", name: "카드 인식 실패", icon: "" },
+      { id: "cardPaymentReject", name: "카드 결제 실패", icon: "" },
     ],
   },
   system: {
@@ -23,21 +35,7 @@ const EXCEPTION_CATEGORIES = {
     color: "",
     exceptions: [
       { id: "dispenseFaultMode", name: "배출 실패", icon: "🚫" },
-      { id: "cardReaderFault", name: "카드 인식 실패", icon: "" },
-      { id: "cardPaymentReject", name: "카드 결제 거부", icon: "" },
-      { id: "networkErrorMode", name: "네트워크 오류", icon: "" },
-      { id: "systemMaintenanceMode", name: "시스템 점검", icon: "" },
-    ],
-  },
-  mechanical: {
-    title: "기계적 예외",
-    color: "",
-    exceptions: [
       { id: "timeoutMode", name: "타임아웃", icon: "" },
-      { id: "dispenseBlockedMode", name: "배출구 막힘", icon: "" },
-      { id: "temperatureErrorMode", name: "온도 이상", icon: "" },
-      { id: "powerUnstableMode", name: "전원 불안정", icon: "" },
-      { id: "adminInterventionMode", name: "관리자 개입 필요", icon: "" },
     ],
   },
 };
@@ -52,10 +50,22 @@ export function ExceptionToggles({
   const adminStore = useAdminStore();
 
   const handleToggle = (
-    exceptionKey: keyof TaskAdminSettings,
-    _checked: boolean
+    exceptionKey: keyof TaskAdminSettings | "cashRecognitionFault",
+    checked: boolean
   ) => {
-    adminStore.toggleException(exceptionKey);
+    if (exceptionKey === "cashRecognitionFault") {
+      const currentBill = adminStore.billJamMode as boolean;
+      const currentCoin = adminStore.coinJamMode as boolean;
+      // 두 플래그를 모두 동일한 상태로 맞춘다
+      if (currentBill !== checked) {
+        adminStore.toggleException("billJamMode");
+      }
+      if (currentCoin !== checked) {
+        adminStore.toggleException("coinJamMode");
+      }
+      return;
+    }
+    adminStore.toggleException(exceptionKey as keyof TaskAdminSettings);
   };
 
   const activeCount = activeExceptions.length;
@@ -68,7 +78,7 @@ export function ExceptionToggles({
           variant={activeCount > 0 ? "destructive" : "secondary"}
           className="text-xs"
         >
-          {activeCount}/15 활성
+          {activeCount}/6 활성
         </Badge>
       </div>
 
@@ -92,13 +102,17 @@ export function ExceptionToggles({
                   <Switch
                     id={exception.id}
                     checked={
-                      (adminStore[
-                        exception.id as keyof TaskAdminSettings
-                      ] as boolean) || false
+                      exception.id === "cashRecognitionFault"
+                        ? adminStore.billJamMode || adminStore.coinJamMode
+                        : (adminStore[
+                            exception.id as keyof TaskAdminSettings
+                          ] as boolean) || false
                     }
                     onCheckedChange={(checked) =>
                       handleToggle(
-                        exception.id as keyof TaskAdminSettings,
+                        exception.id as
+                          | keyof TaskAdminSettings
+                          | "cashRecognitionFault",
                         checked
                       )
                     }

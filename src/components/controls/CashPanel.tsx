@@ -99,16 +99,6 @@ export function CashPanel({ className }: CashPanelProps) {
           </Button>
         </div>
 
-        {/* 현재 잔액 표시 */}
-        <div className="rounded-md p-3 border">
-          <div className="flex justify-between items-center">
-            <span className="font-medium">현재 투입금액</span>
-            <Badge className="text-lg px-3 py-1">
-              {currentBalance.toLocaleString()}원
-            </Badge>
-          </div>
-        </div>
-
         {/* 투입 안내 */}
         <div className="text-center text-xs text-gray-500">
           <p>투입한 금액만큼 음료 선택이 가능합니다</p>
