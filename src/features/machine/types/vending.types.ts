@@ -13,13 +13,13 @@ export type VendingStatus =
   | 'completing'        // 거스름돈 처리 중
   | 'maintenance'       // 점검 모드
 
-// 오류 타입
+// 오류 타입 (시뮬레이션)
 export type ErrorType = 
   | 'change_shortage'      // 거스름돈 부족
-  | 'out_of_stock'        // 재고 부족
-  | 'dispense_failure'    // 배출 실패
-  | 'card_reader_fault'   // 카드 리더기 오류
-  | 'card_payment_reject' // 카드 결제 거부
+  | 'out_of_stock'        // 재고 부족  
+  | 'dispense_failure'    // 음료 배출 실패
+  | 'card_reader_fault'   // 카드 인식 실패 (시뮬레이션)
+  | 'card_payment_reject' // 카드 결제 거부 (시뮬레이션)
 
 // ===== 핵심 타입 정의 =====
 
