@@ -17,10 +17,7 @@ interface ProductButtonProps {
  * - 커스텀 훅을 사용하여 자판기 상태를 직접 계산
  * - 간단한 API로 상품 정보만 받아서 동작
  */
-export function ProductButton({
-  product,
-  onSelect,
-}: ProductButtonProps) {
+export function ProductButton({ product, onSelect }: ProductButtonProps) {
   // 커스텀 훅으로 상태 계산
   const state = useProductState(product);
   const disabled = useButtonDisabled(product);
@@ -28,7 +25,7 @@ export function ProductButton({
   return (
     <div className="relative">
       <Button
-        className="w-full flex flex-col items-center justify-center gap-2"
+        className="h-28 w-full flex flex-col items-center justify-center gap-2"
         disabled={disabled}
         onClick={onSelect}
         aria-label={`${product.name} ${product.price}원, 재고 ${product.stock}개`}
