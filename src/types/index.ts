@@ -7,7 +7,6 @@ export type {
   ErrorType, 
   TransactionStatus, 
   CardStatus, 
-  DialogType, 
   PresetName,
   Nullable, 
   Optional, 
@@ -23,7 +22,6 @@ export type {
   ChangeBreakdown, 
   ChangeCalculationResult,
   Transaction, 
-  DialogState, 
   VendingMachineState, 
   VendingActions, 
   VendingStore 

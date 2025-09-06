@@ -5,7 +5,6 @@ import type {
   ErrorType, 
   TransactionStatus, 
   Nullable, 
-  DialogType, 
   ActionResult, 
   CashDenomination 
 } from './common'
@@ -54,14 +53,6 @@ export interface Transaction {
   errorMessage?: string
 }
 
-// 대화상자 상태
-export interface DialogState {
-  isOpen: boolean
-  type: DialogType
-  title: string
-  message: string
-  data?: unknown
-}
 
 // 자판기 메인 상태
 export interface VendingMachineState {

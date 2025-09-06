@@ -28,8 +28,6 @@ export type TransactionStatus = 'pending' | 'success' | 'failed' | 'cancelled'
 // 카드 상태
 export type CardStatus = 'idle' | 'inserted' | 'processing' | 'approved' | 'declined' | 'error'
 
-// 대화상자 타입
-export type DialogType = 'success' | 'error' | 'confirm' | 'info'
 
 // 유틸리티 타입들
 export type Nullable<T> = T | null
