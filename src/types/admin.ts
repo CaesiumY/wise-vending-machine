@@ -13,8 +13,6 @@ export interface AdminSettings {
   // 💰 결제 예외 (5개)
   changeShortageMode: boolean           // 거스름돈 부족
   changeShortageThreshold: number       // 거스름돈 부족 임계값
-  fakeMoneyDetectionMode: boolean       // 위조화폐 감지
-  fakeMoneyDetectionRate: number        // 위조화폐 감지율 (0-100%)
   
   // 📦 재고 예외 (1개 + 관리)
   forceOutOfStock: Record<ProductType, boolean>  // 강제 품절 설정
@@ -48,7 +46,6 @@ export interface ExceptionToggleItem {
   key: keyof AdminSettings
   label: string
   description: string
-  category: 'payment' | 'stock' | 'system' | 'ui'
   enabled: boolean
   hasRate?: boolean
   rateKey?: keyof AdminSettings
@@ -104,7 +101,6 @@ export interface AdminLogEntry {
   id: string
   timestamp: Date
   level: 'info' | 'warning' | 'error' | 'success'
-  category: 'setting' | 'exception' | 'test' | 'system'
   message: string
   details?: unknown
 }
@@ -149,12 +145,10 @@ export interface AdminActions {
   exportLogs: () => AdminLogEntry[]
 }
 
-// Task-3에서 사용하는 간소화된 AdminSettings (15가지 예외 시뮬레이터용)
+// Task-3에서 사용하는 간소화된 AdminSettings (4가지 예외 시뮬레이터용)
 export interface TaskAdminSettings {
-  // 결제 예외 (2가지)
-  changeShortageMode: boolean
+  // 결제 예외 (1가지)
   fakeMoneyDetection: boolean
-  
   
   // 시스템 예외 (3가지)  
   cardReaderFault: boolean

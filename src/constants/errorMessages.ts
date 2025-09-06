@@ -13,6 +13,7 @@ export const ERROR_MESSAGES: Record<ErrorType, string> = {
   card_reader_fault: "카드를 인식할 수 없습니다. 카드를 다시 삽입해주세요.",
   card_payment_reject:
     "카드 결제가 거부되었습니다. 다른 결제 방법을 이용해주세요.",
+  fake_money_detection: "위조화폐가 감지되었습니다. 화폐를 반환합니다.",
 } as const;
 
 /**

@@ -21,6 +21,7 @@ export type ErrorType =
   | 'dispense_failure'    // 배출 실패
   | 'card_reader_fault'   // 카드 리더기 오류
   | 'card_payment_reject' // 카드 결제 거부
+  | 'fake_money_detection' // 위조화폐 감지
 
 // 거래 상태
 export type TransactionStatus = 'pending' | 'success' | 'failed' | 'cancelled'

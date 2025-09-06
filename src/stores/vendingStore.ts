@@ -14,7 +14,6 @@ import type {
 import { PRODUCTS } from "@/constants/products";
 import { calculateOptimalChange } from "@/utils/changeCalculator";
 import { getErrorMessage } from "@/constants/errorMessages";
-import { INITIAL_CHANGE_STOCK } from "@/constants/denominations";
 import {
   validateCashDenomination,
   validateInsertionState,
@@ -49,7 +48,6 @@ const initialState = {
   currentError: null,
   errorMessage: "",
   isLoading: false,
-
 };
 
 export const useVendingStore = create<VendingStore>()(
@@ -195,7 +193,6 @@ export const useVendingStore = create<VendingStore>()(
             return { success: false, error: stateValidation.reason };
           }
 
-
           // 2. 연속 투입 간격 검증 (1초 간격) - 화폐 인식 시간 시뮬레이션
           if (Date.now() - lastInsertTime < 1000) {
             // 사용자에게 화폐 반환 안내 토스트 표시
@@ -213,6 +210,10 @@ export const useVendingStore = create<VendingStore>()(
           const newBalance = currentBalance + denomination;
           const newInsertedCash = [...insertedCash, denomination];
 
+          // 5. AdminStore의 화폐 재고 증가 (투입된 화폐를 자판기에 추가)
+          const adminStore = useAdminStore.getState();
+          adminStore.adjustCashCount(denomination, 1);
+
           set({
             currentBalance: newBalance,
             insertedCash: newInsertedCash,
@@ -226,7 +227,6 @@ export const useVendingStore = create<VendingStore>()(
             balance: newBalance,
           });
           toast.success(successMessage);
-
 
           return { success: true };
         } finally {
@@ -424,7 +424,9 @@ export const useVendingStore = create<VendingStore>()(
               selectedProduct: null,
             });
 
-            toast.info(`잔액 ${currentBalance}원이 남아있습니다. 추가 구매가 가능합니다.`);
+            toast.info(
+              `잔액 ${currentBalance}원이 남아있습니다. 추가 구매가 가능합니다.`
+            );
             return true;
           } else {
             // 잔액이 0원인 경우 → 대기 상태로 전환
@@ -444,17 +446,19 @@ export const useVendingStore = create<VendingStore>()(
 
         if (!product) return;
 
-        // 거스름돈 계산
+        // 거스름돈 계산 - 실시간 재고 사용
         const changeAmount = currentBalance - product.price;
+        const adminState = useAdminStore.getState();
+        const currentCashInventory = adminState.cashInventory;
+
+        // 실제 보유 화폐로 거스름돈 계산
         const changeResult = calculateOptimalChange(
           changeAmount,
-          INITIAL_CHANGE_STOCK
+          currentCashInventory
         );
 
-        // adminStore 설정에 따른 거스름돈 부족 체크
-        const adminState = useAdminStore.getState();
-        const shouldFailChange =
-          adminState.changeShortageMode || !changeResult.possible;
+        // 거스름돈 부족 체크 (실시간 재고 기반만 사용)
+        const shouldFailChange = !changeResult.possible;
 
         if (shouldFailChange) {
           get().setError(
@@ -462,6 +466,18 @@ export const useVendingStore = create<VendingStore>()(
             "거스름돈이 부족합니다. 정확한 금액을 투입해주세요."
           );
           return;
+        }
+
+        // 거스름돈 지급 후 adminStore 재고 차감
+        if (changeAmount > 0) {
+          Object.entries(changeResult.breakdown).forEach(
+            ([denomStr, count]) => {
+              const denomination = parseInt(denomStr) as CashDenomination;
+              if (count > 0) {
+                adminState.adjustCashCount(denomination, -count);
+              }
+            }
+          );
         }
 
         // 거래 정보 생성
@@ -487,7 +503,6 @@ export const useVendingStore = create<VendingStore>()(
         get().dispenseProduct();
       },
 
-
       // ===== 유틸리티 메서드 =====
 
       updateProductStock: (productId, newStock) => {
@@ -499,16 +514,16 @@ export const useVendingStore = create<VendingStore>()(
       },
 
       calculateChange: (amount: number): ChangeBreakdown => {
-        return calculateOptimalChange(amount, INITIAL_CHANGE_STOCK);
+        const adminState = useAdminStore.getState();
+        return calculateOptimalChange(amount, adminState.cashInventory);
       },
-
 
       cancelTransaction: (): ActionResult => {
         const { currentBalance } = get();
 
         // 현금 반환
         if (currentBalance > 0) {
-          toast.success(`💰 반환 완료! ${currentBalance}원이 반환되었습니다.`);
+          toast.success(`반환 완료! ${currentBalance}원이 반환되었습니다.`);
           get().reset();
         } else {
           get().reset();
@@ -532,9 +547,6 @@ export const useVendingStore = create<VendingStore>()(
       },
 
       clearError: () => set({ currentError: null, errorMessage: "" }),
-
-
-
 
       // ===== 유틸리티 메서드 =====
     }),

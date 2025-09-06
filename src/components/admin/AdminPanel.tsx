@@ -39,7 +39,7 @@ export function AdminPanel({ className }: AdminPanelProps) {
                 {activeExceptions.length > 0 && (
                   <Badge
                     variant={
-                      systemStatus.severity === "critical"
+                      systemStatus.status === "critical"
                         ? "destructive"
                         : "secondary"
                     }

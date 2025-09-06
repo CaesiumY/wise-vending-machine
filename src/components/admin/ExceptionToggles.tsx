@@ -3,17 +3,8 @@ import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useAdminStore } from "@/stores/adminStore";
+import { EXCEPTION_TOGGLES } from "@/constants/adminConfig";
 import type { ErrorType, TaskAdminSettings } from "@/types";
-
-const EXCEPTION_ITEMS: Array<{
-  id: keyof TaskAdminSettings;
-  name: string;
-}> = [
-  { id: "changeShortageMode", name: "거스름돈 부족" },
-  { id: "cardReaderFault", name: "카드 인식 실패" },
-  { id: "cardPaymentReject", name: "카드 결제 실패" },
-  { id: "dispenseFaultMode", name: "배출 실패" },
-];
 
 interface ExceptionTogglesProps {
   activeExceptions?: ErrorType[];
@@ -31,12 +22,10 @@ export function ExceptionToggles({
     adminStore.toggleException(exceptionKey);
   };
 
-  // 4개 카테고리 기준 활성 수 계산
-  const activeCount =
-    (adminStore.changeShortageMode ? 1 : 0) +
-    (adminStore.cardReaderFault ? 1 : 0) +
-    (adminStore.cardPaymentReject ? 1 : 0) +
-    (adminStore.dispenseFaultMode ? 1 : 0);
+  // EXCEPTION_TOGGLES 기반 활성 수 계산
+  const activeCount = EXCEPTION_TOGGLES.filter((toggle) =>
+    adminStore[toggle.key as keyof TaskAdminSettings]
+  ).length;
 
   return (
     <Card className="p-4">
@@ -46,26 +35,31 @@ export function ExceptionToggles({
           variant={activeCount > 0 ? "destructive" : "secondary"}
           className="text-xs"
         >
-          {activeCount}/4 활성
+          {activeCount}/{EXCEPTION_TOGGLES.length} 활성
         </Badge>
       </div>
 
       <div className="space-y-2">
-        {EXCEPTION_ITEMS.map((item) => (
-          <div key={item.id} className="flex items-center justify-between py-1">
-            <Label
-              htmlFor={item.id}
-              className="text-xs cursor-pointer"
-            >
-              {item.name}
-            </Label>
+        {EXCEPTION_TOGGLES.map((toggle) => (
+          <div key={toggle.key} className="flex items-center justify-between py-1">
+            <div>
+              <Label
+                htmlFor={toggle.key}
+                className="text-xs cursor-pointer"
+              >
+                {toggle.label}
+              </Label>
+              <p className="text-[10px] text-muted-foreground">
+                {toggle.description}
+              </p>
+            </div>
             <Switch
-              id={item.id}
+              id={toggle.key}
               checked={
-                (adminStore[item.id] as boolean) || false
+                (adminStore[toggle.key as keyof TaskAdminSettings] as boolean) || false
               }
               onCheckedChange={(checked) =>
-                handleToggle(item.id, checked)
+                handleToggle(toggle.key as keyof TaskAdminSettings, checked)
               }
               className="scale-75"
             />

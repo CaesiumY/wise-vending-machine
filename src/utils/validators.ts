@@ -191,7 +191,7 @@ export function validateChangeAvailability(
   paymentAmount: number,
   productPrice: number
 ): PaymentValidationResult {
-  const { changeShortageMode, cashInventory } = useAdminStore.getState();
+  const { cashInventory } = useAdminStore.getState();
   const changeRequired = paymentAmount - productPrice;
 
   // 거스름돈이 필요 없는 경우
@@ -206,22 +206,20 @@ export function validateChangeAvailability(
 
   // 거스름돈이 필요한 경우
   if (changeRequired > 0) {
-    // 관리자 패널에서 거스름돈 부족 모드 활성화 시
-    if (changeShortageMode) {
-      const changeResult = calculateOptimalChange(
-        changeRequired,
-        cashInventory
-      );
+    // 실시간 재고 기반 거스름돈 계산
+    const changeResult = calculateOptimalChange(
+      changeRequired,
+      cashInventory
+    );
 
-      if (!changeResult.possible) {
-        return {
-          isValid: false,
-          reason: `거스름돈이 부족합니다. 정확한 금액 ${productPrice}원을 투입해주세요.`,
-          canProceed: false,
-          requiredAmount: productPrice,
-          availableChange: false,
-        };
-      }
+    if (!changeResult.possible) {
+      return {
+        isValid: false,
+        reason: `거스름돈이 부족합니다. 정확한 금액 ${productPrice}원을 투입해주세요.`,
+        canProceed: false,
+        requiredAmount: productPrice,
+        availableChange: false,
+      };
     }
 
     return {

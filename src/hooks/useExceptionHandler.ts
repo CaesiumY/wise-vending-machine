@@ -35,15 +35,7 @@ export function useExceptionHandler() {
       const exceptions: ExceptionResult[] = [];
       const adminState = useAdminStore.getState();
 
-      // 1. 거스름돈 부족 모드
-      if (adminState.changeShortageMode && operation === "calculate_change") {
-        exceptions.push({
-          type: "change_shortage",
-          message: "거스름돈이 부족합니다.",
-          recovery: "request_exact_amount",
-          shouldBlock: true,
-        });
-      }
+      // 1. 거스름돈 부족 체크 (실제 계산 로직은 changeCalculator에서 처리됨)
 
       // 2. 품절 상황
       if (operation === "select_product" && context?.productType) {
@@ -166,7 +158,7 @@ export function useExceptionHandler() {
 
       handleException(exception);
     },
-    [handleException, vendingStore]
+    [handleException]
   );
 
   return {

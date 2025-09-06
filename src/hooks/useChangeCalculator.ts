@@ -13,7 +13,7 @@ export function useChangeCalculator() {
   const [isCalculating, setIsCalculating] = useState(false);
   const [lastCalculation, setLastCalculation] = useState<ChangeCalculationResult | null>(null);
   
-  const { cashInventory, updateCashInventory, changeShortageMode } = useAdminStore();
+  const { cashInventory, updateCashInventory } = useAdminStore();
 
   // 거스름돈 계산 및 지급 가능 여부 확인
   const calculateChange = useCallback(
@@ -21,36 +21,7 @@ export function useChangeCalculator() {
       setIsCalculating(true);
 
       try {
-        // 거스름돈 부족 모드 체크
-        if (changeShortageMode) {
-          // 강제로 부족 상황 시뮬레이션
-          const result: ChangeCalculationResult = {
-            total: 0,
-            denominations: {
-              10000: 0,
-              5000: 0,
-              1000: 0,
-              500: 0,
-              100: 0
-            },
-            possible: false,
-            canProvideChange: false,
-            totalChange: changeAmount,
-            breakdown: {
-              10000: 0,
-              5000: 0,
-              1000: 0,
-              500: 0,
-              100: 0
-            },
-            remainingAmount: changeAmount
-          };
-          
-          setLastCalculation(result);
-          return result;
-        }
-
-        // 실제 계산 수행
+        // 실시간 재고 기반 계산 수행
         const result = calculateOptimalChange(changeAmount, cashInventory);
         setLastCalculation(result);
         
@@ -60,7 +31,7 @@ export function useChangeCalculator() {
         setIsCalculating(false);
       }
     },
-    [changeShortageMode, cashInventory]
+    [cashInventory]
   );
 
   // 거스름돈 지급 실행 (애니메이션 포함)

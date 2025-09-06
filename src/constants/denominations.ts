@@ -11,9 +11,9 @@ export const DENOMINATION_LABELS = {
 } as const
 
 export const INITIAL_CHANGE_STOCK: Record<CashDenomination, number> = {
-  10000: 2,
-  5000: 5,
-  1000: 10,
-  500: 20,
-  100: 50,
+  10000: 3,
+  5000: 3,
+  1000: 3,
+  500: 3,
+  100: 3,
 }

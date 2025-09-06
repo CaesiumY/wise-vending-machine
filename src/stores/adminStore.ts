@@ -10,8 +10,7 @@ import type {
 
 // 기본 관리자 설정 (모든 예외 비활성화)
 const defaultSettings: TaskAdminSettings = {
-  // 결제 예외 (2가지)
-  changeShortageMode: false,
+  // 결제 예외 (1가지)
   fakeMoneyDetection: false,
 
   // 시스템 예외 (3가지)
@@ -20,13 +19,13 @@ const defaultSettings: TaskAdminSettings = {
   dispenseFaultMode: false,
 };
 
-// 기본 화폐 보유량
+// 기본 화폐 보유량 (각 3개씩 - 거스름돈 부족 테스트용)
 const defaultCashInventory = {
-  100: 50,
-  500: 30,
-  1000: 20,
-  5000: 10,
-  10000: 5,
+  100: 3,
+  500: 3,
+  1000: 3,
+  5000: 3,
+  10000: 3,
 };
 
 
@@ -136,7 +135,7 @@ export const useAdminStore = create<TaskAdminStore>((set, get) => ({
   triggerException: (type: ErrorType) => {
     // 해당 예외를 즉시 발생시키는 로직
     const exceptionMap: Partial<Record<ErrorType, keyof TaskAdminSettings>> = {
-      change_shortage: "changeShortageMode",
+      fake_money_detection: "fakeMoneyDetection",
       dispense_failure: "dispenseFaultMode",
       card_reader_fault: "cardReaderFault",
     };
@@ -162,8 +161,8 @@ export const adminSelectors = {
     const state = useAdminStore.getState();
     const activeExceptions: ErrorType[] = [];
 
-    // 1) 거스름돈 부족
-    if (state.changeShortageMode) activeExceptions.push("change_shortage");
+    // 1) 위조화폐 감지
+    if (state.fakeMoneyDetection) activeExceptions.push("fake_money_detection");
 
     // 2) 카드 인식 실패
     if (state.cardReaderFault) activeExceptions.push("card_reader_fault");
@@ -181,9 +180,8 @@ export const adminSelectors = {
   getSystemStatus: () => {
     const activeExceptions = adminSelectors.getActiveExceptions();
 
-
     if (activeExceptions.length === 0) {
-      return { status: "normal", severity: "none", count: 0 };
+      return { status: "normal", count: 0 };
     }
 
     const criticalExceptions = ["dispense_failure", "admin_intervention"];
@@ -193,11 +191,6 @@ export const adminSelectors = {
 
     return {
       status: hasCritical ? "critical" : "warning",
-      severity: hasCritical
-        ? "critical"
-        : activeExceptions.length > 3
-        ? "high"
-        : "medium",
       count: activeExceptions.length,
     };
   },
@@ -207,7 +200,7 @@ export const adminSelectors = {
     const state = useAdminStore.getState();
 
     const probabilityMap: Partial<Record<ErrorType, number>> = {
-      change_shortage: state.changeShortageMode ? 0.5 : 0,
+      fake_money_detection: state.fakeMoneyDetection ? 0.5 : 0,
       card_reader_fault: state.cardReaderFault ? 0.4 : 0.05,
       card_payment_reject: state.cardPaymentReject ? 0.35 : 0.03,
       dispense_failure: state.dispenseFaultMode ? 0.3 : 0.02,

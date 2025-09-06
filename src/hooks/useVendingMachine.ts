@@ -17,7 +17,6 @@ export function useCashPayment() {
   } = useVendingStore();
 
   const {
-    changeShortageMode,
     cashInventory,
   } = useAdminStore();
 
@@ -87,21 +86,19 @@ export function useCashPayment() {
         return true;
       }
 
-      // 거스름돈 부족 모드 체크
-      if (changeShortageMode && returnAmount > 0) {
-        const changeResult = calculateOptimalChange(
-          returnAmount,
-          cashInventory
-        );
+      // 실시간 재고 기반 거스름돈 계산
+      const changeResult = calculateOptimalChange(
+        returnAmount,
+        cashInventory
+      );
 
-        if (!changeResult.possible) {
-          setError(
-            "change_shortage",
-            "거스름돈이 부족합니다. 정확한 금액을 투입해주세요."
-          );
-          toast.error(`거스름돈 부족! ${changeResult.shortage ? "일부" : "전액"} 반환할 수 없습니다.`);
-          return false;
-        }
+      if (!changeResult.possible) {
+        setError(
+          "change_shortage",
+          "거스름돈이 부족합니다. 정확한 금액을 투입해주세요."
+        );
+        toast.error("거스름돈 부족으로 반환할 수 없습니다.");
+        return false;
       }
 
       // 상태 초기화

@@ -5,26 +5,15 @@ export interface ExceptionToggleItem {
   key: string;
   label: string;
   description: string;
-  category: 'payment' | 'system';
-  severity: 'low' | 'medium' | 'high' | 'critical';
 }
 
 // 예외 토글 항목 정의
 export const EXCEPTION_TOGGLES: ExceptionToggleItem[] = [
-  // 결제 예외 (2가지)
-  {
-    key: 'changeShortageMode',
-    label: '거스름돈 부족',
-    description: '정확한 금액 투입을 요구합니다',
-    category: 'payment',
-    severity: 'medium',
-  },
+  // 결제 예외 (1가지)
   {
     key: 'fakeMoneyDetection',
     label: '위조화폐 감지',
     description: '투입된 화폐를 위조화폐로 판단합니다',
-    category: 'payment',
-    severity: 'high',
   },
   
   // 시스템 예외 (3가지)
@@ -32,57 +21,16 @@ export const EXCEPTION_TOGGLES: ExceptionToggleItem[] = [
     key: 'cardReaderFault',
     label: '카드 인식 실패',
     description: '카드를 인식하지 못합니다',
-    category: 'system',
-    severity: 'high',
   },
   {
     key: 'cardPaymentReject',
     label: '카드 결제 거부',
     description: '카드 결제가 승인되지 않습니다',
-    category: 'system',
-    severity: 'medium',
   },
   {
     key: 'dispenseFaultMode',
     label: '배출 실패',
     description: '음료 배출 과정에서 실패가 발생합니다',
-    category: 'system',
-    severity: 'critical',
   },
 ];
 
-// 카테고리별 그룹핑
-export const GROUPED_EXCEPTIONS = {
-  payment: EXCEPTION_TOGGLES.filter(item => item.category === 'payment'),
-  system: EXCEPTION_TOGGLES.filter(item => item.category === 'system'),
-};
-
-// 심각도별 색상 매핑
-export const SEVERITY_COLORS = {
-  low: 'text-blue-600 bg-blue-50 border-blue-200',
-  medium: 'text-yellow-600 bg-yellow-50 border-yellow-200',
-  high: 'text-orange-600 bg-orange-50 border-orange-200',
-  critical: 'text-red-600 bg-red-50 border-red-200',
-};
-
-// 카테고리 표시 정보
-export const CATEGORY_INFO = {
-  payment: {
-    label: '결제 예외',
-    icon: '💳',
-    description: '현금 및 카드 결제와 관련된 오류 상황',
-    color: 'bg-blue-500',
-  },
-  stock: {
-    label: '재고 관리',
-    icon: '📦',
-    description: '음료 재고와 관련된 설정',
-    color: 'bg-green-500',
-  },
-  system: {
-    label: '시스템 예외',
-    icon: '⚙️',
-    description: '자판기 하드웨어 및 시스템 관련 오류',
-    color: 'bg-red-500',
-  },
-};
