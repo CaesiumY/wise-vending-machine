@@ -17,7 +17,6 @@ import type { ActionResult } from "@/shared/types/utility.types";
 import { PRODUCTS } from "@/features/products/constants/products";
 import { calculateOptimalChange } from "@/features/payment/utils/changeCalculator";
 import { getErrorMessage } from "../constants/errorMessages";
-import { formatSuccessMessage } from "@/shared/utils/formatters";
 import { useAdminStore } from "@/features/admin/store/adminStore";
 
 // Store 생성 (일반 Zustand 패턴 사용)
@@ -209,10 +208,7 @@ export const useVendingStore = create<VendingStore>()(
           });
 
           // 5. 성공 메시지 표시
-          const successMessage = formatSuccessMessage("cash_inserted", {
-            amount: denomination,
-            balance: newBalance,
-          });
+          const successMessage = `${denomination}원이 투입되었습니다.\n현재 잔액: ${newBalance}원`;
           toast.success(successMessage);
 
           return { success: true };
