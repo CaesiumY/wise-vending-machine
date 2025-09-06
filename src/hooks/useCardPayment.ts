@@ -12,6 +12,7 @@ export function useCardPayment() {
     products,
     setError,
     setStatus,
+    setCardInfo: setVendingCardInfo,
     showDialog,
     dispenseProduct,
     updateProductStock,
@@ -94,10 +95,7 @@ export function useCardPayment() {
     });
 
     try {
-      // 결제 처리 시뮬레이션 (최소 1초 대기)
-      await new Promise((resolve) =>
-        setTimeout(resolve, 1000 + Math.random() * 1000)
-      );
+      // 결제 처리 (즉시 처리)
 
       // (삭제) 네트워크 오류 시뮬레이션 제거
 
@@ -259,8 +257,7 @@ export function useCardPayment() {
     });
 
     try {
-      // 취소 처리 시뮬레이션
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // 취소 처리 (즉시 처리)
 
       // 재고 복구
       if (product) {
@@ -299,9 +296,42 @@ export function useCardPayment() {
     return null;
   };
 
+  // 음료 선택 (결제 진행 없이 선택만)
+  const selectProductForCard = (productId: ProductType) => {
+    // 상태 관리를 위해 selectProduct 호출
+    useVendingStore.getState().selectProduct(productId);
+  };
+
+  // 자동 카드 인식 (PaymentSelector에서 사용)
+  const autoRecognizeCard = async (): Promise<boolean> => {
+    // 카드 리더기 오류 체크 (간단한 버전)
+    if (cardReaderFault && Math.random() < 0.2) {
+      setError(
+        "card_reader_fault", 
+        "카드를 인식할 수 없습니다."
+      );
+      return false;
+    }
+
+    // 카드 정보 자동 생성
+    const mockCardInfo: Partial<CardPayment> = {
+      cardType: Math.random() > 0.5 ? "credit" : "debit",
+      cardNumber: "**** **** **** " + Math.floor(1000 + Math.random() * 9000),
+      transactionId: "TXN" + Date.now().toString().slice(-6),
+    };
+
+    setCardInfo(mockCardInfo);
+    setVendingCardInfo(mockCardInfo);
+    setStatus("card_process");
+    
+    return true;
+  };
+
   return {
     recognizeCard,
+    autoRecognizeCard, // 새로운 자동 인식 메서드
     processCardPayment,
+    selectProductForCard, // 새로운 메서드 추가
     dispenseWithCard,
     cancelCardPayment,
     checkStockAndActivateButtons,

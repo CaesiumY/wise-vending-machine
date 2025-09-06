@@ -72,6 +72,11 @@ export interface VendingMachineState {
   selectedProduct: Nullable<ProductType>
   paymentMethod: Nullable<PaymentMethod>
   
+  // 카드 결제 관련
+  selectedProductForCard: Nullable<ProductType>
+  showPaymentConfirm: boolean
+  cardInfo: Nullable<import('./payment').CardPayment>
+  
   // 현금 투입 관련 (새 추가)
   insertedCash: CashDenomination[]
   lastInsertTime: number
@@ -112,6 +117,8 @@ export interface VendingActions {
   
   // 카드 결제 관련 (새로 추가)
   selectCardPayment: () => void
+  confirmCardPayment: () => Promise<ActionResult>
+  cancelCardPayment: () => void
   updateStock: (productId: ProductType, change: number) => void
   
   // 거스름돈 처리
@@ -131,6 +138,7 @@ export interface VendingActions {
   
   // 시스템 제어
   setStatus: (status: VendingStatus) => void
+  setCardInfo: (cardInfo: Nullable<import('./payment').CardPayment>) => void
   setError: (errorType: ErrorType, message?: string) => void
   clearError: () => void
   

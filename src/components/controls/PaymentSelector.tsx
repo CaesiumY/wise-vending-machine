@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useVendingStore } from "@/stores/vendingStore";
+import { useCardPayment } from "@/hooks/useCardPayment";
 import type { PaymentMethod } from "@/types";
 
 interface PaymentSelectorProps {
@@ -10,6 +11,7 @@ interface PaymentSelectorProps {
 
 export function PaymentSelector({ className }: PaymentSelectorProps) {
   const { paymentMethod, status, setPaymentMethod, resetPaymentMethod } = useVendingStore();
+  const { autoRecognizeCard } = useCardPayment();
 
   // 결제 방식 선택 가능한 상태인지 확인
   const isSelectionDisabled = status !== "idle";
@@ -18,12 +20,18 @@ export function PaymentSelector({ className }: PaymentSelectorProps) {
   const shouldShowCancelButton = paymentMethod !== null && status !== "idle";
 
   // 결제 방식 선택 핸들러
-  const handlePaymentSelect = (method: PaymentMethod) => {
+  const handlePaymentSelect = async (method: PaymentMethod) => {
     if (isSelectionDisabled) return;
 
     const result = setPaymentMethod(method);
     if (!result.success) {
       console.warn("결제 방식 설정 실패:", result.error);
+      return;
+    }
+
+    // 카드 결제 선택 시 자동으로 카드 인식
+    if (method === "card") {
+      await autoRecognizeCard();
     }
   };
 

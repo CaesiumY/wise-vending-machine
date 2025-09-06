@@ -32,6 +32,11 @@ const initialState = {
   status: "idle" as const,
   isOperational: true,
 
+  // 카드 결제 관련
+  selectedProductForCard: null as ProductType | null,
+  showPaymentConfirm: false,
+  cardInfo: null,
+
   // 현금 투입 관련 (새 추가)
   insertedCash: [] as CashDenomination[],
   lastInsertTime: 0,
@@ -117,7 +122,11 @@ export const useVendingStore = create<VendingStore>()(
         if (paymentMethod === "cash") {
           get().processCashTransaction(productId);
         } else {
-          get().processCardPayment(product.price);
+          // 카드 결제: 음료 선택만 저장하고 결제 확인 대기
+          set({ 
+            selectedProductForCard: productId,
+            showPaymentConfirm: true 
+          });
         }
 
         return { success: true };
@@ -126,7 +135,11 @@ export const useVendingStore = create<VendingStore>()(
       reset: () => {
         // 타이머 정리
         get().clearTimeout();
-        set(initialState);
+        set({
+          ...initialState,
+          selectedProductForCard: null,
+          showPaymentConfirm: false
+        });
       },
 
       resetPaymentMethod: (): ActionResult => {
@@ -160,6 +173,8 @@ export const useVendingStore = create<VendingStore>()(
           currentBalance: 0,
           insertedCash: [],
           lastInsertTime: 0,
+          selectedProductForCard: null,
+          showPaymentConfirm: false,
         });
 
         get().clearError();
@@ -274,6 +289,34 @@ export const useVendingStore = create<VendingStore>()(
         });
       },
 
+      // 카드 결제 확인
+      confirmCardPayment: async (): Promise<ActionResult> => {
+        const { selectedProductForCard, products } = get();
+        
+        if (!selectedProductForCard) {
+          return { success: false, error: "선택된 상품이 없습니다." };
+        }
+
+        const product = products[selectedProductForCard];
+        set({ 
+          showPaymentConfirm: false,
+          selectedProduct: selectedProductForCard
+        });
+
+        // 실제 카드 결제 진행
+        const result = await get().processCardPayment(product.price);
+        return result;
+      },
+
+      // 카드 결제 취소
+      cancelCardPayment: () => {
+        set({
+          selectedProductForCard: null,
+          showPaymentConfirm: false,
+          selectedProduct: null
+        });
+      },
+
       // 상품별 재고 업데이트
       updateStock: (productId: ProductType, change: number) => {
         set((state) => ({
@@ -366,7 +409,7 @@ export const useVendingStore = create<VendingStore>()(
 
       // 배출 시뮬레이션
       dispenseProduct: async (): Promise<boolean> => {
-        const { selectedProduct, currentBalance, paymentMethod, products } =
+        const { selectedProduct, paymentMethod, products } =
           get();
         const adminState = useAdminStore.getState();
 
@@ -417,20 +460,31 @@ export const useVendingStore = create<VendingStore>()(
               duration: 3000,
             }
           );
+          
+          // 카드 결제는 바로 대기 상태로 복귀
+          get().reset();
+          return true;
         }
 
-        // 잔액이 있을 때 연속 구매 안내 (현금 결제만)
-        if (paymentMethod === "cash" && currentBalance >= 600) {
-          // 다음 구매로 진행
-          set({
-            selectedProduct: null,
-            status: "product_select",
-          });
-        } else {
-          // 완전히 거래 종료 - 대기 상태로 복귀
-          setTimeout(() => {
-            get().reset();
-          }, 2000); // 2초 후 자동으로 대기 상태로 전환
+        // 현금 결제 후 잔액 확인 및 거스름돈 처리 (다이어그램의 '잔액 확인' 단계)  
+        if (paymentMethod === "cash") {
+          const { lastTransaction } = get();
+          
+          if (lastTransaction && lastTransaction.change > 0) {
+            // 거스름돈이 있는 경우 - 거스름돈 반환 후 대기 상태로 (다이어그램 플로우)
+            get().showDialog(
+              "success",
+              "거스름돈 반환",
+              `거스름돈 ${lastTransaction.change}원을 받아가세요.`
+            );
+            
+            get().reset(); // 완전 초기화 (다이어그램: 잔액 확인 → 0원일 경우 → 대기 상태)
+            return true;
+          } else {
+            // 거스름돈이 없는 경우 (정확한 금액) - 바로 대기 상태로 
+            get().reset(); // 완전 초기화
+            return true;
+          }
         }
 
         return true;
@@ -479,7 +533,7 @@ export const useVendingStore = create<VendingStore>()(
 
         set({
           lastTransaction: transaction,
-          currentBalance: changeAmount, // 거스름돈만 남김
+          currentBalance: currentBalance - product.price, // 상품 가격만큼 차감 (거스름돈이나 0원)
           status: "dispensing",
         });
 
@@ -574,6 +628,8 @@ export const useVendingStore = create<VendingStore>()(
       },
 
       setStatus: (status) => set({ status }),
+      
+      setCardInfo: (cardInfo) => set({ cardInfo }),
 
       setError: (errorType: ErrorType, message?: string) => {
         const errorMessage = message || get().getErrorMessage(errorType);

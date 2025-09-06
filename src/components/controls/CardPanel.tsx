@@ -1,49 +1,33 @@
-import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreditCard } from "lucide-react";
+import { CreditCard, ShoppingCart, X, Loader2 } from "lucide-react";
 import { useCardPayment } from "@/hooks/useCardPayment";
 import { useVendingStore } from "@/stores/vendingStore";
-import type { ProductType, Product } from "@/types";
-
-interface AvailableProduct extends Product {
-  isAvailable: boolean;
-  reason: string | null;
-}
 
 export function CardPanel() {
-  const { status } = useVendingStore();
   const {
-    recognizeCard,
-    processCardPayment,
-    dispenseWithCard,
-    checkStockAndActivateButtons,
-    isProcessing,
+    status,
+    selectedProductForCard,
+    showPaymentConfirm,
+    products,
     cardInfo,
-  } = useCardPayment();
+    confirmCardPayment,
+    cancelCardPayment,
+  } = useVendingStore();
+  const { isProcessing } = useCardPayment();
 
-  const [availableProducts, setAvailableProducts] = useState<
-    AvailableProduct[]
-  >([]);
-
-  useEffect(() => {
-    setAvailableProducts(checkStockAndActivateButtons());
-  }, [checkStockAndActivateButtons]);
-
-  const handleCardInsert = async () => {
-    const recognized = await recognizeCard();
-    if (recognized) {
-      setAvailableProducts(checkStockAndActivateButtons());
+  // 결제 확인
+  const handlePaymentConfirm = async () => {
+    const result = await confirmCardPayment();
+    if (!result.success) {
+      // 오류 처리는 useVendingStore에서 처리
+      console.error("결제 실패:", result.error);
     }
   };
 
-  const handleProductSelect = async (productId: ProductType) => {
-    useVendingStore.getState().selectProduct(productId);
-
-    const paymentSuccess = await processCardPayment(productId);
-    if (paymentSuccess) {
-      await dispenseWithCard(productId);
-    }
+  // 결제 취소
+  const handlePaymentCancel = () => {
+    cancelCardPayment();
   };
 
   return (
@@ -54,45 +38,80 @@ export function CardPanel() {
           카드 결제
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {status === "idle" && (
-          <Button
-            onClick={handleCardInsert}
-            className="w-full"
-            disabled={isProcessing}
-          >
-            {isProcessing ? <></> : <CreditCard className="h-4 w-4 mr-2" />}
-            카드 삽입
-          </Button>
+      <CardContent className="space-y-4">        
+        {cardInfo && status === "card_process" && !showPaymentConfirm && (
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">카드 인식 완료</p>
+            <p className="text-sm text-center py-4 text-muted-foreground border rounded-lg bg-muted/30">
+              ← 좌측에서 원하는 음료를 선택해주세요
+            </p>
+          </div>
         )}
 
-        {cardInfo && status === "card_process" && (
-          <div className="space-y-2">
-            <p className="text-sm text-muted-foreground">
-              카드 인식: {cardInfo.cardNumber}
-            </p>
+        {showPaymentConfirm && selectedProductForCard && (
+          <div className="space-y-4 p-4 border rounded-lg bg-muted/50 relative">
+            {/* 결제 진행 중 오버레이 */}
+            {isProcessing && (
+              <div className="absolute inset-0 bg-background/80 backdrop-blur-sm rounded-lg flex items-center justify-center z-10">
+                <div className="flex flex-col items-center gap-2">
+                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                  <p className="text-sm font-medium">카드 결제 처리 중...</p>
+                </div>
+              </div>
+            )}
+            
+            <div className="flex items-center gap-2 text-sm font-medium">
+              <ShoppingCart className="h-4 w-4" />
+              결제 확인
+            </div>
 
-            <div className="grid gap-2">
-              {availableProducts.map((product) => (
-                <Button
-                  key={product.id}
-                  onClick={() => handleProductSelect(product.id)}
-                  disabled={!product.isAvailable || isProcessing}
-                  variant={product.isAvailable ? "default" : "secondary"}
-                  className="w-full justify-between"
-                >
-                  <span>{product.name}</span>
-                  <span>{product.price}원</span>
-                  {!product.isAvailable && (
-                    <span className="text-xs">({product.reason})</span>
-                  )}
-                </Button>
-              ))}
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span>선택 음료:</span>
+                <span className="font-medium">
+                  {products[selectedProductForCard].name}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span>가격:</span>
+                <span className="font-medium">
+                  {products[selectedProductForCard].price.toLocaleString()}원
+                </span>
+              </div>
+            </div>
+
+            <div className="flex gap-2">
+              <Button
+                onClick={handlePaymentConfirm}
+                disabled={isProcessing}
+                className="flex-1"
+              >
+                {isProcessing ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    결제 중...
+                  </>
+                ) : (
+                  <>
+                    <CreditCard className="h-4 w-4 mr-2" />
+                    결제 진행
+                  </>
+                )}
+              </Button>
+              <Button
+                onClick={handlePaymentCancel}
+                variant="outline"
+                disabled={isProcessing}
+                className="flex-1"
+              >
+                <X className="h-4 w-4 mr-2" />
+                취소
+              </Button>
             </div>
           </div>
         )}
 
-        {isProcessing && (
+        {isProcessing && !showPaymentConfirm && (
           <div className="flex items-center justify-center py-4">
             <span>처리 중...</span>
           </div>

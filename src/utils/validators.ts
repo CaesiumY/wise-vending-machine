@@ -250,9 +250,7 @@ export function validateAdminExceptions(): {
   exceptionType?: ErrorType;
   message?: string;
 } {
-  const adminSettings = useAdminStore.getState();
   // (삭제) 점검/환경 관련 예외 시나리오 제거
-
   return { hasException: false };
 }
 

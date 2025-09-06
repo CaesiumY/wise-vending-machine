@@ -38,9 +38,7 @@ export function DispenseArea({ className }: DispenseAreaProps) {
                 </div>
                 <div className="text-xs">거스름돈</div>
               </div>
-            ) : (
-              <div className="text-sm">거스름돈 반환구</div>
-            )}
+            ) : null}
           </div>
         </div>
       </Card>
