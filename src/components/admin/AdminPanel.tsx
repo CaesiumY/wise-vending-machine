@@ -1,22 +1,22 @@
-import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { Badge } from "@/components/ui/badge";
-import { ChevronDown, ChevronUp, Settings } from "lucide-react";
-import { ExceptionToggles } from "./ExceptionToggles";
 import { cn } from "@/lib/utils";
-import { useAdminStore, adminSelectors } from "@/stores/adminStore";
+import { adminSelectors, useAdminStore } from "@/stores/adminStore";
+import { ChevronDown, Settings } from "lucide-react";
+import { ExceptionToggles } from "./ExceptionToggles";
 
 interface AdminPanelProps {
   className?: string;
 }
 
 export function AdminPanel({ className }: AdminPanelProps) {
-  const { isPanelOpen, errorCount, lastError } = useAdminStore();
+  const { errorCount, lastError } = useAdminStore();
 
   // const { triggerException } = useExceptionHandler(); // 현재 미사용
 
@@ -26,36 +26,30 @@ export function AdminPanel({ className }: AdminPanelProps) {
 
   return (
     <div className={cn("mt-auto", className)}>
-      <Collapsible
-        open={isPanelOpen}
-        onOpenChange={useAdminStore.getState().togglePanel}
-      >
+      <Collapsible defaultOpen={false}>
         <CollapsibleTrigger asChild>
           <Card className="p-3 cursor-pointer">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Settings className="h-4 w-4" />
                 <span className="font-medium text-sm">테스트 패널</span>
-                {activeExceptions.length > 0 && (
-                  <Badge
-                    variant={
-                      systemStatus.status === "critical"
-                        ? "destructive"
-                        : "secondary"
-                    }
-                    className="text-xs"
-                  >
-                    {activeExceptions.length}개 활성
-                  </Badge>
-                )}
+                <Badge
+                  variant={
+                    systemStatus.status === "critical"
+                      ? "destructive"
+                      : "secondary"
+                  }
+                  className="text-xs"
+                  style={{
+                    display:
+                      activeExceptions.length > 0 ? "inline-flex" : "none",
+                  }}
+                >
+                  {activeExceptions.length}개 활성
+                </Badge>
               </div>
               <div className="flex items-center gap-1 text-xs">
-                <span>{isPanelOpen ? "접기" : "펼치기"}</span>
-                {isPanelOpen ? (
-                  <ChevronUp className="h-4 w-4" />
-                ) : (
-                  <ChevronDown className="h-4 w-4" />
-                )}
+                <ChevronDown className="h-4 w-4" />
               </div>
             </div>
           </Card>
@@ -64,7 +58,6 @@ export function AdminPanel({ className }: AdminPanelProps) {
         <CollapsibleContent className="mt-2 space-y-3">
           {/* 예외 상황 토글 */}
           <ExceptionToggles activeExceptions={activeExceptions} />
-
 
           {/* 시스템 상태 표시 */}
           {(errorCount > 0 || lastError) && (

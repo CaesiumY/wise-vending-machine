@@ -156,7 +156,6 @@ export interface TaskAdminSettings {
 // Task-3용 AdminStore 타입 (Zustand 스토어용)
 export interface TaskAdminStore extends TaskAdminSettings {
   // UI 상태
-  isPanelOpen: boolean
   activePreset: Nullable<PresetName>
   
   // 모니터링 상태
@@ -172,9 +171,6 @@ export interface TaskAdminStore extends TaskAdminSettings {
   cashInventory: Record<CashDenomination, number>
 
   // 액션들
-  togglePanel: () => void
-  openPanel: () => void
-  closePanel: () => void
   toggleException: (exception: keyof TaskAdminSettings) => void
   
   // 화폐 재고 관리 (Task 4 추가)

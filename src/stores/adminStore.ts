@@ -31,7 +31,6 @@ export const useAdminStore = create<TaskAdminStore>((set, get) => ({
   ...defaultSettings,
 
   // UI 상태
-  isPanelOpen: false,
   activePreset: "normal",
 
   // 모니터링 상태
@@ -42,19 +41,6 @@ export const useAdminStore = create<TaskAdminStore>((set, get) => ({
   // 화폐 보유량
   cashInventory: defaultCashInventory,
 
-  // ===== 패널 제어 =====
-
-  togglePanel: () => {
-    set((state: TaskAdminStore) => ({ isPanelOpen: !state.isPanelOpen }));
-  },
-
-  openPanel: () => {
-    set({ isPanelOpen: true });
-  },
-
-  closePanel: () => {
-    set({ isPanelOpen: false });
-  },
 
   // ===== 예외 설정 =====
 
