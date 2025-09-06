@@ -93,7 +93,9 @@ export function ProductDisplay({ className }: ProductDisplayProps) {
               <div className="text-3xl" />
 
               {/* 음료 이름 */}
-              <span className="font-bold text-lg">{product.name}</span>
+              <span className="font-bold text-lg">
+                {product.name} ({product.stock})
+              </span>
 
               {/* 가격 */}
               <span className="text-sm">
@@ -115,14 +117,6 @@ export function ProductDisplay({ className }: ProductDisplayProps) {
                 {buttonState === "selected" && (
                   <Badge className="text-xs">선택됨</Badge>
                 )}
-                {/* 재고 표시 (재고가 적을 때만) */}
-                {product.stock > 0 &&
-                  product.stock <= 2 &&
-                  buttonState !== "out-of-stock" && (
-                    <Badge variant="outline" className="text-xs">
-                      재고 {product.stock}
-                    </Badge>
-                  )}
               </div>
             </Button>
           </div>
