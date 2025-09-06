@@ -92,7 +92,7 @@ export function useCashPayment() {
         cashReserve
       );
 
-      if (!changeResult.possible) {
+      if (!changeResult.canProvideChange) {
         setError(
           "change_shortage",
           "거스름돈이 부족합니다. 정확한 금액을 투입해주세요."

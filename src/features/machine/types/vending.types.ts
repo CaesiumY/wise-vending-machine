@@ -25,19 +25,13 @@ export type ErrorType =
 
 // 거스름돈 계산 결과
 export interface ChangeBreakdown {
-  total: number
-  denominations: Record<CashDenomination, number>
-  possible: boolean
-  shortage?: CashDenomination[]
-  remainingAmount?: number
-  // 새 필드들 (ChangeCalculationResult 호환)
   canProvideChange: boolean
   totalChange: number
   breakdown: { [K in CashDenomination]: number }
+  shortage?: CashDenomination[]
+  remainingAmount?: number
 }
 
-// 호환성을 위한 타입 별칭
-export type ChangeCalculationResult = ChangeBreakdown
 
 // 거래 정보
 export interface Transaction {

@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useAdminStore } from '@/features/admin/store/adminStore';
 import type { CashDenomination } from '@/features/payment/types/payment.types';
-import type { ChangeCalculationResult } from '@/features/machine/types/vending.types';
+import type { ChangeBreakdown } from '@/features/machine/types/vending.types';
 import {
   calculateOptimalChange,
   updateCashReserveAfterChange,
@@ -12,13 +12,13 @@ import {
 
 export function useChangeCalculator() {
   const [isCalculating, setIsCalculating] = useState(false);
-  const [lastCalculation, setLastCalculation] = useState<ChangeCalculationResult | null>(null);
+  const [lastCalculation, setLastCalculation] = useState<ChangeBreakdown | null>(null);
   
   const { cashReserve, updateCashReserve } = useAdminStore();
 
   // 거스름돈 계산 및 지급 가능 여부 확인
   const calculateChange = useCallback(
-    async (changeAmount: number): Promise<ChangeCalculationResult> => {
+    async (changeAmount: number): Promise<ChangeBreakdown> => {
       setIsCalculating(true);
 
       try {

@@ -1,5 +1,5 @@
 import type { CashDenomination } from '@/features/payment/types/payment.types'
-import type { ChangeCalculationResult } from '@/features/machine/types/vending.types'
+import type { ChangeBreakdown } from '@/features/machine/types/vending.types'
 
 // 화폐 단위 (큰 단위부터 정렬)
 const DENOMINATIONS: CashDenomination[] = [10000, 5000, 1000, 500, 100];
@@ -8,18 +8,9 @@ const DENOMINATIONS: CashDenomination[] = [10000, 5000, 1000, 500, 100];
 export function calculateOptimalChange(
   changeAmount: number,
   inventory: Record<CashDenomination, number>
-): ChangeCalculationResult {
+): ChangeBreakdown {
   if (changeAmount === 0) {
     return {
-      total: 0,
-      denominations: {
-        10000: 0,
-        5000: 0,
-        1000: 0,
-        500: 0,
-        100: 0
-      },
-      possible: true,
       canProvideChange: true,
       totalChange: 0,
       breakdown: {
@@ -60,16 +51,13 @@ export function calculateOptimalChange(
   const canProvideChange = remainingAmount === 0;
 
   return {
-    total: changeAmount - remainingAmount,
-    denominations: breakdown,
-    possible: canProvideChange,
+    canProvideChange,
+    totalChange: changeAmount,
+    breakdown,
     shortage: canProvideChange ? undefined : DENOMINATIONS.filter(d => 
       Math.floor(remainingAmount / d) > (inventory[d] || 0)
     ),
-    remainingAmount: canProvideChange ? 0 : remainingAmount,
-    canProvideChange,
-    totalChange: changeAmount,
-    breakdown
+    remainingAmount: canProvideChange ? 0 : remainingAmount
   };
 }
 
@@ -77,7 +65,7 @@ export function calculateOptimalChange(
 export function calculateOptimalChangeDP(
   changeAmount: number,
   inventory: Record<CashDenomination, number>
-): ChangeCalculationResult {
+): ChangeBreakdown {
   // DP 테이블: dp[i] = i원을 만들기 위한 최소 화폐 개수
   const dp = new Array(changeAmount + 1).fill(Infinity);
   const parent = new Array(changeAmount + 1).fill(-1);
@@ -119,13 +107,10 @@ export function calculateOptimalChangeDP(
   }
 
   return {
-    total: canProvideChange ? changeAmount : 0,
-    denominations: breakdown,
-    possible: canProvideChange,
-    remainingAmount: canProvideChange ? 0 : changeAmount,
     canProvideChange,
     totalChange: changeAmount,
-    breakdown
+    breakdown,
+    remainingAmount: canProvideChange ? 0 : changeAmount
   };
 }
 

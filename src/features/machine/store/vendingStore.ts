@@ -296,9 +296,6 @@ export const useVendingStore = create<VendingStore>()(
             paymentMethod: "card",
             change: 0,
             changeBreakdown: {
-              total: 0,
-              denominations: { 100: 0, 500: 0, 1000: 0, 5000: 0, 10000: 0 },
-              possible: true,
               canProvideChange: true,
               totalChange: 0,
               breakdown: { 100: 0, 500: 0, 1000: 0, 5000: 0, 10000: 0 },
@@ -441,7 +438,7 @@ export const useVendingStore = create<VendingStore>()(
         );
 
         // 거스름돈 부족 체크 (실시간 재고 기반만 사용)
-        const shouldFailChange = !changeResult.possible;
+        const shouldFailChange = !changeResult.canProvideChange;
 
         if (shouldFailChange) {
           get().setError(
