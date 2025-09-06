@@ -65,7 +65,7 @@ export function useCashPayment() {
 
       return false;
     } catch {
-      setError("system_maintenance", "투입 처리 중 오류가 발생했습니다.");
+      setError("max_amount_exceeded", "투입 처리 중 오류가 발생했습니다.");
       return false;
     }
   };
@@ -147,7 +147,7 @@ export function useCashPayment() {
       showDialog("success", "반환 완료", `${returnAmount}원을 반환했습니다.`);
       return true;
     } catch {
-      setError("system_maintenance", "반환 처리 중 오류가 발생했습니다.");
+      setError("timeout_occurred", "반환 처리 중 오류가 발생했습니다.");
       return false;
     }
   };

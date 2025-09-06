@@ -169,18 +169,11 @@ export const useAdminStore = create<TaskAdminStore>((set, get) => ({
     // 해당 예외를 즉시 발생시키는 로직
     const exceptionMap: Partial<Record<ErrorType, keyof TaskAdminSettings>> = {
       change_shortage: "changeShortageMode",
-      fake_money_detected: "fakeMoneyDetection",
       bill_jam: "billJamMode",
       coin_jam: "coinJamMode",
       dispense_failure: "dispenseFaultMode",
       card_reader_fault: "cardReaderFault",
-      network_error: "networkErrorMode",
-      system_maintenance: "systemMaintenanceMode",
       timeout_occurred: "timeoutMode",
-      dispense_blocked: "dispenseBlockedMode",
-      temperature_error: "temperatureErrorMode",
-      power_unstable: "powerUnstableMode",
-      admin_intervention: "adminInterventionMode",
     };
 
     const settingKey = exceptionMap[type];

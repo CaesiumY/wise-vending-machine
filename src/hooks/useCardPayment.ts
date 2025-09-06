@@ -279,7 +279,7 @@ export function useCardPayment() {
         description: "결제 취소 처리 중 문제가 발생했습니다.",
         duration: 4000,
       });
-      setError("system_maintenance", "취소 처리 중 오류가 발생했습니다.");
+      setError("card_payment_reject", "취소 처리 중 오류가 발생했습니다.");
     } finally {
       resetCardPayment();
     }

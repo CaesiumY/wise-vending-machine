@@ -123,9 +123,9 @@ export const useVendingStore = create<VendingStore>()(
           get().processCashTransaction(productId);
         } else {
           // 카드 결제: 음료 선택만 저장하고 결제 확인 대기
-          set({ 
+          set({
             selectedProductForCard: productId,
-            showPaymentConfirm: true 
+            showPaymentConfirm: true,
           });
         }
 
@@ -138,7 +138,7 @@ export const useVendingStore = create<VendingStore>()(
         set({
           ...initialState,
           selectedProductForCard: null,
-          showPaymentConfirm: false
+          showPaymentConfirm: false,
         });
       },
 
@@ -214,8 +214,11 @@ export const useVendingStore = create<VendingStore>()(
             return { success: false, errorType: "max_amount_exceeded" };
           }
 
-          // 3. 연속 투입 간격 검증 (1초 간격)
+          // 3. 연속 투입 간격 검증 (1초 간격) - 화폐 인식 시간 시뮬레이션
           if (Date.now() - lastInsertTime < 1000) {
+            // 사용자에게 화폐 반환 안내 토스트 표시
+            toast.warning("화폐가 반환되었습니다. 천천히 다시 투입해주세요.");
+
             return {
               success: false,
               error: "너무 빠르게 투입하고 있습니다. 잠시 기다려주세요.",
@@ -292,15 +295,15 @@ export const useVendingStore = create<VendingStore>()(
       // 카드 결제 확인
       confirmCardPayment: async (): Promise<ActionResult> => {
         const { selectedProductForCard, products } = get();
-        
+
         if (!selectedProductForCard) {
           return { success: false, error: "선택된 상품이 없습니다." };
         }
 
         const product = products[selectedProductForCard];
-        set({ 
+        set({
           showPaymentConfirm: false,
-          selectedProduct: selectedProductForCard
+          selectedProduct: selectedProductForCard,
         });
 
         // 실제 카드 결제 진행
@@ -313,7 +316,7 @@ export const useVendingStore = create<VendingStore>()(
         set({
           selectedProductForCard: null,
           showPaymentConfirm: false,
-          selectedProduct: null
+          selectedProduct: null,
         });
       },
 
@@ -409,8 +412,7 @@ export const useVendingStore = create<VendingStore>()(
 
       // 배출 시뮬레이션
       dispenseProduct: async (): Promise<boolean> => {
-        const { selectedProduct, paymentMethod, products } =
-          get();
+        const { selectedProduct, paymentMethod, products } = get();
         const adminState = useAdminStore.getState();
 
         if (!selectedProduct) return false;
@@ -454,10 +456,7 @@ export const useVendingStore = create<VendingStore>()(
 
         // 모든 결제 방식에서 배출 완료 토스트 표시
         toast.success(
-          `${products[selectedProduct].name}이(가) 배출되었습니다! 🎉`,
-          {
-            duration: 3000,
-          }
+          `${products[selectedProduct].name}이(가) 배출되었습니다! 🎉`
         );
 
         // 카드 결제는 바로 대기 상태로 복귀
@@ -466,20 +465,20 @@ export const useVendingStore = create<VendingStore>()(
           return true;
         }
 
-        // 현금 결제 후 잔액 확인 (다이어그램의 '잔액 확인' 단계)  
+        // 현금 결제 후 잔액 확인 (다이어그램의 '잔액 확인' 단계)
         if (paymentMethod === "cash") {
           const { currentBalance } = get();
-          
+
           // 다이어그램: 단순히 잔액이 0원인지 아닌지만 확인
           if (currentBalance > 0) {
             // 잔액이 0원이 아닌 경우 → 음료 선택 가능 상태로 (연속 구매)
             set({
               status: "product_select",
-              selectedProduct: null
+              selectedProduct: null,
             });
-            
+
             get().showDialog(
-              "info", 
+              "info",
               "연속 구매 가능",
               `잔액 ${currentBalance}원이 남아있습니다. 추가 구매가 가능합니다.`
             );
@@ -630,7 +629,7 @@ export const useVendingStore = create<VendingStore>()(
       },
 
       setStatus: (status) => set({ status }),
-      
+
       setCardInfo: (cardInfo) => set({ cardInfo }),
 
       setError: (errorType: ErrorType, message?: string) => {
@@ -673,27 +672,16 @@ export const useVendingStore = create<VendingStore>()(
 
       getErrorMessage: (errorType: ErrorType): string => {
         const errorMessages: Record<ErrorType, string> = {
+          // 실제 사용되는 오류 타입들만 유지
           change_shortage: "거스름돈이 부족합니다. 정확한 금액을 투입해주세요.",
-          fake_money_detected: "위조화폐가 감지되었습니다. 화폐를 반환합니다.",
           bill_jam: "지폐가 걸렸습니다. 다시 투입해주세요.",
           coin_jam: "동전이 걸렸습니다. 다시 투입해주세요.",
           out_of_stock: "선택하신 음료가 품절되었습니다.",
-          dispense_failure:
-            "음료 배출에 실패했습니다. 잠시 후 다시 시도해주세요.",
+          dispense_failure: "음료 배출에 실패했습니다. 잠시 후 다시 시도해주세요.",
           card_reader_fault: "카드를 인식할 수 없습니다. 다시 삽입해주세요.",
-          card_payment_reject:
-            "카드 결제가 거부되었습니다. 다른 카드를 사용해주세요.",
-          network_error:
-            "네트워크 오류가 발생했습니다. 현금 결제를 이용해주세요.",
-          system_maintenance: "시스템 점검 중입니다. 잠시 후 이용해주세요.",
+          card_payment_reject: "카드 결제가 거부되었습니다. 다른 카드를 사용해주세요.",
           max_amount_exceeded: "최대 투입 금액을 초과했습니다.",
-          timeout_occurred:
-            "시간이 초과되었습니다. 처음부터 다시 시도해주세요.",
-          dispense_blocked: "배출구가 막혔습니다. 관리자에게 문의해주세요.",
-          temperature_error: "온도 이상으로 서비스가 제한됩니다.",
-          power_unstable: "전원이 불안정합니다. 잠시 후 이용해주세요.",
-          admin_intervention:
-            "관리자 개입이 필요합니다. 관리자에게 문의해주세요.",
+          timeout_occurred: "시간이 초과되었습니다. 처음부터 다시 시도해주세요.",
         };
 
         return errorMessages[errorType] || "알 수 없는 오류가 발생했습니다.";
