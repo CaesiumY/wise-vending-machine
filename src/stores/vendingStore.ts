@@ -383,8 +383,6 @@ export const useVendingStore = create<VendingStore>()(
               currentBalance: state.currentBalance + product.price, // 잔액 복구
               status: "product_select", // 다시 선택 가능 상태로
               selectedProduct: null,
-              currentError: "dispense_failure", // 에러 상태 설정 (토스트 없이)
-              errorMessage: "음료 배출에 실패했습니다."
             }));
             
             toast.error("🚫 음료 배출 실패", {

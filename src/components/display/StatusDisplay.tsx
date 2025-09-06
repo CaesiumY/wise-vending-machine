@@ -14,8 +14,6 @@ export function StatusDisplay({ className }: StatusDisplayProps) {
     paymentMethod,
     status,
     products,
-    errorMessage,
-    currentError,
   } = useVendingStore();
 
   // 선택된 제품 정보
@@ -28,10 +26,6 @@ export function StatusDisplay({ className }: StatusDisplayProps) {
 
   // 상태별 메시지 반환
   const getStatusMessage = () => {
-    if (currentError && errorMessage) {
-      return errorMessage;
-    }
-
     switch (status) {
       case "idle":
         return "음료를 선택해주세요";
@@ -99,17 +93,6 @@ export function StatusDisplay({ className }: StatusDisplayProps) {
               </div>
             </div>
           )}
-
-
-        {/* 에러 상태 표시 */}
-        {currentError && (
-          <div className="rounded-md p-3 border border-destructive/30 bg-destructive/5">
-            <div className="flex items-center gap-2">
-              <span className="text-sm">오류 발생</span>
-            </div>
-          </div>
-        )}
-
       </div>
     </Card>
   );
