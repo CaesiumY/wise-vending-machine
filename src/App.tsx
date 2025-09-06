@@ -1,9 +1,9 @@
-import { AdminPanel } from "@/components/admin/AdminPanel";
-import { PaymentSelector } from "@/components/controls/PaymentSelector";
-import { ProductDisplay } from "@/components/display/ProductDisplay";
-import { StatusDisplay } from "@/components/display/StatusDisplay";
-import { VendingMachine } from "@/components/layout/VendingMachine";
-import { Toaster } from "@/components/ui/sonner";
+import { AdminPanel } from "@/features/admin/components/AdminPanel";
+import { PaymentSelector } from "@/features/payment/components/PaymentSelector";
+import { ProductDisplay } from "@/features/products/components/ProductDisplay";
+import { StatusDisplay } from "@/features/machine/components/StatusDisplay";
+import { VendingMachine } from "@/features/machine/components/VendingMachine";
+import { Toaster } from "@/shared/components/ui/sonner";
 
 function App() {
   return (
