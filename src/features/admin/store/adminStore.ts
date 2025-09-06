@@ -1,8 +1,6 @@
 import { create } from "zustand";
-import type {
-  AdminStore,
-  AdminSettings,
-} from "@/features/admin/types/admin.types";
+import { combine } from "zustand/middleware";
+import type { AdminSettings } from "@/features/admin/types/admin.types";
 import type { ErrorType } from "@/features/machine/types/vending.types";
 import type { CashDenomination } from "@/features/payment/types/payment.types";
 
@@ -21,99 +19,94 @@ const defaultCashInventory = {
   1000: 3,
   5000: 3,
   10000: 3,
-};
+} as const;
 
-
-export const useAdminStore = create<AdminStore>((set, get) => ({
-  // 초기 상태
-  ...defaultSettings,
-
-  // UI 상태
-  activePreset: "normal",
-
-  // 모니터링 상태
-  totalTransactions: 0,
-
-  // 화폐 보유량
-  cashInventory: defaultCashInventory,
-
-
-  // ===== 예외 설정 =====
-
-  toggleException: (exception: keyof AdminSettings) => {
-    set((state: AdminStore) => ({
-      ...state,
-      [exception]: !state[exception],
-      activePreset: null, // 수동 조정시 프리셋 해제
-    }));
-  },
-
-  // 화폐 재고 업데이트 (전체 재고 교체)
-  updateCashInventory: (newInventory: Record<CashDenomination, number>) => {
-    set({ cashInventory: newInventory });
-  },
-
-  // 개별 화폐 수량 조정
-  adjustCashCount: (denomination: CashDenomination, change: number) => {
-    set((state) => ({
-      cashInventory: {
-        ...state.cashInventory,
-        [denomination]: Math.max(0, state.cashInventory[denomination] + change),
+export const useAdminStore = create(
+  combine(
+    {
+      // 초기 상태 - state만 정의
+      ...defaultSettings,
+      activePreset: "normal" as "normal" | null,
+      totalTransactions: 0,
+      cashInventory: defaultCashInventory as Record<CashDenomination, number>,
+    },
+    (set) => ({
+      // Actions만 정의 - TypeScript가 자동으로 타입 추론
+      
+      // ===== 예외 설정 =====
+      toggleException: (exception: keyof AdminSettings) => {
+        set((state) => ({
+          ...state,
+          [exception]: !state[exception],
+          activePreset: null, // 수동 조정시 프리셋 해제
+        }));
       },
-    }));
-  },
 
-  // 재고 초기화 (관리자 리셋)
-  resetCashInventory: () => {
-    set({
-      cashInventory: defaultCashInventory,
-    });
-  },
+      // ===== 화폐 재고 관리 =====
+      
+      // 화폐 재고 업데이트 (전체 재고 교체)
+      updateCashInventory: (newInventory: Record<CashDenomination, number>) => {
+        set({ cashInventory: newInventory });
+      },
 
-  // ===== 프리셋 관리 =====
+      // 개별 화폐 수량 조정
+      adjustCashCount: (denomination: CashDenomination, change: number) => {
+        set((state) => ({
+          cashInventory: {
+            ...state.cashInventory,
+            [denomination]: Math.max(0, state.cashInventory[denomination] + change),
+          },
+        }));
+      },
 
-  loadPreset: () => {
-    // 프리셋 기능 제거: no-op
-    return;
-  },
+      // 재고 초기화 (관리자 리셋)
+      resetCashInventory: () => {
+        set({
+          cashInventory: defaultCashInventory,
+        });
+      },
 
-  saveCustomPreset: (_name: string, _settings: AdminSettings) => {
-    // 실제로는 서버나 로컬스토리지에 저장
-    // 여기서는 시뮬레이션으로만 처리
-  },
+      // ===== 프리셋 관리 =====
+      
+      loadPreset: () => {
+        // 프리셋 기능 제거: no-op
+        return;
+      },
 
+      // ===== 모니터링 =====
+      
+      incrementTransactionCount: () => {
+        set((state) => ({
+          totalTransactions: state.totalTransactions + 1,
+        }));
+      },
 
-  // ===== 모니터링 =====
+      // ===== 시뮬레이션 제어 =====
+      
+      triggerException: (type: ErrorType) => {
+        // 해당 예외를 즉시 발생시키는 로직
+        const exceptionMap: Partial<Record<ErrorType, keyof AdminSettings>> = {
+          dispense_failure: "dispenseFaultMode",
+          card_reader_fault: "cardReaderFault",
+        };
 
-  incrementTransactionCount: () => {
-    set((state: AdminStore) => ({
-      totalTransactions: state.totalTransactions + 1,
-    }));
-  },
+        const settingKey = exceptionMap[type];
+        if (settingKey) {
+          // combine 패턴에서는 set을 직접 사용
+          set((state) => ({
+            ...state,
+            [settingKey]: !state[settingKey],
+            activePreset: null, // 수동 조정시 프리셋 해제
+          }));
+        }
 
+        // 로그 출력
+        console.log(`관리자가 ${type} 예외를 트리거했습니다`);
+      },
 
-  // ===== 시뮬레이션 제어 =====
-
-  triggerException: (type: ErrorType) => {
-    // 해당 예외를 즉시 발생시키는 로직
-    const exceptionMap: Partial<Record<ErrorType, keyof AdminSettings>> = {
-      dispense_failure: "dispenseFaultMode",
-      card_reader_fault: "cardReaderFault",
-    };
-
-    const settingKey = exceptionMap[type];
-    if (settingKey) {
-      get().toggleException(settingKey);
-    }
-
-    // 로그 출력
-    console.log(`관리자가 ${type} 예외를 트리거했습니다`);
-  },
-
-  simulateNetworkDelay: async () => {
-    // 네트워크 지연 시뮬레이션
-  },
-}));
+    })
+  )
+);
 
 // 관리자 스토어 셀렉터들
 export const adminSelectors = {
