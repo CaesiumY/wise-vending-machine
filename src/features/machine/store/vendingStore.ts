@@ -5,6 +5,7 @@ import type {
   VendingStore,
   Transaction,
   ChangeBreakdown,
+  VendingStatus,
 } from "../types/vending.types";
 import type { ProductType } from "@/features/products/types/product.types";
 import type { PaymentMethod, CashDenomination } from "@/features/payment/types/payment.types";
@@ -20,14 +21,14 @@ import {
 import { formatSuccessMessage } from "@/shared/utils/formatters";
 import { useAdminStore } from "@/features/admin/store/adminStore";
 
-// 초기 상태
+// 초기 상태 (타입 추론 개선)
 const initialState = {
   // 기본 상태
   products: PRODUCTS,
   currentBalance: 0,
-  selectedProduct: null,
-  paymentMethod: null,
-  status: "idle" as const,
+  selectedProduct: null as ProductType | null,
+  paymentMethod: null as PaymentMethod | null,
+  status: "idle" as VendingStatus,
   isOperational: true,
 
   // 카드 결제 관련
@@ -35,19 +36,19 @@ const initialState = {
   showPaymentConfirm: false,
   cardInfo: null,
 
-  // 현금 투입 관련 (새 추가)
+  // 현금 투입 관련
   insertedCash: [] as CashDenomination[],
   lastInsertTime: 0,
 
   // 거래 관련
   lastTransaction: null,
-  transactionHistory: [],
+  transactionHistory: [] as Transaction[],
 
   // UI 상태
   currentError: null,
   errorMessage: "",
   isLoading: false,
-};
+} as const;
 
 export const useVendingStore = create<VendingStore>()(
   devtools(

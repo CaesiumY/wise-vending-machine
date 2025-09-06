@@ -1,6 +1,6 @@
 import type { Nullable, ActionResult } from '@/shared/types/utility.types'
-import type { ProductType } from '@/features/products/types/product.types'
-import type { PaymentMethod, CashDenomination, TransactionStatus } from '@/features/payment/types/payment.types'
+import type { ProductType, Product } from '@/features/products/types/product.types'
+import type { PaymentMethod, CashDenomination, TransactionStatus, CardPayment } from '@/features/payment/types/payment.types'
 
 // 자판기 상태 타입
 export type VendingStatus = 
@@ -21,10 +21,9 @@ export type ErrorType =
   | 'card_reader_fault'   // 카드 리더기 오류
   | 'card_payment_reject' // 카드 결제 거부
 
-import type { CardPayment } from '@/features/payment/types/payment.types'
-import type { Product } from '@/features/products/types/product.types'
+// ===== 핵심 타입 정의 =====
 
-// 거스름돈 상세 분석 (호환성을 위해 ChangeCalculationResult와 통합)
+// 거스름돈 계산 결과
 export interface ChangeBreakdown {
   total: number
   denominations: Record<CashDenomination, number>
@@ -37,13 +36,13 @@ export interface ChangeBreakdown {
   breakdown: { [K in CashDenomination]: number }
 }
 
-// 거스름돈 계산 결과 - ChangeBreakdown과 동일
+// 호환성을 위한 타입 별칭
 export type ChangeCalculationResult = ChangeBreakdown
 
-// 향상된 거래 정보
+// 거래 정보
 export interface Transaction {
   id: string
-  productId: ProductType | null  // 반환 거래 시 null 허용
+  productId: ProductType | null
   productName: string
   amount: number
   paymentMethod: PaymentMethod
@@ -56,9 +55,11 @@ export interface Transaction {
   isRefund?: boolean
 }
 
-// 자판기 내부 상태
-export interface VendingState {
-  // 기본 정보
+// 자판기 스토어 타입 (상태 + 액션 통합)
+export interface VendingStore {
+  // ===== 상태 =====
+  
+  // 기본 상태
   products: Record<ProductType, Product>
   currentBalance: number
   selectedProduct: Nullable<ProductType>
@@ -66,7 +67,7 @@ export interface VendingState {
   status: VendingStatus
   isOperational: boolean
   
-  // 카드 결제 관련 (통합)
+  // 카드 결제 관련
   selectedProductForCard: Nullable<ProductType>
   showPaymentConfirm: boolean
   cardInfo: Nullable<Partial<CardPayment>>
@@ -83,21 +84,19 @@ export interface VendingState {
   currentError: Nullable<ErrorType>
   errorMessage: string
   isLoading: boolean
-}
-
-// 자판기 액션 인터페이스
-export interface VendingActions {
+  
+  // ===== 액션 =====
+  
   // 상품 관리
   selectProduct: (productId: ProductType) => ActionResult
   updateProductStock: (productId: ProductType, newStock: number) => void
   
   // 결제 관리
   setPaymentMethod: (method: PaymentMethod) => ActionResult
-  resetPaymentMethod: () => void
+  resetPaymentMethod: () => ActionResult
   
   // 현금 관리
   insertCash: (denomination: CashDenomination) => ActionResult
-  returnCash: () => ActionResult
   
   // 카드 결제
   setCardInfo: (info: Partial<CardPayment>) => void
@@ -107,7 +106,6 @@ export interface VendingActions {
   
   // 배출 관리
   dispenseProduct: () => boolean
-  dispenseChange: (amount: number) => ActionResult
   
   // 거래 처리
   processCashTransaction: (productId: ProductType) => void
@@ -119,37 +117,7 @@ export interface VendingActions {
   clearError: () => void
   reset: () => void
   
-  // 거래 관리
-  recordTransaction: (transaction: Omit<Transaction, 'id' | 'timestamp'>) => void
-  getTransactionHistory: () => Transaction[]
-  clearTransactionHistory: () => void
-}
-
-// 자판기 스토어 타입
-export interface VendingStore extends VendingState, VendingActions {}
-
-// 자판기 설정
-export interface VendingMachineConfig {
-  // 제품 설정
-  maxProductStock: number
-  minProductStock: number
-  
-  // 결제 설정
-  maxCashAmount: number
-  maxCardAmount: number
-  cashTimeout: number
-  cardTimeout: number
-  
-  // 시스템 설정
-  operatingHours: {
-    start: string
-    end: string
-  }
-  maintenanceMode: boolean
-  enableSounds: boolean
-  
-  // 예외 처리 설정
-  maxRetries: number
-  networkTimeout: number
-  dispenseTimeout: number
+  // 유틸리티
+  calculateChange: (amount: number) => ChangeBreakdown
+  updateStock: (productId: ProductType, change: number) => void
 }
