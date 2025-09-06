@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CreditCard, Loader2 } from 'lucide-react';
-import { useCardPayment } from '@/hooks/useCardPayment';
-import { useVendingStore } from '@/stores/vendingStore';
-import type { ProductType, Product } from '@/types';
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CreditCard } from "lucide-react";
+import { useCardPayment } from "@/hooks/useCardPayment";
+import { useVendingStore } from "@/stores/vendingStore";
+import type { ProductType, Product } from "@/types";
 
 interface AvailableProduct extends Product {
   isAvailable: boolean;
@@ -19,10 +19,12 @@ export function CardPanel() {
     dispenseWithCard,
     checkStockAndActivateButtons,
     isProcessing,
-    cardInfo
+    cardInfo,
   } = useCardPayment();
 
-  const [availableProducts, setAvailableProducts] = useState<AvailableProduct[]>([]);
+  const [availableProducts, setAvailableProducts] = useState<
+    AvailableProduct[]
+  >([]);
 
   useEffect(() => {
     setAvailableProducts(checkStockAndActivateButtons());
@@ -37,7 +39,7 @@ export function CardPanel() {
 
   const handleProductSelect = async (productId: ProductType) => {
     useVendingStore.getState().selectProduct(productId);
-    
+
     const paymentSuccess = await processCardPayment(productId);
     if (paymentSuccess) {
       await dispenseWithCard(productId);
@@ -53,34 +55,30 @@ export function CardPanel() {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {status === 'idle' && (
-          <Button 
+        {status === "idle" && (
+          <Button
             onClick={handleCardInsert}
             className="w-full"
             disabled={isProcessing}
           >
-            {isProcessing ? (
-              <Loader2 className="h-4 w-4 animate-spin mr-2" />
-            ) : (
-              <CreditCard className="h-4 w-4 mr-2" />
-            )}
+            {isProcessing ? <></> : <CreditCard className="h-4 w-4 mr-2" />}
             카드 삽입
           </Button>
         )}
 
-        {cardInfo && status === 'card_process' && (
+        {cardInfo && status === "card_process" && (
           <div className="space-y-2">
             <p className="text-sm text-muted-foreground">
               카드 인식: {cardInfo.cardNumber}
             </p>
-            
+
             <div className="grid gap-2">
-              {availableProducts.map(product => (
+              {availableProducts.map((product) => (
                 <Button
                   key={product.id}
                   onClick={() => handleProductSelect(product.id)}
                   disabled={!product.isAvailable || isProcessing}
-                  variant={product.isAvailable ? 'default' : 'secondary'}
+                  variant={product.isAvailable ? "default" : "secondary"}
                   className="w-full justify-between"
                 >
                   <span>{product.name}</span>
@@ -96,7 +94,6 @@ export function CardPanel() {
 
         {isProcessing && (
           <div className="flex items-center justify-center py-4">
-            <Loader2 className="h-6 w-6 animate-spin mr-2" />
             <span>처리 중...</span>
           </div>
         )}
