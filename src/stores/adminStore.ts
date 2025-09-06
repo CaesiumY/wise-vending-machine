@@ -184,15 +184,26 @@ export const useAdminStore = create<TaskAdminStore>()(
           }));
         },
 
-        updateCashInventory: (denomination: CashDenomination, amount: number) => {
-          const clampedAmount = Math.max(0, Math.min(999, amount));
-          
-          set((state: TaskAdminStore) => ({
+        // 화폐 재고 업데이트 (전체 재고 교체)
+        updateCashInventory: (newInventory: Record<CashDenomination, number>) => {
+          set({ cashInventory: newInventory });
+        },
+
+        // 개별 화폐 수량 조정
+        adjustCashCount: (denomination: CashDenomination, change: number) => {
+          set(state => ({
             cashInventory: {
               ...state.cashInventory,
-              [denomination]: clampedAmount,
-            },
+              [denomination]: Math.max(0, state.cashInventory[denomination] + change)
+            }
           }));
+        },
+
+        // 재고 초기화 (관리자 리셋)
+        resetCashInventory: () => {
+          set({
+            cashInventory: defaultCashInventory
+          });
         },
 
         // ===== 프리셋 관리 =====

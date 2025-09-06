@@ -12,6 +12,7 @@ import type {
 } from '@/types'
 import { PRODUCTS } from '@/constants/products'
 import { calculateOptimalChange } from '@/utils/changeCalculator'
+import { INITIAL_CHANGE_STOCK } from '@/constants/denominations'
 import { 
   validateCashDenomination, 
   validateMaxCashInput,
@@ -264,7 +265,14 @@ export const useVendingStore = create<VendingStore>()(
             amount: product.price,
             paymentMethod: 'card',
             change: 0,
-            changeBreakdown: { total: 0, denominations: { 100: 0, 500: 0, 1000: 0, 5000: 0, 10000: 0 }, possible: true },
+            changeBreakdown: { 
+              total: 0, 
+              denominations: { 100: 0, 500: 0, 1000: 0, 5000: 0, 10000: 0 }, 
+              possible: true,
+              canProvideChange: true,
+              totalChange: 0,
+              breakdown: { 100: 0, 500: 0, 1000: 0, 5000: 0, 10000: 0 }
+            },
             timestamp: new Date(),
             status: 'pending',
           }
@@ -327,7 +335,7 @@ export const useVendingStore = create<VendingStore>()(
         
         // 거스름돈 계산
         const changeAmount = currentBalance - product.price
-        const changeResult = calculateOptimalChange(changeAmount)
+        const changeResult = calculateOptimalChange(changeAmount, INITIAL_CHANGE_STOCK)
         
         // adminStore 설정에 따른 거스름돈 부족 체크
         const adminState = useAdminStore.getState()
@@ -418,7 +426,7 @@ export const useVendingStore = create<VendingStore>()(
       },
       
       calculateChange: (amount: number): ChangeBreakdown => {
-        return calculateOptimalChange(amount)
+        return calculateOptimalChange(amount, INITIAL_CHANGE_STOCK)
       },
       
       dispenseCash: (_breakdown: ChangeBreakdown): ActionResult => {

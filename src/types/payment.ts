@@ -27,27 +27,8 @@ export interface CardPayment {
   networkResponseTime?: number
 }
 
-// 현금 보관함 상태
-export interface CashInventory {
-  available: Record<CashDenomination, number>
-  reserved: Record<CashDenomination, number>
-  capacity: Record<CashDenomination, number>
-  lastRefill: Date
-  lowStockThreshold: Record<CashDenomination, number>
-}
-
-// 거스름돈 계산 결과
-export interface ChangeCalculationResult {
-  total: number
-  denominations: Record<CashDenomination, number>
-  possible: boolean
-  optimalBreakdown: Record<CashDenomination, number>
-  alternativeBreakdowns: Record<CashDenomination, number>[]
-  shortage: {
-    total: number
-    denominations: Record<CashDenomination, number>
-  }
-}
+// 현금 보관함 상태 (간소화)
+export type CashInventory = Record<CashDenomination, number>
 
 // 결제 상태
 export interface PaymentState {
@@ -112,8 +93,8 @@ export interface PaymentProcessor {
   cancelCardPayment: (transactionId: string) => Promise<ActionResult>
   
   // 거스름돈 처리
-  calculateChange: (paidAmount: number, purchaseAmount: number) => ChangeCalculationResult
-  dispenseChange: (calculation: ChangeCalculationResult) => ActionResult
+  calculateChange: (paidAmount: number, purchaseAmount: number) => import('./vending').ChangeCalculationResult
+  dispenseChange: (calculation: import('./vending').ChangeCalculationResult) => ActionResult
   
   // 결제 관리
   validatePaymentMethod: (method: PaymentMethod, amount: number) => ValidationResult

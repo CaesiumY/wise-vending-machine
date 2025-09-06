@@ -21,6 +21,7 @@ export type {
 export type { 
   Product, 
   ChangeBreakdown, 
+  ChangeCalculationResult,
   Transaction, 
   DialogState, 
   VendingMachineState, 
@@ -33,7 +34,6 @@ export type {
   CashPayment, 
   CardPayment, 
   CashInventory, 
-  ChangeCalculationResult, 
   PaymentState, 
   PaymentValidation,
   PaymentValidationResult, 

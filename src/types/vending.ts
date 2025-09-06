@@ -22,14 +22,21 @@ export interface Product {
   available: boolean
 }
 
-// 거스름돈 상세 분석
+// 거스름돈 상세 분석 (호환성을 위해 ChangeCalculationResult와 통합)
 export interface ChangeBreakdown {
   total: number
   denominations: Record<CashDenomination, number>
   possible: boolean
   shortage?: CashDenomination[]
   remainingAmount?: number
+  // 새 필드들 (ChangeCalculationResult 호환)
+  canProvideChange: boolean
+  totalChange: number
+  breakdown: { [K in CashDenomination]: number }
 }
+
+// 거스름돈 계산 결과 (Task 4) - ChangeBreakdown과 동일
+export type ChangeCalculationResult = ChangeBreakdown
 
 // 향상된 거래 정보
 export interface Transaction {

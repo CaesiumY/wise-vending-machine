@@ -204,7 +204,12 @@ export interface TaskAdminStore extends TaskAdminSettings {
   closePanel: () => void
   toggleException: (exception: keyof TaskAdminSettings) => void
   updateStockLevel: (productId: ProductType, level: number) => void
-  updateCashInventory: (denomination: CashDenomination, amount: number) => void
+  
+  // 화폐 재고 관리 (Task 4 추가)
+  updateCashInventory: (newInventory: Record<CashDenomination, number>) => void
+  adjustCashCount: (denomination: CashDenomination, change: number) => void
+  resetCashInventory: () => void
+  
   loadPreset: (preset: PresetName) => void
   saveCustomPreset: (name: string, settings: TaskAdminSettings) => void
   resetToDefault: () => void
