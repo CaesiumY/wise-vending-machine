@@ -1,9 +1,8 @@
-import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { useAdminStore } from "@/stores/adminStore";
 import { EXCEPTION_TOGGLES } from "@/constants/adminConfig";
+import { useAdminStore } from "@/stores/adminStore";
 import type { ErrorType, TaskAdminSettings } from "@/types";
 
 interface ExceptionTogglesProps {
@@ -22,31 +21,20 @@ export function ExceptionToggles({
     adminStore.toggleException(exceptionKey);
   };
 
-  // EXCEPTION_TOGGLES 기반 활성 수 계산
-  const activeCount = EXCEPTION_TOGGLES.filter((toggle) =>
-    adminStore[toggle.key as keyof TaskAdminSettings]
-  ).length;
-
   return (
     <Card className="p-4">
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between">
         <h4 className="font-semibold text-sm">예외 상황 시뮬레이터</h4>
-        <Badge
-          variant={activeCount > 0 ? "destructive" : "secondary"}
-          className="text-xs"
-        >
-          {activeCount}/{EXCEPTION_TOGGLES.length} 활성
-        </Badge>
       </div>
 
       <div className="space-y-2">
         {EXCEPTION_TOGGLES.map((toggle) => (
-          <div key={toggle.key} className="flex items-center justify-between py-1">
+          <div
+            key={toggle.key}
+            className="flex items-center justify-between py-1"
+          >
             <div>
-              <Label
-                htmlFor={toggle.key}
-                className="text-xs cursor-pointer"
-              >
+              <Label htmlFor={toggle.key} className="text-xs cursor-pointer">
                 {toggle.label}
               </Label>
               <p className="text-[10px] text-muted-foreground">
@@ -56,7 +44,9 @@ export function ExceptionToggles({
             <Switch
               id={toggle.key}
               checked={
-                (adminStore[toggle.key as keyof TaskAdminSettings] as boolean) || false
+                (adminStore[
+                  toggle.key as keyof TaskAdminSettings
+                ] as boolean) || false
               }
               onCheckedChange={(checked) =>
                 handleToggle(toggle.key as keyof TaskAdminSettings, checked)

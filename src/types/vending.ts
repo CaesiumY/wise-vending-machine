@@ -9,6 +9,7 @@ import type {
   ActionResult, 
   CashDenomination 
 } from './common'
+import type { CardPayment } from './payment'
 
 // 상품 정보
 export interface Product {
@@ -75,7 +76,7 @@ export interface VendingMachineState {
   // 카드 결제 관련
   selectedProductForCard: Nullable<ProductType>
   showPaymentConfirm: boolean
-  cardInfo: Nullable<import('./payment').CardPayment>
+  cardInfo: Nullable<CardPayment>
   
   // 현금 투입 관련 (새 추가)
   insertedCash: CashDenomination[]
@@ -130,7 +131,7 @@ export interface VendingActions {
   
   // 시스템 제어
   setStatus: (status: VendingStatus) => void
-  setCardInfo: (cardInfo: Nullable<import('./payment').CardPayment>) => void
+  setCardInfo: (cardInfo: Nullable<CardPayment>) => void
   setError: (errorType: ErrorType, message?: string) => void
   clearError: () => void
   

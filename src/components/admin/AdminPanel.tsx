@@ -15,7 +15,6 @@ interface AdminPanelProps {
 }
 
 export function AdminPanel({ className }: AdminPanelProps) {
-  const { errorCount, lastError } = useAdminStore();
 
   // 활성화된 예외 목록 가져오기
   const activeExceptions = adminSelectors.getActiveExceptions();
@@ -40,31 +39,6 @@ export function AdminPanel({ className }: AdminPanelProps) {
         <CollapsibleContent className="mt-2 space-y-3">
           {/* 예외 상황 토글 */}
           <ExceptionToggles activeExceptions={activeExceptions} />
-
-          {/* 시스템 상태 표시 */}
-          {(errorCount > 0 || lastError) && (
-            <Card className="p-3">
-              <div className="flex items-center justify-between">
-                <div className="text-xs">
-                  <span className="font-medium">오류 상태</span>
-                  <span className="ml-2">{errorCount}건</span>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-xs h-6"
-                  onClick={useAdminStore.getState().clearErrorLog}
-                >
-                  초기화
-                </Button>
-              </div>
-              {lastError && (
-                <div className="text-xs mt-1">
-                  최근: {lastError.type} - {lastError.message}
-                </div>
-              )}
-            </Card>
-          )}
         </CollapsibleContent>
       </Collapsible>
     </div>

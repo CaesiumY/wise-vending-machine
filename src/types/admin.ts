@@ -159,12 +159,6 @@ export interface TaskAdminStore extends TaskAdminSettings {
   
   // 모니터링 상태
   totalTransactions: number
-  errorCount: number
-  lastError: Nullable<{
-    type: ErrorType
-    message: string
-    timestamp: number
-  }>
   
   // 화폐 보유량
   cashInventory: Record<CashDenomination, number>
@@ -180,8 +174,6 @@ export interface TaskAdminStore extends TaskAdminSettings {
   loadPreset: (preset: PresetName) => void
   saveCustomPreset: (name: string, settings: TaskAdminSettings) => void
   incrementTransactionCount: () => void
-  recordError: (type: ErrorType, message: string) => void
-  clearErrorLog: () => void
   triggerException: (type: ErrorType) => void
   simulateNetworkDelay: (delayMs: number) => Promise<void>
 }

@@ -175,14 +175,4 @@ export function formatButtonLabel(
   return `${productName}\n${formatAmount(price)}`;
 }
 
-/**
- * 관리자 패널 상태 포맷팅
- */
-export function formatAdminStatus(
-  activeExceptions: number,
-  totalTransactions: number,
-  errorCount: number
-): string {
-  return `활성 예외: ${activeExceptions}개 | 총 거래: ${totalTransactions}건 | 오류: ${errorCount}건`;
-}
 

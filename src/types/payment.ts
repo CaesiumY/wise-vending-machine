@@ -7,6 +7,7 @@ import type {
   Nullable, 
   ValidationResult 
 } from './common'
+import type { ChangeCalculationResult } from './vending'
 
 // 현금 결제 정보
 export interface CashPayment {
@@ -93,8 +94,8 @@ export interface PaymentProcessor {
   cancelCardPayment: (transactionId: string) => Promise<ActionResult>
   
   // 거스름돈 처리
-  calculateChange: (paidAmount: number, purchaseAmount: number) => import('./vending').ChangeCalculationResult
-  dispenseChange: (calculation: import('./vending').ChangeCalculationResult) => ActionResult
+  calculateChange: (paidAmount: number, purchaseAmount: number) => ChangeCalculationResult
+  dispenseChange: (calculation: ChangeCalculationResult) => ActionResult
   
   // 결제 관리
   validatePaymentMethod: (method: PaymentMethod, amount: number) => ValidationResult

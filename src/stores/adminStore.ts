@@ -35,8 +35,6 @@ export const useAdminStore = create<TaskAdminStore>((set, get) => ({
 
   // 모니터링 상태
   totalTransactions: 0,
-  errorCount: 0,
-  lastError: null,
 
   // 화폐 보유량
   cashInventory: defaultCashInventory,
@@ -95,23 +93,6 @@ export const useAdminStore = create<TaskAdminStore>((set, get) => ({
     }));
   },
 
-  recordError: (type: ErrorType, message: string) => {
-    set((state: TaskAdminStore) => ({
-      errorCount: state.errorCount + 1,
-      lastError: {
-        type,
-        message,
-        timestamp: Date.now(),
-      },
-    }));
-  },
-
-  clearErrorLog: () => {
-    set({
-      errorCount: 0,
-      lastError: null,
-    });
-  },
 
   // ===== 시뮬레이션 제어 =====
 
