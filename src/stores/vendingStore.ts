@@ -349,7 +349,7 @@ export const useVendingStore = create<VendingStore>()(
       
       // 배출 시뮬레이션
       dispenseProduct: async (): Promise<boolean> => {
-        const { selectedProduct, currentBalance, paymentMethod } = get()
+        const { selectedProduct, currentBalance, paymentMethod, products } = get()
         const adminState = useAdminStore.getState()
         
         if (!selectedProduct) return false
@@ -376,11 +376,27 @@ export const useVendingStore = create<VendingStore>()(
           return false
         }
 
-        // 즉시 배출 처리
-        set({ status: 'completing' })
+        // 배출 성공 - 재고 감소 처리
+        const updatedProducts = { ...products }
+        if (updatedProducts[selectedProduct]) {
+          updatedProducts[selectedProduct] = {
+            ...updatedProducts[selectedProduct],
+            stock: Math.max(0, updatedProducts[selectedProduct].stock - 1)
+          }
+        }
+
+        // 관리자 스토어의 재고도 동기화
+        const adminStore = useAdminStore.getState()
+        const currentAdminStock = adminStore.stockLevels[selectedProduct]
+        adminStore.updateStockLevel(selectedProduct, Math.max(0, currentAdminStock - 1))
+
+        set({ 
+          status: 'completing',
+          products: updatedProducts
+        })
         
         // 거래 완료 처리
-        get().showDialog('success', '배출 완료', `${get().products[selectedProduct].name}이(가) 배출되었습니다.`)
+        get().showDialog('success', '배출 완료', `${products[selectedProduct].name}이(가) 배출되었습니다.`)
         
         // 잔액이 있을 때 연속 구매 안내 (현금 결제만)
         if (paymentMethod === 'cash' && currentBalance >= 600) {
@@ -391,7 +407,9 @@ export const useVendingStore = create<VendingStore>()(
           })
         } else {
           // 완전히 거래 종료 - 대기 상태로 복귀
-          get().reset()
+          setTimeout(() => {
+            get().reset()
+          }, 2000) // 2초 후 자동으로 대기 상태로 전환
         }
         
         return true
