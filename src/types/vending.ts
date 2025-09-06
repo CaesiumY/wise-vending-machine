@@ -41,7 +41,7 @@ export type ChangeCalculationResult = ChangeBreakdown
 // 향상된 거래 정보
 export interface Transaction {
   id: string
-  productId: ProductType
+  productId: ProductType | null  // 반환 거래 시 null 허용
   productName: string
   amount: number
   paymentMethod: PaymentMethod

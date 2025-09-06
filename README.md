@@ -17,12 +17,12 @@ React + TypeScript로 구현한 자판기 시스템
 
 ## 기술 스택
 
-- Frontend: React 19.1.1, TypeScript 5.8.3
-- Build Tool: Vite 7.1.2 (SWC 플러그인)
-- State Management: Zustand 5.0.8 (경량 상태 관리)
+- Frontend: React, TypeScript
+- Build Tool: Vite
+- State Management: Zustand
 - UI Components: shadcn/ui + Radix UI
-- Styling: Tailwind CSS 4.1.13
-- Icons: Lucide React 0.542.0
+- Styling: Tailwind CSS
+- Icons: Lucide React
 - Code Quality: ESLint + TypeScript
 
 ## 빠른 시작

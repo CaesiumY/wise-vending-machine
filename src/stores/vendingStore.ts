@@ -452,37 +452,41 @@ export const useVendingStore = create<VendingStore>()(
           `${products[selectedProduct].name}이(가) 배출되었습니다.`
         );
 
-        // 카드 결제 완료 토스트 (카드 결제일 때만)
+        // 모든 결제 방식에서 배출 완료 토스트 표시
+        toast.success(
+          `${products[selectedProduct].name}이(가) 배출되었습니다! 🎉`,
+          {
+            duration: 3000,
+          }
+        );
+
+        // 카드 결제는 바로 대기 상태로 복귀
         if (paymentMethod === "card") {
-          toast.success(
-            `${products[selectedProduct].name}이(가) 배출되었습니다! 🎉`,
-            {
-              duration: 3000,
-            }
-          );
-          
-          // 카드 결제는 바로 대기 상태로 복귀
           get().reset();
           return true;
         }
 
-        // 현금 결제 후 잔액 확인 및 거스름돈 처리 (다이어그램의 '잔액 확인' 단계)  
+        // 현금 결제 후 잔액 확인 (다이어그램의 '잔액 확인' 단계)  
         if (paymentMethod === "cash") {
-          const { lastTransaction } = get();
+          const { currentBalance } = get();
           
-          if (lastTransaction && lastTransaction.change > 0) {
-            // 거스름돈이 있는 경우 - 거스름돈 반환 후 대기 상태로 (다이어그램 플로우)
-            get().showDialog(
-              "success",
-              "거스름돈 반환",
-              `거스름돈 ${lastTransaction.change}원을 받아가세요.`
-            );
+          // 다이어그램: 단순히 잔액이 0원인지 아닌지만 확인
+          if (currentBalance > 0) {
+            // 잔액이 0원이 아닌 경우 → 음료 선택 가능 상태로 (연속 구매)
+            set({
+              status: "product_select",
+              selectedProduct: null
+            });
             
-            get().reset(); // 완전 초기화 (다이어그램: 잔액 확인 → 0원일 경우 → 대기 상태)
+            get().showDialog(
+              "info", 
+              "연속 구매 가능",
+              `잔액 ${currentBalance}원이 남아있습니다. 추가 구매가 가능합니다.`
+            );
             return true;
           } else {
-            // 거스름돈이 없는 경우 (정확한 금액) - 바로 대기 상태로 
-            get().reset(); // 완전 초기화
+            // 잔액이 0원인 경우 → 대기 상태로 전환
+            get().reset();
             return true;
           }
         }
@@ -616,14 +620,12 @@ export const useVendingStore = create<VendingStore>()(
 
         // 현금 반환
         if (currentBalance > 0) {
-          get().showDialog(
-            "info",
-            "반환 완료",
-            `${currentBalance}원이 반환되었습니다.`
-          );
+          toast.success(`💰 반환 완료! ${currentBalance}원이 반환되었습니다.`);
+          get().reset();
+        } else {
+          get().reset();
         }
 
-        get().reset();
         return { success: true };
       },
 
