@@ -145,11 +145,8 @@ export interface AdminActions {
   exportLogs: () => AdminLogEntry[]
 }
 
-// Task-3에서 사용하는 간소화된 AdminSettings (4가지 예외 시뮬레이터용)
+// Task-3에서 사용하는 간소화된 AdminSettings (3가지 예외 시뮬레이터용)
 export interface TaskAdminSettings {
-  // 결제 예외 (1가지)
-  fakeMoneyDetection: boolean
-  
   // 시스템 예외 (3가지)  
   cardReaderFault: boolean
   cardPaymentReject: boolean

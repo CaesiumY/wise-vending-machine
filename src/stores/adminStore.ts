@@ -10,9 +10,6 @@ import type {
 
 // 기본 관리자 설정 (모든 예외 비활성화)
 const defaultSettings: TaskAdminSettings = {
-  // 결제 예외 (1가지)
-  fakeMoneyDetection: false,
-
   // 시스템 예외 (3가지)
   cardReaderFault: false,
   cardPaymentReject: false,
@@ -135,7 +132,6 @@ export const useAdminStore = create<TaskAdminStore>((set, get) => ({
   triggerException: (type: ErrorType) => {
     // 해당 예외를 즉시 발생시키는 로직
     const exceptionMap: Partial<Record<ErrorType, keyof TaskAdminSettings>> = {
-      fake_money_detection: "fakeMoneyDetection",
       dispense_failure: "dispenseFaultMode",
       card_reader_fault: "cardReaderFault",
     };
@@ -161,16 +157,13 @@ export const adminSelectors = {
     const state = useAdminStore.getState();
     const activeExceptions: ErrorType[] = [];
 
-    // 1) 위조화폐 감지
-    if (state.fakeMoneyDetection) activeExceptions.push("fake_money_detection");
-
-    // 2) 카드 인식 실패
+    // 1) 카드 인식 실패
     if (state.cardReaderFault) activeExceptions.push("card_reader_fault");
 
-    // 3) 카드 결제 실패
+    // 2) 카드 결제 실패
     if (state.cardPaymentReject) activeExceptions.push("card_payment_reject");
 
-    // 4) 배출 실패
+    // 3) 배출 실패
     if (state.dispenseFaultMode) activeExceptions.push("dispense_failure");
 
     return activeExceptions;
@@ -195,12 +188,11 @@ export const adminSelectors = {
     };
   },
 
-  // 특정 예외 발생 확률 계산 (요구된 6개 항목으로 제한)
+  // 특정 예외 발생 확률 계산 (3개 시스템 예외)
   getExceptionProbability: (type: ErrorType): number => {
     const state = useAdminStore.getState();
 
     const probabilityMap: Partial<Record<ErrorType, number>> = {
-      fake_money_detection: state.fakeMoneyDetection ? 0.5 : 0,
       card_reader_fault: state.cardReaderFault ? 0.4 : 0.05,
       card_payment_reject: state.cardPaymentReject ? 0.35 : 0.03,
       dispense_failure: state.dispenseFaultMode ? 0.3 : 0.02,

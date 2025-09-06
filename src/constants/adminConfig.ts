@@ -9,13 +9,6 @@ export interface ExceptionToggleItem {
 
 // 예외 토글 항목 정의
 export const EXCEPTION_TOGGLES: ExceptionToggleItem[] = [
-  // 결제 예외 (1가지)
-  {
-    key: 'fakeMoneyDetection',
-    label: '위조화폐 감지',
-    description: '투입된 화폐를 위조화폐로 판단합니다',
-  },
-  
   // 시스템 예외 (3가지)
   {
     key: 'cardReaderFault',
