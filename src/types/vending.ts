@@ -106,6 +106,7 @@ export interface VendingActions {
   
   // 결제 관리
   setPaymentMethod: (method: PaymentMethod) => ActionResult
+  resetPaymentMethod: () => ActionResult
   insertCash: (denomination: CashDenomination) => ActionResult
   processCardPayment: (amount: number) => Promise<ActionResult>
   

@@ -20,10 +20,6 @@ interface ErrorDialogProps {
   canRetry?: boolean;
 }
 
-const ERROR_CONFIGS = {
-  default: {},
-};
-
 export function ErrorDialog({
   open,
   onOpenChange,
@@ -33,7 +29,6 @@ export function ErrorDialog({
   onRetry,
   canRetry = false,
 }: ErrorDialogProps) {
-  const config = ERROR_CONFIGS.default;
 
   const getActionMessage = () => {
     switch (errorType) {

@@ -4,7 +4,7 @@ import type {
   TaskAdminStore,
   TaskAdminSettings,
   PresetName,
-  ScenarioPreset,
+  // ScenarioPreset, - 향후 프리셋 기능 확장 시 사용 예정
   ProductType,
   ErrorType,
   CashDenomination,

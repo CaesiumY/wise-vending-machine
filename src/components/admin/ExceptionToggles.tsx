@@ -6,46 +6,26 @@ import { Separator } from "@/components/ui/separator";
 import { useAdminStore } from "@/stores/adminStore";
 import type { ErrorType, TaskAdminSettings } from "@/types";
 
-// 요구사항: 관리자 패널에 남길 오류 케이스 6개만 노출
-// - 거스름돈 부족
-// - 동전/지폐 인식 실패 (동전/지폐 걸림으로 대표)
-// - 카드 인식 실패
-// - 카드 결제 실패
-// - 배출 실패
-// - 타임아웃
-const EXCEPTION_CATEGORIES = {
-  payment: {
-    title: "결제 예외",
-    color: "",
-    exceptions: [
-      { id: "changeShortageMode", name: "거스름돈 부족", icon: "" },
-      { id: "cashRecognitionFault", name: "동전/지폐 인식 실패", icon: "🪙" },
-    ],
-  },
-  card: {
-    title: "카드 예외",
-    color: "",
-    exceptions: [
-      { id: "cardReaderFault", name: "카드 인식 실패", icon: "" },
-      { id: "cardPaymentReject", name: "카드 결제 실패", icon: "" },
-    ],
-  },
-  system: {
-    title: "시스템 예외",
-    color: "",
-    exceptions: [
-      { id: "dispenseFaultMode", name: "배출 실패", icon: "🚫" },
-      { id: "timeoutMode", name: "타임아웃", icon: "" },
-    ],
-  },
-};
+// 6개 예외 항목을 단일 리스트로 노출 (shadcn Switch)
+const EXCEPTION_ITEMS: Array<{
+  id: keyof TaskAdminSettings | "cashRecognitionFault";
+  name: string;
+  icon?: string;
+}> = [
+  { id: "changeShortageMode", name: "거스름돈 부족" },
+  { id: "cashRecognitionFault", name: "동전/지폐 인식 실패", icon: "🪙" },
+  { id: "cardReaderFault", name: "카드 인식 실패" },
+  { id: "cardPaymentReject", name: "카드 결제 실패" },
+  { id: "dispenseFaultMode", name: "배출 실패", icon: "🚫" },
+  { id: "timeoutMode", name: "타임아웃" },
+];
 
 interface ExceptionTogglesProps {
   activeExceptions?: ErrorType[];
 }
 
 export function ExceptionToggles({
-  activeExceptions = [],
+  activeExceptions: _activeExceptions = [],
 }: ExceptionTogglesProps) {
   const adminStore = useAdminStore();
 
@@ -68,7 +48,14 @@ export function ExceptionToggles({
     adminStore.toggleException(exceptionKey as keyof TaskAdminSettings);
   };
 
-  const activeCount = activeExceptions.length;
+  // 6개 카테고리 기준 활성 수 계산
+  const activeCount =
+    (adminStore.changeShortageMode ? 1 : 0) +
+    (adminStore.billJamMode || adminStore.coinJamMode ? 1 : 0) +
+    (adminStore.cardReaderFault ? 1 : 0) +
+    (adminStore.cardPaymentReject ? 1 : 0) +
+    (adminStore.dispenseFaultMode ? 1 : 0) +
+    (adminStore.timeoutMode ? 1 : 0);
 
   return (
     <Card className="p-4">
@@ -82,46 +69,34 @@ export function ExceptionToggles({
         </Badge>
       </div>
 
-      <div className="space-y-3">
-        {Object.entries(EXCEPTION_CATEGORIES).map(([categoryKey, category]) => (
-          <Card key={categoryKey} className={`p-3 ${category.color}`}>
-            <h5 className="font-medium text-xs mb-2">{category.title}</h5>
-            <div className="grid grid-cols-1 gap-2">
-              {category.exceptions.map((exception) => (
-                <div
-                  key={exception.id}
-                  className="flex items-center justify-between"
-                >
-                  <Label
-                    htmlFor={exception.id}
-                    className="text-xs flex items-center gap-1 cursor-pointer"
-                  >
-                    <span>{exception.icon}</span>
-                    <span>{exception.name}</span>
-                  </Label>
-                  <Switch
-                    id={exception.id}
-                    checked={
-                      exception.id === "cashRecognitionFault"
-                        ? adminStore.billJamMode || adminStore.coinJamMode
-                        : (adminStore[
-                            exception.id as keyof TaskAdminSettings
-                          ] as boolean) || false
-                    }
-                    onCheckedChange={(checked) =>
-                      handleToggle(
-                        exception.id as
-                          | keyof TaskAdminSettings
-                          | "cashRecognitionFault",
-                        checked
-                      )
-                    }
-                    className="scale-75"
-                  />
-                </div>
-              ))}
-            </div>
-          </Card>
+      <div className="space-y-2">
+        {EXCEPTION_ITEMS.map((item) => (
+          <div key={item.id} className="flex items-center justify-between py-1">
+            <Label
+              htmlFor={item.id}
+              className="text-xs flex items-center gap-2 cursor-pointer"
+            >
+              <span>{item.icon}</span>
+              <span>{item.name}</span>
+            </Label>
+            <Switch
+              id={item.id}
+              checked={
+                item.id === "cashRecognitionFault"
+                  ? adminStore.billJamMode || adminStore.coinJamMode
+                  : (adminStore[
+                      item.id as keyof TaskAdminSettings
+                    ] as boolean) || false
+              }
+              onCheckedChange={(checked) =>
+                handleToggle(
+                  item.id as keyof TaskAdminSettings | "cashRecognitionFault",
+                  checked
+                )
+              }
+              className="scale-75"
+            />
+          </div>
         ))}
       </div>
 

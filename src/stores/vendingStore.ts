@@ -121,6 +121,32 @@ export const useVendingStore = create<VendingStore>()(
         set(initialState)
       },
 
+      resetPaymentMethod: (): ActionResult => {
+        const { status, currentBalance } = get()
+        
+        // 결제 방식 리셋 가능한 상태인지 확인
+        if (status === 'dispensing' || status === 'completing' || status === 'maintenance') {
+          return { success: false, error: '현재 상태에서는 결제 방식을 변경할 수 없습니다.' }
+        }
+        
+        // 현금이 투입된 상태라면 반환 처리
+        if (currentBalance > 0) {
+          get().showDialog('info', '현금 반환', `${currentBalance}원이 반환되었습니다.`)
+        }
+        
+        set({
+          paymentMethod: null,
+          status: 'idle',
+          selectedProduct: null,
+          currentBalance: 0,
+          insertedCash: [],
+          lastInsertTime: 0
+        })
+        
+        get().clearError()
+        return { success: true }
+      },
+
       // ===== 현금 관련 액션 =====
       
       insertCash: (denomination: CashDenomination): ActionResult => {

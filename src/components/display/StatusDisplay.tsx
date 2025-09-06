@@ -101,21 +101,6 @@ export function StatusDisplay({ className }: StatusDisplayProps) {
             </div>
           )}
 
-        {/* 결제 방식 표시 */}
-        <div className="flex justify-center gap-2">
-          <Badge
-            variant={paymentMethod === "cash" ? "default" : "outline"}
-            className={cn("text-sm")}
-          >
-            현금
-          </Badge>
-          <Badge
-            variant={paymentMethod === "card" ? "default" : "outline"}
-            className={cn("text-sm")}
-          >
-            카드
-          </Badge>
-        </div>
 
         {/* 에러 상태 표시 */}
         {currentError && (
