@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { useVendingStore } from '@/stores/vendingStore';
 import { useAdminStore } from '@/stores/adminStore';
 import type { ProductType, CardPayment } from '@/types';
@@ -48,6 +49,10 @@ export function useCardPayment() {
       if (cardReaderFault && Math.random() < 0.4) {
         setError('card_reader_fault', '카드를 인식할 수 없습니다. 다시 삽입해주세요.');
         showDialog('error', '카드 인식 실패!', '카드를 다시 삽입해주세요.');
+        
+        // sonner 토스트로 에러 알림
+        toast.error('카드 인식 실패 ❌');
+        
         return false;
       }
 
@@ -60,6 +65,7 @@ export function useCardPayment() {
 
       setCardInfo(mockCardInfo);
       showDialog('success', '카드 인식 완료', `카드 인식 완료\n${mockCardInfo.cardNumber}`);
+      
       return true;
 
     } catch {
@@ -90,6 +96,10 @@ export function useCardPayment() {
       if (cardPaymentReject && Math.random() < 0.5) {
         setError('card_payment_reject', '카드 결제가 거부되었습니다. 다른 결제 방법을 이용해주세요.');
         showDialog('error', '결제 거부!', '다른 카드 또는 현금을 이용해주세요.');
+        
+        // sonner 토스트로 결제 거부 알림
+        toast.error('결제 거부 ❌');
+        
         return false;
       }
 
@@ -108,6 +118,7 @@ export function useCardPayment() {
       updateProductStock(productId, product.stock - 1);
       
       showDialog('success', '결제 승인 완료!', `결제 승인 완료!\n승인번호: ${approvalNumber}`);
+      
       return true;
 
     } catch (error) {
@@ -133,7 +144,21 @@ export function useCardPayment() {
       const dispenseSuccess = await dispenseProduct();
       
       if (dispenseSuccess) {
+        const product = products[productId];
+        
+        // 기존 다이얼로그도 유지
         showDialog('success', '구매 완료', '음료가 배출되었습니다.\n감사합니다!');
+        
+        // sonner 토스트로 상세한 결제 완료 정보 표시
+        toast.success('카드 결제 완료! 🎉', {
+          description: `${product?.name} (${product?.price.toLocaleString()}원)\n${cardInfo?.cardNumber}\n승인번호: ${cardInfo?.approvalCode}`,
+          duration: 5000,
+          style: {
+            background: 'var(--success)',
+            color: 'var(--success-foreground)',
+            border: '2px solid var(--success)',
+          }
+        });
         
         // 거래 완료 후 상태 초기화
         resetCardPayment();

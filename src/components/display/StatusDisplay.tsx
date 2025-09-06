@@ -44,7 +44,7 @@ export function StatusDisplay({ className }: StatusDisplayProps) {
       case "dispensing":
         return "음료를 배출하고 있습니다...";
       case "completing":
-        return "거래를 완료하고 있습니다...";
+        return "음료를 선택해주세요";
       case "maintenance":
         return "시스템 점검 중입니다";
       default:
@@ -110,18 +110,6 @@ export function StatusDisplay({ className }: StatusDisplayProps) {
           </div>
         )}
 
-        {/* 진행 상태 표시 (배출 중일 때) */}
-        {(status === "dispensing" || status === "completing") && (
-          <div className="rounded-md p-3 border border-border bg-background">
-            <div className="flex items-center gap-3">
-              <span className="text-sm">
-                {status === "dispensing"
-                  ? "음료 배출 중..."
-                  : "거래 완료 중..."}
-              </span>
-            </div>
-          </div>
-        )}
       </div>
     </Card>
   );

@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
+import { toast } from 'sonner'
 import type { 
   VendingStore, 
   ProductType, 
@@ -277,24 +278,29 @@ export const useVendingStore = create<VendingStore>()(
         
         set({ status: 'card_process' })
         
+        
         try {
           // adminStore 설정 확인
           const adminState = useAdminStore.getState()
           
           // 카드 인식 실패 시뮬레이션
           if (adminState.cardReaderFault) {
+            toast.error('카드 인식 실패 ❌')
             throw new Error('card_reader_fault')
           }
 
           // 네트워크 오류 시뮬레이션
           if (adminState.networkErrorMode && Math.random() < 0.3) {
+            toast.error('네트워크 오류 ❌')
             throw new Error('network_error')
           }
           
           // 결제 거부 시뮬레이션
           if (adminState.cardPaymentReject && Math.random() < 0.15) {
+            toast.error('결제 거부 ❌')
             throw new Error('card_payment_reject')
           }
+          
 
           // 관리자 개입 필요 시뮬레이션
           if (adminState.adminInterventionMode && Math.random() < 0.1) {
@@ -397,6 +403,13 @@ export const useVendingStore = create<VendingStore>()(
         
         // 거래 완료 처리
         get().showDialog('success', '배출 완료', `${products[selectedProduct].name}이(가) 배출되었습니다.`)
+        
+        // 카드 결제 완료 토스트 (카드 결제일 때만)
+        if (paymentMethod === 'card') {
+          toast.success(`${products[selectedProduct].name}이(가) 배출되었습니다! 🎉`, {
+            duration: 3000,
+          })
+        }
         
         // 잔액이 있을 때 연속 구매 안내 (현금 결제만)
         if (paymentMethod === 'cash' && currentBalance >= 600) {

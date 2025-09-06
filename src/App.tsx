@@ -1,23 +1,15 @@
-import { MainLayout, VendingLayout } from "@/components/layout/MainLayout";
 import { AdminPanel } from "@/components/admin/AdminPanel";
+import { CashPanel } from "@/components/controls/CashPanel";
+import { PaymentSelector } from "@/components/controls/PaymentSelector";
+import { DispenseArea } from "@/components/display/DispenseArea";
 import { ProductDisplay } from "@/components/display/ProductDisplay";
 import { StatusDisplay } from "@/components/display/StatusDisplay";
-import { DispenseArea } from "@/components/display/DispenseArea";
-import { PaymentSelector } from "@/components/controls/PaymentSelector";
-import { CashPanel } from "@/components/controls/CashPanel";
-import { Button } from "./components/ui/button";
-import { Switch } from "./components/ui/switch";
-import { Label } from "./components/ui/label";
+import { MainLayout, VendingLayout } from "@/components/layout/MainLayout";
+import { Toaster } from "@/components/ui/sonner";
 
 function App() {
   return (
     <MainLayout>
-      <Button>test</Button>
-      <div className="flex items-center space-x-2">
-        <Switch id="airplane-mode" />
-        <Label htmlFor="airplane-mode">Airplane Mode</Label>
-      </div>
-
       <VendingLayout
         vendingDisplay={
           <div className="flex flex-col h-full">
@@ -48,6 +40,7 @@ function App() {
           </div>
         }
       />
+      <Toaster />
     </MainLayout>
   );
 }
