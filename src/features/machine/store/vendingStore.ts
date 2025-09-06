@@ -6,13 +6,10 @@ import type {
   Transaction,
   ChangeBreakdown,
 } from "../types/vending.types";
-import type {
-  ProductType,
-  PaymentMethod,
-  CashDenomination,
-  ErrorType,
-  ActionResult,
-} from "@/shared/types/common.types";
+import type { ProductType } from "@/features/products/types/product.types";
+import type { PaymentMethod, CashDenomination } from "@/features/payment/types/payment.types";
+import type { ErrorType } from "@/features/machine/types/vending.types";
+import type { ActionResult } from "@/shared/types/utility.types";
 import { PRODUCTS } from "@/features/products/constants/products";
 import { calculateOptimalChange } from "@/features/payment/utils/changeCalculator";
 import { getErrorMessage } from "../constants/errorMessages";

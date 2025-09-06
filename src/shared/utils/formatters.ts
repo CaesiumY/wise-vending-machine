@@ -1,4 +1,5 @@
-import type { CashDenomination, ProductType } from '@/shared/types/common.types';
+import type { CashDenomination } from '@/features/payment/types/payment.types';
+import type { ProductType } from '@/features/products/types/product.types';
 
 /**
  * 금액을 한국 통화 형식으로 포맷팅

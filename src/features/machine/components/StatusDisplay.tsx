@@ -1,7 +1,7 @@
 import { Card } from "@/shared/components/ui/card";
 import { cn } from "@/shared/utils/ui";
 import { useVendingStore } from "../store/vendingStore";
-import type { VendingStatus } from "@/shared/types/common.types";
+import type { VendingStatus } from "@/features/machine/types/vending.types";
 
 interface StatusDisplayProps {
   className?: string;

@@ -3,7 +3,7 @@ import { Card } from "@/shared/components/ui/card";
 import { cn } from "@/shared/utils/ui";
 import { useVendingStore } from "@/features/machine/store/vendingStore";
 import { useCardPayment } from "@/features/payment/hooks/useCardPayment";
-import type { PaymentMethod } from "@/shared/types/common.types";
+import type { PaymentMethod } from "@/features/payment/types/payment.types";
 
 interface PaymentSelectorProps {
   className?: string;

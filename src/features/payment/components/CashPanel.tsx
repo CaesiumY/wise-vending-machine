@@ -3,7 +3,7 @@ import { Card } from "@/shared/components/ui/card";
 import { Badge } from "@/shared/components/ui/badge";
 import { cn } from "@/shared/utils/ui";
 import { useVendingStore } from "@/features/machine/store/vendingStore";
-import type { CashDenomination } from "@/shared/types/common.types";
+import type { CashDenomination } from "@/features/payment/types/payment.types";
 
 interface CashPanelProps {
   className?: string;

@@ -3,7 +3,7 @@ import { Label } from "@/shared/components/ui/label";
 import { Switch } from "@/shared/components/ui/switch";
 import { EXCEPTION_TOGGLES } from "@/features/admin/constants/adminConfig";
 import { useAdminStore } from "@/features/admin/store/adminStore";
-import type { ErrorType } from "@/shared/types/common.types";
+import type { ErrorType } from "@/features/machine/types/vending.types";
 import type { TaskAdminSettings } from "@/features/admin/types/admin.types";
 
 interface ExceptionTogglesProps {

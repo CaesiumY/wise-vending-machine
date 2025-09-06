@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useAdminStore } from '@/features/admin/store/adminStore';
-import type { CashDenomination } from '@/shared/types/common.types';
+import type { CashDenomination } from '@/features/payment/types/payment.types';
 import type { ChangeCalculationResult } from '@/features/machine/types/vending.types';
 import {
   calculateOptimalChange,

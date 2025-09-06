@@ -1,4 +1,5 @@
-import type { ProductType } from '@/shared/types/common.types'
+// 상품 타입
+export type ProductType = 'cola' | 'water' | 'coffee'
 
 // 상품 정보
 export interface Product {
@@ -31,5 +32,3 @@ export interface ProductAvailability {
   requiredAmount?: number
 }
 
-// Export ProductType for convenience
-export type { ProductType }

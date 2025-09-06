@@ -1,13 +1,12 @@
-import type { 
-  PaymentMethod, 
-  CashDenomination, 
-  CardStatus, 
-  ErrorType, 
-  ActionResult, 
-  Nullable, 
-  ValidationResult 
-} from '@/shared/types/common.types'
+import type { ActionResult, Nullable, ValidationResult } from '@/shared/types/utility.types'
+import type { ErrorType } from '@/features/machine/types/vending.types'
 import type { ChangeCalculationResult } from '@/features/machine/types/vending.types'
+
+// 결제 관련 기본 타입들
+export type PaymentMethod = 'cash' | 'card'
+export type CashDenomination = 100 | 500 | 1000 | 5000 | 10000
+export type CardStatus = 'idle' | 'inserted' | 'processing' | 'approved' | 'declined' | 'error'
+export type TransactionStatus = 'pending' | 'success' | 'failed' | 'cancelled'
 
 // 현금 결제 정보
 export interface CashPayment {

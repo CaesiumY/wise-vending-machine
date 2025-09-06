@@ -2,13 +2,9 @@ import { create } from "zustand";
 import type {
   TaskAdminStore,
   TaskAdminSettings,
-  PresetName,
-  // ScenarioPreset, - 향후 프리셋 기능 확장 시 사용 예정
 } from "@/features/admin/types/admin.types";
-import type {
-  ErrorType,
-  CashDenomination,
-} from "@/shared/types/common.types";
+import type { ErrorType } from "@/features/machine/types/vending.types";
+import type { CashDenomination } from "@/features/payment/types/payment.types";
 
 // 기본 관리자 설정 (모든 예외 비활성화)
 const defaultSettings: TaskAdminSettings = {
@@ -76,7 +72,7 @@ export const useAdminStore = create<TaskAdminStore>((set, get) => ({
 
   // ===== 프리셋 관리 =====
 
-  loadPreset: (_preset: PresetName) => {
+  loadPreset: () => {
     // 프리셋 기능 제거: no-op
     return;
   },

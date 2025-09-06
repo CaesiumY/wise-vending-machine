@@ -1,8 +1,6 @@
-import type {
-  ProductType,
-  CashDenomination,
-  ErrorType,
-} from "@/shared/types/common.types";
+import type { ProductType } from "@/features/products/types/product.types";
+import type { CashDenomination } from "@/features/payment/types/payment.types";
+import type { ErrorType } from "@/features/machine/types/vending.types";
 import type { PaymentValidationResult } from "@/features/payment/types/payment.types";
 import { CASH_DENOMINATIONS } from "@/features/payment/constants/denominations";
 import { useAdminStore } from "@/features/admin/store/adminStore";

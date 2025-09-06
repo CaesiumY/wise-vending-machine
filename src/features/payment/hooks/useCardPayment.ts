@@ -2,7 +2,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useVendingStore } from "@/features/machine/store/vendingStore";
 import { useAdminStore } from "@/features/admin/store/adminStore";
-import type { ProductType } from "@/shared/types/common.types";
+import type { ProductType } from "@/features/products/types/product.types";
 import type { CardPayment } from "@/features/payment/types/payment.types";
 
 export function useCardPayment() {

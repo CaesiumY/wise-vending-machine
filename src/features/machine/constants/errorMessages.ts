@@ -1,4 +1,4 @@
-import type { ErrorType } from "@/shared/types/common.types";
+import type { ErrorType } from "@/features/machine/types/vending.types";
 
 /**
  * 자판기 시스템 오류 메시지 상수

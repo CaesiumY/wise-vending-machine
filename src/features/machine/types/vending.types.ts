@@ -1,24 +1,26 @@
-import type { 
-  ProductType, 
-  PaymentMethod, 
-  VendingStatus, 
-  ErrorType, 
-  TransactionStatus, 
-  Nullable, 
-  ActionResult, 
-  CashDenomination 
-} from '@/shared/types/common.types'
+import type { Nullable, ActionResult } from '@/shared/types/utility.types'
+import type { ProductType } from '@/features/products/types/product.types'
+import type { PaymentMethod, CashDenomination, TransactionStatus } from '@/features/payment/types/payment.types'
 
-// Re-export commonly used types for convenience
-export type { 
-  ProductType, 
-  PaymentMethod, 
-  VendingStatus, 
-  ErrorType, 
-  TransactionStatus, 
-  ActionResult, 
-  CashDenomination 
-} from '@/shared/types/common.types'
+// 자판기 상태 타입
+export type VendingStatus = 
+  | 'idle'              // 대기 상태
+  | 'payment_select'    // 결제 방식 선택
+  | 'cash_input'        // 현금 투입 중
+  | 'card_process'      // 카드 처리 중
+  | 'product_select'    // 음료 선택 중
+  | 'dispensing'        // 배출 진행 중
+  | 'completing'        // 거스름돈 처리 중
+  | 'maintenance'       // 점검 모드
+
+// 오류 타입
+export type ErrorType = 
+  | 'change_shortage'      // 거스름돈 부족
+  | 'out_of_stock'        // 재고 부족
+  | 'dispense_failure'    // 배출 실패
+  | 'card_reader_fault'   // 카드 리더기 오류
+  | 'card_payment_reject' // 카드 결제 거부
+
 import type { CardPayment } from '@/features/payment/types/payment.types'
 import type { Product } from '@/features/products/types/product.types'
 

@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui
 import { useAdminStore } from "@/features/admin/store/adminStore";
 import { Banknote } from "lucide-react";
 import { cn } from "@/shared/utils/ui";
-import type { CashDenomination } from "@/shared/types/common.types";
+import type { CashDenomination } from "@/features/payment/types/payment.types";
 
 const CASH_DENOMINATIONS: CashDenomination[] = [10000, 5000, 1000, 500, 100];
 

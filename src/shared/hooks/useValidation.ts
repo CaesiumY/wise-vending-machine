@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import type { ProductType } from '@/shared/types/common.types';
+import type { ProductType } from '@/features/products/types/product.types';
 import type { PaymentValidationResult } from '@/features/payment/types/payment.types';
 import {
   validateStock,

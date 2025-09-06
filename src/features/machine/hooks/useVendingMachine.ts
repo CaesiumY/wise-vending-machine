@@ -2,7 +2,7 @@ import { useVendingStore } from "../store/vendingStore";
 import { useAdminStore } from "@/features/admin/store/adminStore";
 import { calculateOptimalChange } from "@/features/payment/utils/changeCalculator";
 import { toast } from "sonner";
-import type { CashDenomination } from "@/shared/types/common.types";
+import type { CashDenomination } from "@/features/payment/types/payment.types";
 
 /**
  * 현금 결제 플로우를 위한 커스텀 훅
@@ -157,14 +157,7 @@ export function useAdmin() {
      * 빠른 테스트를 위한 시나리오 실행
      */
     runTestScenario: (scenarioName: string) => {
-      adminStore.loadPreset(
-        scenarioName as
-          | "normal"
-          | "change_shortage"
-          | "stock_shortage"
-          | "system_error"
-          | "worst_case"
-      );
+      adminStore.loadPreset();
       return `${scenarioName} 시나리오가 활성화되었습니다.`;
     },
   };

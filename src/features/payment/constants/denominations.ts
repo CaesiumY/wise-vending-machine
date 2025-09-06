@@ -1,4 +1,4 @@
-import type { CashDenomination } from '@/shared/types/common.types'
+import type { CashDenomination } from '@/features/payment/types/payment.types'
 
 export const CASH_DENOMINATIONS: CashDenomination[] = [10000, 5000, 1000, 500, 100]
 
