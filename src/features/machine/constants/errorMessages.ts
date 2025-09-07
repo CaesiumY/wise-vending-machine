@@ -12,6 +12,7 @@ const ERROR_MESSAGES: Record<ErrorType, string> = {
   dispenseFailure: "음료 배출에 실패했습니다.",
   cardReaderFault: "카드를 인식할 수 없습니다.",
   cardPaymentReject: "카드 결제가 거부되었습니다.",
+  cashInsertTooFast: "너무 빠르게 투입하고 있습니다. 잠시 기다려주세요.",
 };
 
 /**

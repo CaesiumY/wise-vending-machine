@@ -1,7 +1,6 @@
 import type { StateCreator } from "zustand";
 import type { VendingStatus, ErrorType, VendingStore } from "../../types/vending.types";
 import { getErrorMessage } from "../../constants/errorMessages";
-import { toast } from "sonner";
 
 // UI 상태 인터페이스 (상태만)
 interface UiState {
@@ -48,8 +47,7 @@ export const createUiSlice: StateCreator<
       currentError: errorType,
       errorMessage,
     });
-    
-    toast.error(errorMessage);
+    // Toast는 UI 컴포넌트에서 처리
   },
 
   clearError: () =>

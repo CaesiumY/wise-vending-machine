@@ -4,6 +4,7 @@ import { CreditCard, ShoppingCart, X } from "lucide-react";
 import { formatCurrency } from "@/shared/utils/formatters";
 import { useVendingStore } from "@/features/machine/store/vendingStore";
 import { isCardInputState } from "@/shared/utils/statusHelpers";
+import { toast } from "sonner";
 
 export function CardPanel() {
   // Zustand 전역 상태 직접 사용 (useState, useEffect 없이!)
@@ -19,8 +20,27 @@ export function CardPanel() {
   // 결제 확인 - Zustand 액션 직접 호출
   const handlePaymentConfirm = () => {
     if (selectedProductForCard) {
-      confirmCardPayment(selectedProductForCard);
-      // 상태 초기화는 confirmCardPayment 내부에서 처리
+      const result = confirmCardPayment(selectedProductForCard);
+      
+      if (result.success) {
+        // 배출 성공 시 토스트 표시
+        if (result.data?.message) {
+          toast.success(result.data.message);
+        }
+      } else {
+        // 에러 타입별 메시지 처리
+        const errorMessages: Record<string, string> = {
+          cardReaderFault: "카드를 다시 삽입해주세요",
+          cardPaymentReject: "다른 카드를 사용해주세요",
+          dispenseFailure: "배출에 실패했습니다. 결제가 취소됩니다."
+        };
+        
+        const message = result.errorType ? 
+          errorMessages[result.errorType] || result.error : 
+          result.error || "결제 실패";
+          
+        toast.error(message);
+      }
     }
   };
 

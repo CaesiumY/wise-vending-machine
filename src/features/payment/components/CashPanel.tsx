@@ -7,6 +7,7 @@ import { useVendingStore } from "@/features/machine/store/vendingStore";
 import { CASH_DENOMINATIONS } from "@/features/payment/constants/denominations";
 import type { CashDenomination } from "@/features/payment/types/payment.types";
 import { isProcessing, canInsertCash, isIdleState } from "@/shared/utils/statusHelpers";
+import { toast } from "sonner";
 
 interface CashPanelProps {
   className?: string;
@@ -30,13 +31,30 @@ export function CashPanel({ className }: CashPanelProps) {
   const handleCashInsert = (amount: CashDenomination) => {
     if (!canInsertCashNow) return;
 
-    insertCash(amount);
+    const result = insertCash(amount);
+    
+    if (result.success) {
+      if (result.data?.message) {
+        toast.success(result.data.message);
+      }
+    } else {
+      // 에러 타입별 메시지 처리
+      if (result.errorType === 'cashInsertTooFast') {
+        toast.warning("천천히 투입해주세요");
+      } else {
+        toast.error(result.error || "투입 실패");
+      }
+    }
   };
 
   // 반환 버튼 핸들러
   const handleReturn = () => {
     if (currentBalance > 0) {
-      cancelTransaction();
+      const result = cancelTransaction();
+      
+      if (result.success && result.data?.message) {
+        toast.success(result.data.message);
+      }
     }
   };
 

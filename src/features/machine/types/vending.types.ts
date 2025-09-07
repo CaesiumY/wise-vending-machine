@@ -29,7 +29,8 @@ export type ErrorType =
   | "outOfStock" // 재고 부족
   | "dispenseFailure" // 음료 배출 실패
   | "cardReaderFault" // 카드 인식 실패 (시뮬레이션)
-  | "cardPaymentReject"; // 카드 결제 거부 (시뮬레이션)
+  | "cardPaymentReject" // 카드 결제 거부 (시뮬레이션)
+  | "cashInsertTooFast"; // 현금 투입 간격 제한
 
 // ===== 핵심 타입 정의 =====
 

@@ -3,11 +3,12 @@ import type { VendingStore } from "../../types/vending.types";
 import { useAdminStore } from "@/features/admin/store/adminStore";
 import { isCashPayment, isCardPayment, ensureNonNegative } from "@/shared/utils/paymentHelpers";
 import { formatCurrency } from "@/shared/utils/formatters";
-import { toast } from "sonner";
+
+import type { ActionResult, DispenseData } from "@/shared/types/utility.types";
 
 // 배출 관련 액션 인터페이스
 export interface DispenseActions {
-  dispenseProduct: () => boolean;
+  dispenseProduct: () => ActionResult<DispenseData>;
 }
 
 // 배출 액션 생성 함수
@@ -18,11 +19,13 @@ export const createDispenseActions: StateCreator<
   DispenseActions
 > = (set, get, _api) => ({
   
-  dispenseProduct: (): boolean => {
-    const { selectedProduct, paymentMethod, products, setError, reset } = get();
+  dispenseProduct: (): ActionResult<DispenseData> => {
+    const { selectedProduct, paymentMethod, products, reset } = get();
     const adminState = useAdminStore.getState();
 
-    if (!selectedProduct) return false;
+    if (!selectedProduct) {
+      return { success: false, error: "선택된 상품이 없습니다." };
+    }
 
     set({ status: "dispensing" });
 
@@ -38,18 +41,23 @@ export const createDispenseActions: StateCreator<
           selectedProduct: null,
         }));
 
-        toast.error("음료 배출 실패", {
-          description:
-            "배출에 실패했습니다. 잔액이 복구되었습니다. 다시 선택해주세요.",
-        });
+        return {
+          success: false,
+          error: "배출에 실패했습니다. 잔액이 복구되었습니다. 다시 선택해주세요.",
+          errorType: "dispenseFailure",
+          data: { paymentMethod: "cash", balanceRestored: true }
+        };
       } else {
         // 카드 결제는 별도 취소 처리가 있으므로 idle 상태로
         set({ status: "idle" });
 
-        // 카드 결제는 기존 setError 방식 유지
-        setError("dispenseFailure");
+        return {
+          success: false,
+          error: "배출에 실패했습니다. 결제가 취소됩니다.",
+          errorType: "dispenseFailure",
+          data: { paymentMethod: "card", paymentCancelled: true }
+        };
       }
-      return false;
     }
 
     // 배출 성공 - 재고 감소 처리
@@ -66,13 +74,20 @@ export const createDispenseActions: StateCreator<
       products: updatedProducts,
     });
 
-    // 모든 결제 방식에서 배출 완료 토스트 표시
-    toast.success(`${products[selectedProduct].name}이(가) 배출되었습니다!`);
+    // 배출 성공 정보
+    const productName = products[selectedProduct].name;
 
     // 카드 결제는 바로 대기 상태로 복귀
     if (isCardPayment(paymentMethod)) {
       reset();
-      return true;
+      return { 
+        success: true, 
+        data: { 
+          productName,
+          message: `${productName}이(가) 배출되었습니다!`,
+          paymentMethod: "card"
+        }
+      };
     }
 
     // 현금 결제 후 잔액 확인 (다이어그램의 '잔액 확인' 단계)
@@ -87,18 +102,32 @@ export const createDispenseActions: StateCreator<
           selectedProduct: null,
         });
 
-        toast.info(
-          `잔액 ${formatCurrency(currentBalance)}이 남아있습니다. 추가 구매가 가능합니다.`
-        );
-        return true;
+        return { 
+          success: true, 
+          data: { 
+            productName,
+            message: `${productName}이(가) 배출되었습니다!`,
+            paymentMethod: "cash",
+            remainingBalance: currentBalance,
+            balanceMessage: `잔액 ${formatCurrency(currentBalance)}이 남아있습니다. 추가 구매가 가능합니다.`
+          }
+        };
       } else {
         // 잔액이 0원인 경우 → 대기 상태로 전환
         reset();
-        return true;
+        return { 
+          success: true, 
+          data: { 
+            productName,
+            message: `${productName}이(가) 배출되었습니다!`,
+            paymentMethod: "cash",
+            remainingBalance: 0
+          }
+        };
       }
     }
 
-    return true;
+    return { success: true };
   },
 
 });
