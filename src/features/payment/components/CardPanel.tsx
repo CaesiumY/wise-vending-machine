@@ -4,10 +4,9 @@ import { CreditCard, ShoppingCart, X, Clock } from "lucide-react";
 import { formatCurrency } from "@/shared/utils/formatters";
 import { useVendingStore } from "@/features/machine/store/vendingStore";
 import { isCardInputState } from "@/features/payment/utils/statusHelpers";
-import { useCardPayment } from "@/features/payment/hooks/useCardPayment";
+import { usePaymentTimeout } from "@/features/payment/hooks/usePaymentTimeout";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/features/machine/constants/errorMessages";
-import { cn } from "@/shared/utils/ui";
 
 export function CardPanel() {
   const {
@@ -19,7 +18,7 @@ export function CardPanel() {
     cancelCardPayment,
   } = useVendingStore();
 
-  const { remainingTime, isTimeoutWarning, hasActiveTimeout } = useCardPayment();
+  const { remainingTime, hasActiveTimeout } = usePaymentTimeout();
 
   // 결제 확인 - Zustand 액션 직접 호출
   const handlePaymentConfirm = () => {
@@ -56,12 +55,7 @@ export function CardPanel() {
       <CardContent className="space-y-4">
         {/* 타임아웃 표시 */}
         {hasActiveTimeout && (
-          <div className={cn(
-            "flex items-center gap-2 p-3 rounded-lg border text-sm",
-            isTimeoutWarning 
-              ? "bg-destructive/10 border-destructive/20 text-destructive" 
-              : "bg-muted/50 border-muted text-muted-foreground"
-          )}>
+          <div className="flex items-center gap-2 p-3 rounded-lg border text-sm bg-muted/50 border-muted text-muted-foreground">
             <Clock className="h-4 w-4" />
             <span>
               남은 시간: <strong>{remainingTime}초</strong>

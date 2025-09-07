@@ -50,7 +50,7 @@ export const createIntegrationActions: StateCreator<
         }
       };
 
-      state.startPaymentTimeout(handleTimeout);
+      state.startPaymentTimeout(handleTimeout, "card");
     } else {
       // 현금 결제 선택 시 타임아웃 클리어 (혹시 있다면)
       state.clearPaymentTimeout();
@@ -126,7 +126,7 @@ export const createIntegrationActions: StateCreator<
         }
       };
       
-      state.extendPaymentTimeout(handleTimeout);
+      state.extendPaymentTimeout(handleTimeout, "card");
     }
 
     return { success: true };

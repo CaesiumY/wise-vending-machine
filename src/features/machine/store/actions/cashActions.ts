@@ -13,7 +13,7 @@ const CASH_INSERT_DELAY_MS = 1000;
 export interface CashActions {
   insertCash: (denomination: CashDenomination) => ActionResult<CashInsertData>;
   processCashTransaction: (productId: ProductType) => ActionResult<DispenseData>;
-  cancelTransaction: () => ActionResult<RefundData | void>;
+  cancelTransaction: (isTimeout?: boolean) => ActionResult<RefundData | void>;
 }
 
 export const createCashActions: StateCreator<
@@ -40,6 +40,19 @@ export const createCashActions: StateCreator<
     const adminStore = useAdminStore.getState();
     adminStore.adjustCashCount(denomination, 1);
 
+    const handleTimeout = () => {
+      const currentState = get();
+      if (currentState.paymentMethod === "cash") {
+        const result = currentState.cancelTransaction(true);
+        return result;
+      }
+    };
+    if (currentBalance === 0) {
+      state.startPaymentTimeout(handleTimeout, "cash");
+    } else {
+      state.extendPaymentTimeout(handleTimeout, "cash");
+    }
+
     set({
       currentBalance: currentBalance + denomination,
       insertedCash: [...insertedCash, denomination],
@@ -60,6 +73,8 @@ export const createCashActions: StateCreator<
   processCashTransaction: (productId: ProductType): ActionResult<DispenseData> => {
     const state = get();
     const { products, currentBalance } = state;
+
+    state.clearPaymentTimeout();
     const product = products[productId];
 
     if (!product) {
@@ -70,18 +85,14 @@ export const createCashActions: StateCreator<
       };
     }
 
-    // 거스름돈 계산 - 실시간 재고 사용
     const changeAmount = currentBalance - product.price;
     const adminState = useAdminStore.getState();
     const currentCashReserve = adminState.cashReserve;
 
-    // 실제 보유 화폐로 거스름돈 계산
     const changeResult = calculateOptimalChange(
       changeAmount,
       currentCashReserve
     );
-
-    // 거스름돈 부족 체크 (실시간 재고 기반만 사용)
     const shouldFailChange = !changeResult.canProvideChange;
 
     if (shouldFailChange) {
@@ -93,7 +104,6 @@ export const createCashActions: StateCreator<
       };
     }
 
-    // 거래 정보 생성 (배출 전)
     const transaction: Transaction = {
       id: Date.now().toString(),
       productId: product.id,
@@ -119,36 +129,40 @@ export const createCashActions: StateCreator<
 
     set({
       lastTransaction: transaction,
-      currentBalance: currentBalance - product.price, // 상품 가격만큼 차감
+      currentBalance: currentBalance - product.price,
       status: "dispensing",
     });
 
-    // 배출 시도
     const dispenseResult = state.dispenseProduct();
 
     // 배출 실패 시 추가 안전장치: 사용자 자금 보호를 위한 거스름돈 복구
     if (!dispenseResult.success) {
       for (const { denomination, count } of changeAdjustments) {
-        adminState.adjustCashCount(denomination, count); // 차감했던 거스름돈 복구
+        adminState.adjustCashCount(denomination, count);
       }
     }
     
     return dispenseResult;
   },
 
-  cancelTransaction: (): ActionResult<RefundData | void> => {
+  cancelTransaction: (isTimeout?: boolean): ActionResult<RefundData | void> => {
     const state = get();
     const { currentBalance } = state;
 
-    // 상태 초기화는 공통으로 수행
+    state.clearPaymentTimeout();
+
     state.reset();
 
-    // 잔액이 없는 경우 단순 반환
     if (currentBalance === 0) {
       return { success: true };
     }
 
-    // 잔액이 있는 경우 반환 정보와 함께 반환
+    if (isTimeout) {
+      return {
+        success: false,
+        error: `시간 초과로 현금이 반환되었습니다.\n반환 완료! ${formatCurrency(currentBalance)}이 반환되었습니다.`
+      };
+    }
     return { 
       success: true, 
       data: { 

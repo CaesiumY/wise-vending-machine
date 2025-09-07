@@ -5,15 +5,12 @@ import type { Transaction, VendingStore } from "../../types/vending.types";
 import { useAdminStore } from "@/features/admin/store/adminStore";
 import { EMPTY_BREAKDOWN } from "@/features/payment/constants/denominations";
 import { ErrorTypes } from "@/features/machine/constants/errorTypes";
-import { toast } from "sonner";
 
-// 카드 관련 액션 인터페이스
 export interface CardActions {
   confirmCardPayment: (productId: ProductType) => ActionResult<DispenseData>;
   cancelCardPayment: () => void;
 }
 
-// 카드 액션 생성 함수
 export const createCardActions: StateCreator<
   VendingStore,
   [],
@@ -35,19 +32,15 @@ export const createCardActions: StateCreator<
     const product = products[productId];
     const adminState = useAdminStore.getState();
 
-    // 결제 시도 시 타임아웃 연장
     const handleTimeout = () => {
       const currentState = get();
       if (currentState.paymentMethod === "card") {
-        // 타임아웃으로 결제 방식 초기화
         currentState.resetPaymentMethod();
-        toast.error("시간 초과로 카드 결제가 취소되었습니다.");
       }
     };
 
-    state.extendPaymentTimeout(handleTimeout);
+    state.extendPaymentTimeout(handleTimeout, "card");
 
-    // 카드 인식 실패 체크를 먼저 수행
     if (adminState.cardReaderFault) {
       set({
         selectedProduct: null,
@@ -63,7 +56,6 @@ export const createCardActions: StateCreator<
       };
     }
 
-    // 결제 거부 체크
     if (adminState.cardPaymentReject) {
       set({
         selectedProduct: null,
@@ -79,17 +71,14 @@ export const createCardActions: StateCreator<
       };
     }
 
-    // 결제 성공 시 타임아웃 클리어 
     state.clearPaymentTimeout();
 
-    // 결제 성공 시에만 상태 변경
     set({
       selectedProduct: productId,
       status: "cardProcess",
       showPaymentConfirm: false,
     });
 
-    // 결제 성공 - 거래 생성
     const transaction: Transaction = {
       id: Date.now().toString(),
       productId: productId,
@@ -113,14 +102,12 @@ export const createCardActions: StateCreator<
 
     const dispenseResult = get().dispenseProduct();
 
-    // 배출 결과 반환 (성공/실패 모두)
     return dispenseResult;
   },
 
   cancelCardPayment: () => {
     const state = get();
     
-    // 결제 취소 시 타임아웃 클리어
     state.clearPaymentTimeout();
     
     set({

@@ -1,22 +1,25 @@
 import { useVendingStore } from "@/features/machine/store/vendingStore";
 import { useAdminStore } from "@/features/admin/store/adminStore";
-import { PAYMENT_TIMEOUT_MS } from "@/features/machine/store/slices/paymentSlice";
-import { useState, useEffect } from "react";
+import { CARD_PAYMENT_TIMEOUT_MS, CASH_PAYMENT_TIMEOUT_MS } from "@/features/machine/store/slices/paymentSlice";
+import { useState, useEffect, useRef } from "react";
 
 /**
- * 카드 결제 관련 상태 관리 hook
+ * 결제 타임아웃 관련 상태 관리 hook (카드/현금 통합)
  */
-export function useCardPayment() {
+export function usePaymentTimeout() {
   const { 
     setError, 
     setStatus, 
     paymentMethod, 
     paymentStartTime, 
-    paymentTimeout 
+    paymentTimeout,
+    cancelTransaction
   } = useVendingStore();
   const { cardReaderFault } = useAdminStore();
   
   const [remainingTime, setRemainingTime] = useState<number>(0);
+  
+  const prevRemainingTimeRef = useRef<number>(0);
 
   const autoRecognizeCard = (): boolean => {
     if (cardReaderFault) {
@@ -29,35 +32,44 @@ export function useCardPayment() {
     return true;
   };
 
-  // 타임아웃 모니터링 useEffect
   useEffect(() => {
-    if (paymentMethod !== "card" || !paymentStartTime || !paymentTimeout) {
+    if (!paymentMethod || !paymentStartTime || !paymentTimeout) {
       setRemainingTime(0);
       return;
     }
 
     const updateTimer = () => {
       const elapsed = Date.now() - paymentStartTime;
-      const remaining = Math.max(0, PAYMENT_TIMEOUT_MS - elapsed);
-      setRemainingTime(Math.ceil(remaining / 1000)); // 초 단위로 변환
+      const timeoutMs = paymentMethod === "card" ? CARD_PAYMENT_TIMEOUT_MS : CASH_PAYMENT_TIMEOUT_MS;
+      const remaining = Math.max(0, timeoutMs - elapsed);
+      setRemainingTime(Math.ceil(remaining / 1000));
     };
 
-    // 즉시 실행
     updateTimer();
 
-    // 1초마다 업데이트
     const interval = setInterval(updateTimer, 1000);
 
     return () => clearInterval(interval);
   }, [paymentMethod, paymentStartTime, paymentTimeout]);
 
-  // 타임아웃 경고 상태 (10초 미만일 때)
+  useEffect(() => {
+    const prevTime = prevRemainingTimeRef.current;
+    
+    if (remainingTime === 0 && prevTime > 0) {
+      if (paymentMethod === 'cash') {
+        cancelTransaction(true);
+      }
+    }
+    
+    prevRemainingTimeRef.current = remainingTime;
+  }, [remainingTime, paymentMethod, cancelTransaction]);
+
   const isTimeoutWarning = remainingTime > 0 && remainingTime <= 10;
 
   return {
     autoRecognizeCard,
     remainingTime,
     isTimeoutWarning,
-    hasActiveTimeout: paymentMethod === "card" && remainingTime > 0,
+    hasActiveTimeout: paymentMethod !== null && remainingTime > 0,
   };
 }

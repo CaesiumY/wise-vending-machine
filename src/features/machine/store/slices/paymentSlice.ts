@@ -25,8 +25,9 @@ interface PaymentState {
   paymentStartTime: number | null;
 }
 
-// 타임아웃 상수 (30초)
-const PAYMENT_TIMEOUT_MS = 30000;
+// 타임아웃 상수
+const CARD_PAYMENT_TIMEOUT_MS = 30000; // 30초 - 카드 결제
+const CASH_PAYMENT_TIMEOUT_MS = 60000; // 60초 - 현금 결제
 
 // 초기 상태 (재사용 가능)
 const initialPaymentState: PaymentState = {
@@ -44,8 +45,14 @@ const initialPaymentState: PaymentState = {
 interface PaymentActions {
   resetPayment: () => void;
   clearPaymentTimeout: () => void;
-  startPaymentTimeout: (onTimeout: () => void) => void;
-  extendPaymentTimeout: (onTimeout: () => void) => void;
+  startPaymentTimeout: (
+    onTimeout: () => void,
+    paymentMethod: "card" | "cash"
+  ) => void;
+  extendPaymentTimeout: (
+    onTimeout: () => void,
+    paymentMethod: "card" | "cash"
+  ) => void;
 }
 
 // 결제 슬라이스 타입 (상태 + 액션)
@@ -75,36 +82,50 @@ export const createPaymentSlice: StateCreator<
     const state = get();
     if (state.paymentTimeout) {
       clearTimeout(state.paymentTimeout);
-      set({ 
-        paymentTimeout: null, 
-        paymentStartTime: null 
+      set({
+        paymentTimeout: null,
+        paymentStartTime: null,
       });
     }
   },
 
-  startPaymentTimeout: (onTimeout: () => void) => {
+  startPaymentTimeout: (
+    onTimeout: () => void,
+    paymentMethod: "card" | "cash"
+  ) => {
     const state = get();
     // 기존 타임아웃이 있으면 먼저 정리
     if (state.paymentTimeout) {
       clearTimeout(state.paymentTimeout);
     }
 
-    const timeoutId = setTimeout(onTimeout, PAYMENT_TIMEOUT_MS);
+    const timeoutMs =
+      paymentMethod === "card"
+        ? CARD_PAYMENT_TIMEOUT_MS
+        : CASH_PAYMENT_TIMEOUT_MS;
+    const timeoutId = setTimeout(onTimeout, timeoutMs);
     set({
       paymentTimeout: timeoutId,
       paymentStartTime: Date.now(),
     });
   },
 
-  extendPaymentTimeout: (onTimeout: () => void) => {
+  extendPaymentTimeout: (
+    onTimeout: () => void,
+    paymentMethod: "card" | "cash"
+  ) => {
     const state = get();
     // 기존 타임아웃 정리
     if (state.paymentTimeout) {
       clearTimeout(state.paymentTimeout);
     }
 
-    // 새로운 타임아웃 설정 (30초 연장)
-    const timeoutId = setTimeout(onTimeout, PAYMENT_TIMEOUT_MS);
+    // 새로운 타임아웃 설정 (결제 방식에 따라 다른 시간)
+    const timeoutMs =
+      paymentMethod === "card"
+        ? CARD_PAYMENT_TIMEOUT_MS
+        : CASH_PAYMENT_TIMEOUT_MS;
+    const timeoutId = setTimeout(onTimeout, timeoutMs);
     set({
       paymentTimeout: timeoutId,
       paymentStartTime: Date.now(),
@@ -113,4 +134,4 @@ export const createPaymentSlice: StateCreator<
 });
 
 // 타임아웃 상수를 외부로 export
-export { PAYMENT_TIMEOUT_MS };
+export { CARD_PAYMENT_TIMEOUT_MS, CASH_PAYMENT_TIMEOUT_MS };

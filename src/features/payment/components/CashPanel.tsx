@@ -1,9 +1,11 @@
 import { Button } from "@/shared/components/ui/button";
 import { Card } from "@/shared/components/ui/card";
 import { Badge } from "@/shared/components/ui/badge";
+import { Clock } from "lucide-react";
 import { cn } from "@/shared/utils/ui";
 import { formatCurrency, formatDenomination } from "@/shared/utils/formatters";
 import { useVendingStore } from "@/features/machine/store/vendingStore";
+import { usePaymentTimeout } from "@/features/payment/hooks/usePaymentTimeout";
 import { CASH_DENOMINATIONS } from "@/features/payment/constants/denominations";
 import type { CashDenomination } from "@/features/payment/types/payment.types";
 import { canInsertCash, isIdleState } from "@/features/payment/utils/statusHelpers";
@@ -23,6 +25,8 @@ export function CashPanel({ className }: CashPanelProps) {
     insertCash,
     cancelTransaction,
   } = useVendingStore();
+
+  const { remainingTime, hasActiveTimeout } = usePaymentTimeout();
 
   const isVisible = paymentMethod === "cash";
   const isDisabled = isProcessing(status);
@@ -51,12 +55,16 @@ export function CashPanel({ className }: CashPanelProps) {
   const handleReturn = () => {
     if (currentBalance <= 0) return;
     
-    const result = cancelTransaction();
+    const result = cancelTransaction(); // 사용자 수동 취소 (isTimeout = false)
     
     if (!result.success) {
+      // 타임아웃으로 인한 취소인 경우 에러 토스트
+      const errorMessage = result.error || "현금 반환에 실패했습니다.";
+      toast.error(errorMessage);
       return;
     }
     
+    // 사용자 수동 취소인 경우 성공 토스트
     if (result.data?.message) {
       toast.success(result.data.message);
     }
@@ -72,6 +80,16 @@ export function CashPanel({ className }: CashPanelProps) {
         <div className="text-center">
           <h3 className="text-lg font-semibold">현금 투입</h3>
         </div>
+
+        {/* 타임아웃 표시 (현금 투입 시) */}
+        {hasActiveTimeout && paymentMethod === "cash" && (
+          <div className="flex items-center gap-2 p-3 rounded-lg border text-sm bg-muted/50 border-muted text-muted-foreground">
+            <Clock className="h-4 w-4" />
+            <span>
+              남은 시간: <strong>{remainingTime}초</strong>
+            </span>
+          </div>
+        )}
 
         {/* 현금 투입 버튼들 */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
