@@ -30,8 +30,7 @@ export const createResetActions: StateCreator<
     // 결제 방식 리셋 가능한 상태인지 확인
     if (
       status === "dispensing" ||
-      status === "completing" ||
-      status === "maintenance"
+      status === "completing"
     ) {
       return {
         success: false,

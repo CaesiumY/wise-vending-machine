@@ -34,8 +34,7 @@ export function CashPanel({ className }: CashPanelProps) {
   const isVisible = paymentMethod === "cash";
   const isDisabled =
     status === "dispensing" ||
-    status === "completing" ||
-    status === "maintenance";
+    status === "completing";
   const canInsertCash = status === "cashInput" || status === "productSelect";
 
   // 현금 투입 핸들러

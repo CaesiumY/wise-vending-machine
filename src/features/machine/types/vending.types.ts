@@ -17,13 +17,11 @@ import type { ResetActions } from "../store/actions/resetActions";
 // 자판기 상태 타입
 export type VendingStatus =
   | "idle" // 대기 상태
-  | "paymentSelect" // 결제 방식 선택
   | "cashInput" // 현금 투입 중
   | "cardProcess" // 카드 처리 중
   | "productSelect" // 음료 선택 중
   | "dispensing" // 배출 진행 중
-  | "completing" // 거스름돈 처리 중
-  | "maintenance"; // 점검 모드
+  | "completing"; // 거스름돈 처리 중
 
 // 오류 타입 (시뮬레이션)
 export type ErrorType =

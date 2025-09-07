@@ -39,8 +39,6 @@ export function StatusDisplay({ className }: StatusDisplayProps) {
         return "음료를 배출하고 있습니다...";
       case "completing":
         return "음료를 선택해주세요";
-      case "maintenance":
-        return "시스템 점검 중입니다";
       default:
         return "준비 중입니다...";
     }
