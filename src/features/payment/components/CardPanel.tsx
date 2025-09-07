@@ -7,7 +7,6 @@ import { isCardInputState } from "@/shared/utils/statusHelpers";
 import { handleActionResult } from "@/shared/utils/toastHelpers";
 
 export function CardPanel() {
-  // Zustand 전역 상태 직접 사용 (useState, useEffect 없이!)
   const {
     status,
     products,

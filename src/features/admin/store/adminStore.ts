@@ -19,15 +19,10 @@ export const useAdminStore = create(
       cashReserve: DEFAULT_CASH_RESERVE,
     },
     (set) => ({
-      // ===== 예외 설정 =====
-      // 예외 설정을 직접 값으로 설정
       setException: (exception: keyof AdminSettings, value: boolean) => {
         set({ [exception]: value });
       },
 
-      // ===== 화폐 재고 관리 =====
-
-      // 개별 화폐 수량 조정
       adjustCashCount: (denomination: CashDenomination, change: number) => {
         set((state) => ({
           cashReserve: {

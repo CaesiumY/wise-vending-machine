@@ -34,10 +34,7 @@ export const createUiSlice: StateCreator<
   [],
   UiSlice
 > = (set, _get, _api) => ({
-  // 초기 상태 spread
   ...initialUiState,
-
-  // 액션들
   setStatus: (status) =>
     set({ status }),
 
@@ -47,7 +44,6 @@ export const createUiSlice: StateCreator<
       currentError: errorType,
       errorMessage,
     });
-    // Toast는 UI 컴포넌트에서 처리
   },
 
   clearError: () =>

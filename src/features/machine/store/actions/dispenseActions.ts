@@ -38,11 +38,10 @@ export const createDispenseActions: StateCreator<
     if (adminState.dispenseFaultMode) {
       const product = products[selectedProduct];
 
-      // 현금 결제인 경우 잔액 복구 및 적절한 상태 전환
       if (isCashPayment(paymentMethod)) {
         set((state: VendingStore) => ({
           currentBalance: state.currentBalance + product.price, // 잔액 복구
-          status: "productSelect", // 다시 선택 가능 상태로
+          status: "productSelect",
           selectedProduct: null,
         }));
 
@@ -53,7 +52,6 @@ export const createDispenseActions: StateCreator<
           data: { paymentMethod: "cash", balanceRestored: true }
         };
       } else {
-        // 카드 결제는 별도 취소 처리가 있으므로 idle 상태로
         set({ status: "idle" });
 
         return {

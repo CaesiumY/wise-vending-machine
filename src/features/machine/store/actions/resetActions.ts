@@ -28,7 +28,6 @@ export const createResetActions: StateCreator<
   resetPaymentMethod: (): ActionResult<RefundData | void> => {
     const { status, currentBalance } = get();
 
-    // 결제 방식 리셋 가능한 상태인지 확인
     if (
       status === "dispensing" ||
       status === "completing"
@@ -40,7 +39,6 @@ export const createResetActions: StateCreator<
       };
     }
 
-    // 현금이 투입된 상태라면 반환 정보 포함
     const refundData = currentBalance > 0 ? {
       refundAmount: currentBalance,
       message: `${formatCurrency(currentBalance)}이 반환되었습니다.`
@@ -50,7 +48,6 @@ export const createResetActions: StateCreator<
     get().resetPayment();
     get().clearError();
     
-    // 선택된 상품 및 상태 초기화
     set({ 
       selectedProduct: null,
       status: "idle"

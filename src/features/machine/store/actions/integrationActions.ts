@@ -24,7 +24,6 @@ export const createIntegrationActions: StateCreator<
   setPaymentMethod: (method: PaymentMethod): ActionResult<void> => {
     const { status } = get();
 
-    // 대기 상태에서만 결제 방식 선택 가능
     if (status !== "idle") {
       return {
         success: false,
@@ -44,7 +43,6 @@ export const createIntegrationActions: StateCreator<
   selectProduct: (productId: ProductType): ActionResult<DispenseData | void> => {
     const { status, currentBalance, products, paymentMethod } = get();
 
-    // 음료 선택 가능한 상태인지 확인
     if (!isProductSelectionAllowed(status)) {
       return { 
         success: false, 
@@ -87,7 +85,6 @@ export const createIntegrationActions: StateCreator<
     set({ selectedProduct: productId });
 
     if (isCashPayment(paymentMethod)) {
-      // 현금 결제 처리 및 결과 반환
       const result = get().processCashTransaction(productId);
       return result;
     } else {

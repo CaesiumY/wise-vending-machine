@@ -40,7 +40,6 @@ export const createCardActions: StateCreator<
       showPaymentConfirm: false,
     });
 
-    // adminStore 설정 확인
     const adminState = useAdminStore.getState();
 
     // 카드 인식 실패 시뮬레이션
@@ -83,7 +82,6 @@ export const createCardActions: StateCreator<
       status: "dispensing",
     });
 
-    // 배출 처리
     const dispenseResult = get().dispenseProduct();
     
     // 배출 결과 반환 (성공/실패 모두)

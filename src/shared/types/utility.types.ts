@@ -1,6 +1,5 @@
 import type { ErrorType } from "@/features/machine/types/vending.types";
 
-// 액션 결과 데이터 타입들
 export interface CashInsertData {
   amount: number;
   newBalance: number;
@@ -22,7 +21,6 @@ export interface DispenseData {
   paymentCancelled?: boolean;
 }
 
-// 액션 결과 타입
 export interface ActionResult<T = void> {
   success: boolean
   data?: T

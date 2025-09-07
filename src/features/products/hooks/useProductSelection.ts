@@ -24,7 +24,6 @@ export function useProductSelection() {
   const handleProductSelect = (productId: ProductType): void => {
     const product = products[productId];
     
-    // 상태 검증을 위한 컨텍스트 생성
     const vendingContext: VendingContext = {
       selectedProduct,
       paymentMethod,
@@ -34,16 +33,13 @@ export function useProductSelection() {
 
     const productState = getProductState(product, vendingContext);
 
-    // 선택 불가능한 상태면 무시
     if (!canSelectProduct(productState)) {
       return;
     }
 
     const result = selectProduct(productId);
     
-    // 결과에 따른 UI 피드백 처리
     if (result.success) {
-      // 현금 결제 시 배출 결과가 있으면 처리
       if (result.data?.message) {
         toast.success(result.data.message);
         
@@ -53,7 +49,6 @@ export function useProductSelection() {
         }
       }
     } else {
-      // 에러 메시지 처리
       if (result.errorType) {
         toast.error(getErrorMessage(result.errorType));
       } else {

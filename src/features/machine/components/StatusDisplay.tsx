@@ -22,7 +22,6 @@ export function StatusDisplay({ className }: StatusDisplayProps) {
     : null;
 
 
-  // 상태별 메시지 반환
   const getStatusMessage = () => {
     switch (status) {
       case "idle":

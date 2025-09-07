@@ -39,7 +39,6 @@ export const createCashActions: StateCreator<
       };
     }
 
-    // 3. 정상 투입 처리
     const newBalance = currentBalance + denomination;
     const newInsertedCash = [...insertedCash, denomination];
 
@@ -51,7 +50,7 @@ export const createCashActions: StateCreator<
       currentBalance: newBalance,
       insertedCash: newInsertedCash,
       lastInsertTime: Date.now(),
-      status: "productSelect", // 음료 선택 가능 상태로 전환
+      status: "productSelect",
     });
 
     // 5. 성공 데이터 반환
@@ -145,7 +144,6 @@ export const createCashActions: StateCreator<
       });
     }
     
-    // 배출 결과를 상위로 전파 (UI 컴포넌트에서 토스트 처리)
     return dispenseResult;
   },
 
@@ -153,7 +151,6 @@ export const createCashActions: StateCreator<
     const state = get();
     const { currentBalance } = state;
 
-    // 현금 반환 처리
     if (currentBalance > 0) {
       state.reset();
       return { 

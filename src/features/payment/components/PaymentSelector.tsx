@@ -15,10 +15,8 @@ export function PaymentSelector({ className }: PaymentSelectorProps) {
   const { paymentMethod, status, setPaymentMethod, resetPaymentMethod } = useVendingStore();
   const { autoRecognizeCard } = useCardPayment();
 
-  // 결제 방식 선택 가능한 상태인지 확인
   const isSelectionDisabled = status !== "idle";
   
-  // 취소 버튼 표시 조건: 결제 방식이 선택되었고 대기 상태가 아닐 때
   const shouldShowCancelButton = paymentMethod !== null && status !== "idle";
 
   // 결제 방식 선택 핸들러

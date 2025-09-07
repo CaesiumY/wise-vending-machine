@@ -23,7 +23,6 @@ export function CashPanel({ className }: CashPanelProps) {
     cancelTransaction,
   } = useVendingStore();
 
-  // 현금 투입 가능 상태 확인
   const isVisible = paymentMethod === "cash";
   const isDisabled = isProcessing(status);
   const canInsertCashNow = !isDisabled && canInsertCash(status);
