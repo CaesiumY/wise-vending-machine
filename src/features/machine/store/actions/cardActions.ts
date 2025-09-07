@@ -1,6 +1,7 @@
 import type { StateCreator } from "zustand";
 import type { ActionResult } from "@/shared/types/utility.types";
 import type { Transaction, ErrorType, VendingStore } from "../../types/vending.types";
+import type { ProductType } from "@/features/products/types/product.types";
 import { useAdminStore } from "@/features/admin/store/adminStore";
 import { getErrorMessage } from "../../constants/errorMessages";
 import { EMPTY_BREAKDOWN } from "@/features/payment/constants/denominations";
@@ -8,7 +9,7 @@ import { toast } from "sonner";
 
 // 카드 관련 액션 인터페이스
 export interface CardActions {
-  confirmCardPayment: () => Promise<ActionResult>;
+  confirmCardPayment: (productId: ProductType) => Promise<ActionResult>;
   cancelCardPayment: () => void;
 }
 
@@ -20,20 +21,20 @@ export const createCardActions: StateCreator<
   CardActions
 > = (set, get, _api) => ({
   
-  confirmCardPayment: async (): Promise<ActionResult> => {
+  confirmCardPayment: async (productId: ProductType): Promise<ActionResult> => {
     const state = get();
-    const { selectedProductForCard, products } = state;
+    const { products } = state;
 
-    if (!selectedProductForCard) {
+    if (!productId) {
       return { success: false, error: "선택된 상품이 없습니다." };
     }
 
-    const product = products[selectedProductForCard];
+    const product = products[productId];
 
     set({
-      showPaymentConfirm: false,
-      selectedProduct: selectedProductForCard,
+      selectedProduct: productId,
       status: "cardProcess",
+      showPaymentConfirm: false,
     });
 
     try {
@@ -55,7 +56,7 @@ export const createCardActions: StateCreator<
       // 결제 성공 - 거래 생성
       const transaction: Transaction = {
         id: Date.now().toString(),
-        productId: selectedProductForCard,
+        productId: productId,
         productName: product.name,
         amount: product.price,
         paymentMethod: "card",
@@ -95,9 +96,9 @@ export const createCardActions: StateCreator<
 
   cancelCardPayment: () => {
     set({
+      selectedProduct: null,
       selectedProductForCard: null,
       showPaymentConfirm: false,
-      selectedProduct: null,
     });
   },
 });

@@ -6,22 +6,25 @@ import { useVendingStore } from "@/features/machine/store/vendingStore";
 import { isCardInputState } from "@/shared/utils/statusHelpers";
 
 export function CardPanel() {
+  // Zustand 전역 상태 직접 사용 (useState, useEffect 없이!)
   const {
     status,
-    selectedProductForCard,
-    showPaymentConfirm,
     products,
+    showPaymentConfirm,
+    selectedProductForCard,
     confirmCardPayment,
     cancelCardPayment,
   } = useVendingStore();
 
-  // 결제 확인
+  // 결제 확인 - Zustand 액션 직접 호출
   const handlePaymentConfirm = async () => {
-    await confirmCardPayment();
-    // 오류 처리는 useVendingStore에서 처리
+    if (selectedProductForCard) {
+      await confirmCardPayment(selectedProductForCard);
+      // 상태 초기화는 confirmCardPayment 내부에서 처리
+    }
   };
 
-  // 결제 취소
+  // 결제 취소 - Zustand 액션 직접 호출
   const handlePaymentCancel = () => {
     cancelCardPayment();
   };

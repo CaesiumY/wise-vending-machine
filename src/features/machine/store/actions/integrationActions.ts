@@ -72,11 +72,9 @@ export const createIntegrationActions: StateCreator<
 
     set({ selectedProduct: productId });
 
-    // 결제 방식에 따라 처리 분기
     if (isCashPayment(paymentMethod)) {
       get().processCashTransaction(productId);
     } else {
-      // 카드 결제: 음료 선택만 저장하고 결제 확인 대기
       set({
         selectedProductForCard: productId,
         showPaymentConfirm: true,

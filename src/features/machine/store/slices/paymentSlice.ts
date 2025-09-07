@@ -16,7 +16,7 @@ interface PaymentState {
   // 결제 방식 관련 상태
   paymentMethod: PaymentMethod | null;
 
-  // 카드 결제 관련 상태
+  // 카드 결제 관련 상태 (CardPanel에서 사용)
   selectedProductForCard: ProductType | null;
   showPaymentConfirm: boolean;
 }

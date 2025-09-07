@@ -30,8 +30,6 @@ export const createCashActions: StateCreator<
     const state = get();
     const { currentBalance, insertedCash, lastInsertTime } = state;
 
-    set({ isLoading: true });
-
     try {
       // 1. 연속 투입 간격 검증 (1초 간격) - 화폐 인식 시간 시뮬레이션
       if (Date.now() - lastInsertTime < CASH_INSERT_DELAY_MS) {
@@ -64,8 +62,12 @@ export const createCashActions: StateCreator<
       toast.success(successMessage);
 
       return { success: true };
-    } finally {
-      set({ isLoading: false });
+    } catch (error) {
+      console.error('현금 투입 중 오류:', error);
+      return { 
+        success: false, 
+        error: '현금 투입 중 오류가 발생했습니다.' 
+      };
     }
   },
 

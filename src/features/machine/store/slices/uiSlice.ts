@@ -8,7 +8,6 @@ interface UiState {
   status: VendingStatus;
   currentError: ErrorType | null;
   errorMessage: string;
-  isLoading: boolean;
 }
 
 // 초기 상태 (재사용 가능)
@@ -16,7 +15,6 @@ const initialUiState: UiState = {
   status: "idle",
   currentError: null,
   errorMessage: "",
-  isLoading: false,
 };
 
 // UI 액션 인터페이스 (액션만)
