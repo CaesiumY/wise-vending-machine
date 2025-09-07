@@ -1,6 +1,7 @@
 import type { StateCreator } from "zustand";
 import type { VendingStore } from "../../types/vending.types";
 import type { ActionResult } from "@/shared/types/utility.types";
+import { formatCurrency } from "@/shared/utils/formatters";
 import { toast } from "sonner";
 
 // 리셋 액션 인터페이스
@@ -19,8 +20,8 @@ export const createResetActions: StateCreator<
   reset: () => {
     // 각 슬라이스의 리셋 함수 호출
     get().resetPayment();      // PaymentSlice
-    get().resetProducts();     // ProductSlice - 추가 예정
-    get().resetTransaction();  // TransactionSlice - 추가 예정  
+    get().resetProducts();     // ProductSlice
+    get().resetTransaction();  // TransactionSlice
     get().resetUi();           // UiSlice
   },
 
@@ -40,7 +41,7 @@ export const createResetActions: StateCreator<
 
     // 현금이 투입된 상태라면 반환 처리
     if (currentBalance > 0) {
-      toast.info(`${currentBalance}원이 반환되었습니다.`);
+      toast.info(`${formatCurrency(currentBalance)}이 반환되었습니다.`);
     }
 
     // 슬라이스별 리셋 호출

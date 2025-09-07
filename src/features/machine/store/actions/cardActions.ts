@@ -3,6 +3,7 @@ import type { ActionResult } from "@/shared/types/utility.types";
 import type { Transaction, ErrorType, VendingStore } from "../../types/vending.types";
 import { useAdminStore } from "@/features/admin/store/adminStore";
 import { getErrorMessage } from "../../constants/errorMessages";
+import { EMPTY_BREAKDOWN } from "@/features/payment/constants/denominations";
 import { toast } from "sonner";
 
 // 카드 관련 액션 인터페이스
@@ -41,13 +42,13 @@ export const createCardActions: StateCreator<
 
       // 카드 인식 실패 시뮬레이션
       if (adminState.cardReaderFault) {
-        toast.error("카드 인식 실패 ❌");
+        toast.error("카드 인식 실패");
         throw new Error("cardReaderFault");
       }
 
       // 결제 거부 시뮬레이션
       if (adminState.cardPaymentReject) {
-        toast.error("결제 거부 ❌");
+        toast.error("결제 거부");
         throw new Error("cardPaymentReject");
       }
 
@@ -62,7 +63,7 @@ export const createCardActions: StateCreator<
         changeBreakdown: {
           canProvideChange: true,
           totalChange: 0,
-          breakdown: { 100: 0, 500: 0, 1000: 0, 5000: 0, 10000: 0 },
+          breakdown: { ...EMPTY_BREAKDOWN },
         },
         timestamp: new Date(),
         status: "pending",

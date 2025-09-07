@@ -5,20 +5,17 @@ import { CashPanel } from "@/features/payment/components/CashPanel";
 import { CardPanel } from "@/features/payment/components/CardPanel";
 import { MainLayout } from "@/shared/components/layout/MainLayout";
 
-interface VendingMachineProps {
+// 공통 컴포넌트 속성 타입
+interface ComponentWithChildren {
   children: ReactNode;
   className?: string;
 }
 
-interface VendingDisplayProps {
-  children: ReactNode;
-  className?: string;
-}
+type VendingMachineProps = ComponentWithChildren;
 
-interface VendingControlsProps {
-  children: ReactNode;
-  className?: string;
-}
+type VendingDisplayProps = ComponentWithChildren;
+
+type VendingControlsProps = ComponentWithChildren;
 
 /**
  * VendingMachine - 자판기 메인 컨테이너 (Compound Component Pattern)

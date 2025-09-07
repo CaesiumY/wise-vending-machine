@@ -1,6 +1,8 @@
 import type { StateCreator } from "zustand";
 import type { VendingStore } from "../../types/vending.types";
 import { useAdminStore } from "@/features/admin/store/adminStore";
+import { isCashPayment, isCardPayment, ensureNonNegative } from "@/shared/utils/paymentHelpers";
+import { formatCurrency } from "@/shared/utils/formatters";
 import { toast } from "sonner";
 
 // 배출 관련 액션 인터페이스
@@ -30,15 +32,14 @@ export const createDispenseActions: StateCreator<
       const product = products[selectedProduct];
 
       // 현금 결제인 경우 잔액 복구 및 적절한 상태 전환
-      if (paymentMethod === "cash") {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        set((state: any) => ({
+      if (isCashPayment(paymentMethod)) {
+        set((state: VendingStore) => ({
           currentBalance: state.currentBalance + product.price, // 잔액 복구
           status: "productSelect", // 다시 선택 가능 상태로
           selectedProduct: null,
         }));
 
-        toast.error("🚫 음료 배출 실패", {
+        toast.error("음료 배출 실패", {
           description:
             "배출에 실패했습니다. 잔액이 복구되었습니다. 다시 선택해주세요.",
         });
@@ -57,7 +58,7 @@ export const createDispenseActions: StateCreator<
     if (updatedProducts[selectedProduct]) {
       updatedProducts[selectedProduct] = {
         ...updatedProducts[selectedProduct],
-        stock: Math.max(0, updatedProducts[selectedProduct].stock - 1),
+        stock: ensureNonNegative(updatedProducts[selectedProduct].stock - 1),
       };
     }
 
@@ -67,16 +68,16 @@ export const createDispenseActions: StateCreator<
     });
 
     // 모든 결제 방식에서 배출 완료 토스트 표시
-    toast.success(`${products[selectedProduct].name}이(가) 배출되었습니다! 🎉`);
+    toast.success(`${products[selectedProduct].name}이(가) 배출되었습니다!`);
 
     // 카드 결제는 바로 대기 상태로 복귀
-    if (paymentMethod === "card") {
+    if (isCardPayment(paymentMethod)) {
       state.reset();
       return true;
     }
 
     // 현금 결제 후 잔액 확인 (다이어그램의 '잔액 확인' 단계)
-    if (paymentMethod === "cash") {
+    if (isCashPayment(paymentMethod)) {
       const { currentBalance } = get();
 
       // 다이어그램: 단순히 잔액이 0원인지 아닌지만 확인
@@ -88,7 +89,7 @@ export const createDispenseActions: StateCreator<
         });
 
         toast.info(
-          `잔액 ${currentBalance}원이 남아있습니다. 추가 구매가 가능합니다.`
+          `잔액 ${formatCurrency(currentBalance)}이 남아있습니다. 추가 구매가 가능합니다.`
         );
         return true;
       } else {

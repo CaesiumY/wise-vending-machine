@@ -2,6 +2,7 @@ import type { StateCreator } from "zustand";
 import type { ProductType, Product } from "@/features/products/types/product.types";
 import type { VendingStore } from "../../types/vending.types";
 import { PRODUCTS } from "@/features/products/constants/products";
+import { ensureNonNegative } from "@/shared/utils/paymentHelpers";
 
 // 상품 상태 인터페이스 (상태만)
 interface ProductState {
@@ -41,7 +42,7 @@ export const createProductSlice: StateCreator<
         ...state.products,
         [productId]: {
           ...state.products[productId],
-          stock: Math.max(0, newStock),
+          stock: ensureNonNegative(newStock),
         },
       },
     })),

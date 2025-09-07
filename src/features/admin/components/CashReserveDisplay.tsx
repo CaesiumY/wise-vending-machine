@@ -6,15 +6,8 @@ import {
 } from "@/shared/components/ui/card";
 import { useAdminStore } from "@/features/admin/store/adminStore";
 import { Banknote } from "lucide-react";
-import type { CashDenomination } from "@/features/payment/types/payment.types";
-
-const CASH_DENOMINATIONS: CashDenomination[] = [10000, 5000, 1000, 500, 100];
-
-const formatDenomination = (denomination: number): string => {
-  return denomination >= 1000
-    ? `${denomination / 1000}천원`
-    : `${denomination}원`;
-};
+import { CASH_DENOMINATIONS } from "@/features/payment/constants/denominations";
+import { formatDenomination } from "@/shared/utils/formatters";
 
 export function CashReserveDisplay() {
   const { cashReserve } = useAdminStore();
@@ -30,7 +23,7 @@ export function CashReserveDisplay() {
       <CardContent className="pt-0">
         <div className="space-y-2">
           {CASH_DENOMINATIONS.map((denomination) => {
-            const count = cashReserve[denomination] || 0;
+            const count = cashReserve[denomination] ?? 0;
             return (
               <div
                 key={denomination}

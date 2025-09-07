@@ -1,6 +1,5 @@
 import { Badge } from "@/shared/components/ui/badge";
-import type { ButtonStateType } from "../types/product.types";
-import { ButtonState } from "../types/product.types";
+import { ButtonState, type ButtonStateType } from "../types/product.types";
 
 interface ProductStateBadgeProps {
   state: ButtonStateType;

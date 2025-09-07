@@ -1,3 +1,5 @@
+import type { PaymentMethod } from "@/features/payment/types/payment.types";
+
 // 상품 타입
 export type ProductType = 'cola' | 'water' | 'coffee'
 
@@ -23,9 +25,7 @@ export type ButtonStateType = typeof ButtonState[keyof typeof ButtonState];
 // 자판기 상태 컨텍스트 타입
 export interface VendingContext {
   selectedProduct: ProductType | null;
-  paymentMethod: 'cash' | 'card' | null;
+  paymentMethod: PaymentMethod | null;
   status: string; // VendingStatus 타입을 import하지 않고 string으로 유지
   currentBalance: number;
 }
-
-

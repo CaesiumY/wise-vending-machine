@@ -5,7 +5,11 @@ import type { ActionResult } from "@/shared/types/utility.types";
 import type { Transaction, VendingStore } from "../../types/vending.types";
 import { calculateOptimalChange } from "@/features/payment/utils/changeCalculator";
 import { useAdminStore } from "@/features/admin/store/adminStore";
+import { formatCurrency } from "@/shared/utils/formatters";
 import { toast } from "sonner";
+
+// 현금 투입 간격 제한 (밀리초)
+const CASH_INSERT_DELAY_MS = 1000;
 
 // 현금 관련 액션 인터페이스
 export interface CashActions {
@@ -30,7 +34,7 @@ export const createCashActions: StateCreator<
 
     try {
       // 1. 연속 투입 간격 검증 (1초 간격) - 화폐 인식 시간 시뮬레이션
-      if (Date.now() - lastInsertTime < 1000) {
+      if (Date.now() - lastInsertTime < CASH_INSERT_DELAY_MS) {
         // 사용자에게 화폐 반환 안내 토스트 표시
         toast.warning("화폐가 반환되었습니다. 천천히 다시 투입해주세요.");
 
@@ -56,7 +60,7 @@ export const createCashActions: StateCreator<
       });
 
       // 5. 성공 메시지 표시
-      const successMessage = `${denomination}원이 투입되었습니다.\n현재 잔액: ${newBalance}원`;
+      const successMessage = `${formatCurrency(denomination)}이 투입되었습니다.\n현재 잔액: ${formatCurrency(newBalance)}`;
       toast.success(successMessage);
 
       return { success: true };
@@ -142,7 +146,7 @@ export const createCashActions: StateCreator<
 
     // 현금 반환
     if (currentBalance > 0) {
-      toast.success(`반환 완료! ${currentBalance}원이 반환되었습니다.`);
+      toast.success(`반환 완료! ${formatCurrency(currentBalance)}이 반환되었습니다.`);
       state.reset();
     } else {
       state.reset();

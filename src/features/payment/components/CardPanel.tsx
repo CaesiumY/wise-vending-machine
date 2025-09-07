@@ -1,6 +1,7 @@
 import { Button } from "@/shared/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { CreditCard, ShoppingCart, X, Loader2 } from "lucide-react";
+import { formatCurrency } from "@/shared/utils/formatters";
 import { useCardPayment } from "@/features/payment/hooks/useCardPayment";
 import { useVendingStore } from "@/features/machine/store/vendingStore";
 
@@ -71,7 +72,7 @@ export function CardPanel() {
               <div className="flex justify-between">
                 <span>가격:</span>
                 <span className="font-medium">
-                  {products[selectedProductForCard].price.toLocaleString()}원
+                  {formatCurrency(products[selectedProductForCard].price)}
                 </span>
               </div>
             </div>

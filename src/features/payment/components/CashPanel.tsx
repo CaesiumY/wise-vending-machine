@@ -2,24 +2,14 @@ import { Button } from "@/shared/components/ui/button";
 import { Card } from "@/shared/components/ui/card";
 import { Badge } from "@/shared/components/ui/badge";
 import { cn } from "@/shared/utils/ui";
+import { formatCurrency, formatDenomination } from "@/shared/utils/formatters";
 import { useVendingStore } from "@/features/machine/store/vendingStore";
+import { CASH_DENOMINATIONS } from "@/features/payment/constants/denominations";
 import type { CashDenomination } from "@/features/payment/types/payment.types";
 
 interface CashPanelProps {
   className?: string;
 }
-
-// 화폐 단위별 정보
-const cashDenominations: Array<{
-  value: CashDenomination;
-  label: string;
-}> = [
-  { value: 10000, label: "1만원" },
-  { value: 5000, label: "5천원" },
-  { value: 1000, label: "1천원" },
-  { value: 500, label: "500원" },
-  { value: 100, label: "100원" },
-];
 
 export function CashPanel({ className }: CashPanelProps) {
   const {
@@ -64,18 +54,18 @@ export function CashPanel({ className }: CashPanelProps) {
 
         {/* 현금 투입 버튼들 */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {cashDenominations.map((cash) => (
+          {CASH_DENOMINATIONS.map((denomination) => (
             <Button
-              key={cash.value}
+              key={denomination}
               className={cn(
                 "h-16 flex flex-col items-center justify-center gap-1",
                 "font-bold"
               )}
-              onClick={() => handleCashInsert(cash.value)}
+              onClick={() => handleCashInsert(denomination)}
               disabled={isDisabled || !canInsertCash}
             >
-              <span className="text-lg">{cash.value.toLocaleString()}</span>
-              <span className="text-xs">{cash.label}</span>
+              <span className="text-lg">{formatCurrency(denomination)}</span>
+              <span className="text-xs">{formatDenomination(denomination)}</span>
             </Button>
           ))}
 

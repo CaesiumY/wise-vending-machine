@@ -3,6 +3,8 @@ import type { VendingStore } from "../../types/vending.types";
 import type { ProductType } from "@/features/products/types/product.types";
 import type { PaymentMethod } from "@/features/payment/types/payment.types";
 import type { ActionResult } from "@/shared/types/utility.types";
+import { isCashPayment } from "@/shared/utils/paymentHelpers";
+import { formatCurrency } from "@/shared/utils/formatters";
 
 // 통합 액션 인터페이스
 export interface IntegrationActions {
@@ -59,10 +61,10 @@ export const createIntegrationActions: StateCreator<
     }
 
     // 현금 결제시 잔액 확인
-    if (paymentMethod === "cash" && currentBalance < product.price) {
+    if (isCashPayment(paymentMethod) && currentBalance < product.price) {
       get().setError(
         "changeShortage",
-        `잔액이 부족합니다. (필요: ${product.price}원, 보유: ${currentBalance}원)`
+        `잔액이 부족합니다. (필요: ${formatCurrency(product.price)}, 보유: ${formatCurrency(currentBalance)})`
       );
       return { success: false, error: "잔액이 부족합니다." };
     }
@@ -70,7 +72,7 @@ export const createIntegrationActions: StateCreator<
     set({ selectedProduct: productId });
 
     // 결제 방식에 따라 처리 분기
-    if (paymentMethod === "cash") {
+    if (isCashPayment(paymentMethod)) {
       get().processCashTransaction(productId);
     } else {
       // 카드 결제: 음료 선택만 저장하고 결제 확인 대기

@@ -1,5 +1,6 @@
 import { Card } from "@/shared/components/ui/card";
 import { cn } from "@/shared/utils/ui";
+import { formatCurrency } from "@/shared/utils/formatters";
 import { useVendingStore } from "../store/vendingStore";
 
 interface StatusDisplayProps {
@@ -55,7 +56,7 @@ export function StatusDisplay({ className }: StatusDisplayProps) {
         <div className="flex justify-between items-center rounded-md p-3 border border-border bg-background">
           <span>투입금액</span>
           <span className="text-2xl font-bold">
-            {currentBalance.toLocaleString()}원
+            {formatCurrency(currentBalance)}
           </span>
         </div>
 
@@ -67,7 +68,7 @@ export function StatusDisplay({ className }: StatusDisplayProps) {
               <div className="text-lg font-semibold">
                 {selectedProductInfo.name}
               </div>
-              <div>{selectedProductInfo.price.toLocaleString()}원</div>
+              <div>{formatCurrency(selectedProductInfo.price)}</div>
             </div>
           </div>
         )}
@@ -80,10 +81,7 @@ export function StatusDisplay({ className }: StatusDisplayProps) {
               <span>거스름돈</span>
               <div className="text-right">
                 <div className="text-lg font-semibold">
-                  {(
-                    currentBalance - selectedProductInfo.price
-                  ).toLocaleString()}
-                  원
+                  {formatCurrency(currentBalance - selectedProductInfo.price)}
                 </div>
               </div>
             </div>

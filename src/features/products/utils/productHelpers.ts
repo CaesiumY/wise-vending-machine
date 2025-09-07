@@ -5,6 +5,7 @@ import type {
   VendingContext 
 } from "../types/product.types";
 import { ButtonState } from "../types/product.types";
+import { isCashPayment } from "@/shared/utils/paymentHelpers";
 
 /**
  * 상품의 버튼 상태를 결정하는 순수 함수
@@ -25,7 +26,7 @@ export const getProductState = (
   if (selectedProduct === product.id) return ButtonState.SELECTED;
 
   // 현금 결제시 잔액 확인
-  if (paymentMethod === "cash" && currentBalance < product.price) {
+  if (isCashPayment(paymentMethod) && currentBalance < product.price) {
     return ButtonState.INSUFFICIENT_FUNDS;
   }
 
@@ -78,24 +79,4 @@ export const useProductState = (product: Product): ButtonStateType => {
     status,
     currentBalance,
   });
-};
-
-/**
- * 버튼이 비활성화되어야 하는지 확인하는 커스텀 훅
- * @param product 상품 정보
- * @returns 비활성화 여부
- */
-export const useButtonDisabled = (product: Product): boolean => {
-  const productState = useProductState(product);
-  return isButtonDisabled(productState);
-};
-
-/**
- * 상품 선택이 가능한지 확인하는 커스텀 훅
- * @param product 상품 정보
- * @returns 선택 가능 여부
- */
-export const useCanSelectProduct = (product: Product): boolean => {
-  const productState = useProductState(product);
-  return canSelectProduct(productState);
 };
