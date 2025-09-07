@@ -7,6 +7,7 @@ import { isCashPayment } from "@/shared/utils/paymentHelpers";
 import { formatCurrency } from "@/shared/utils/formatters";
 import { isProductSelectionAllowed } from "@/features/machine/utils/statusHelpers";
 import { ErrorTypes } from "@/features/machine/constants/errorTypes";
+import { toast } from "sonner";
 
 // 통합 액션 인터페이스
 export interface IntegrationActions {
@@ -22,7 +23,8 @@ export const createIntegrationActions: StateCreator<
   IntegrationActions
 > = (set, get, _api) => ({
   setPaymentMethod: (method: PaymentMethod): ActionResult<void> => {
-    const { status } = get();
+    const state = get();
+    const { status } = state;
 
     if (status !== "idle") {
       return {
@@ -36,6 +38,23 @@ export const createIntegrationActions: StateCreator<
       paymentMethod: method,
       status: method === "cash" ? "cashInput" : "cardProcess",
     });
+
+    // 카드 결제 선택 시 타임아웃 시작
+    if (method === "card") {
+      const handleTimeout = () => {
+        const currentState = get();
+        if (currentState.paymentMethod === "card") {
+          // 타임아웃으로 결제 방식 초기화
+          currentState.resetPaymentMethod();
+          toast.error("시간 초과로 카드 결제가 취소되었습니다.");
+        }
+      };
+
+      state.startPaymentTimeout(handleTimeout);
+    } else {
+      // 현금 결제 선택 시 타임아웃 클리어 (혹시 있다면)
+      state.clearPaymentTimeout();
+    }
 
     return { success: true };
   },
@@ -94,6 +113,22 @@ export const createIntegrationActions: StateCreator<
       selectedProductForCard: productId,
       showPaymentConfirm: true,
     });
+
+    // 카드 결제 시 음료 선택 시점에서 타임아웃 연장
+    if (paymentMethod === "card") {
+      const state = get();
+      const handleTimeout = () => {
+        const currentState = get();
+        if (currentState.paymentMethod === "card") {
+          // 타임아웃으로 결제 방식 초기화
+          currentState.resetPaymentMethod();
+          toast.error("시간 초과로 카드 결제가 취소되었습니다.");
+        }
+      };
+      
+      state.extendPaymentTimeout(handleTimeout);
+    }
+
     return { success: true };
   },
 

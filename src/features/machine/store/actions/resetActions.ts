@@ -19,8 +19,11 @@ export const createResetActions: StateCreator<
   ResetActions
 > = (set, get, _api) => ({
   reset: () => {
+    // 타임아웃 클리어 (resetPayment에서 처리되지만 명시적으로)
+    get().clearPaymentTimeout();
+    
     // 각 슬라이스의 리셋 함수 호출
-    get().resetPayment();           // PaymentSlice
+    get().resetPayment();           // PaymentSlice (타임아웃도 포함)
     get().clearProductSelection();  // ProductSlice
     get().resetTransaction();       // TransactionSlice
     get().resetUi();                // UiSlice
@@ -41,6 +44,9 @@ export const createResetActions: StateCreator<
       refundAmount: currentBalance,
       message: `${formatCurrency(currentBalance)}이 반환되었습니다.`
     } : undefined;
+
+    // 타임아웃 클리어 (결제 방식 변경 시)
+    get().clearPaymentTimeout();
 
     // 슬라이스별 리셋 호출
     get().resetPayment();

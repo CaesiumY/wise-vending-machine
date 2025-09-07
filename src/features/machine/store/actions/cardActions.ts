@@ -5,6 +5,7 @@ import type { Transaction, VendingStore } from "../../types/vending.types";
 import { useAdminStore } from "@/features/admin/store/adminStore";
 import { EMPTY_BREAKDOWN } from "@/features/payment/constants/denominations";
 import { ErrorTypes } from "@/features/machine/constants/errorTypes";
+import { toast } from "sonner";
 
 // 카드 관련 액션 인터페이스
 export interface CardActions {
@@ -33,6 +34,18 @@ export const createCardActions: StateCreator<
 
     const product = products[productId];
     const adminState = useAdminStore.getState();
+
+    // 결제 시도 시 타임아웃 연장
+    const handleTimeout = () => {
+      const currentState = get();
+      if (currentState.paymentMethod === "card") {
+        // 타임아웃으로 결제 방식 초기화
+        currentState.resetPaymentMethod();
+        toast.error("시간 초과로 카드 결제가 취소되었습니다.");
+      }
+    };
+
+    state.extendPaymentTimeout(handleTimeout);
 
     // 카드 인식 실패 체크를 먼저 수행
     if (adminState.cardReaderFault) {
@@ -65,6 +78,9 @@ export const createCardActions: StateCreator<
         errorType: ErrorTypes.CARD_PAYMENT_REJECT,
       };
     }
+
+    // 결제 성공 시 타임아웃 클리어 
+    state.clearPaymentTimeout();
 
     // 결제 성공 시에만 상태 변경
     set({
@@ -102,6 +118,11 @@ export const createCardActions: StateCreator<
   },
 
   cancelCardPayment: () => {
+    const state = get();
+    
+    // 결제 취소 시 타임아웃 클리어
+    state.clearPaymentTimeout();
+    
     set({
       selectedProduct: null,
       selectedProductForCard: null,
