@@ -65,7 +65,6 @@ export interface VendingState {
   
   // 거래 기록
   lastTransaction: Nullable<Transaction>
-  transactionHistory: Transaction[]
   
   // UI 상태
   currentError: Nullable<ErrorType>
@@ -110,5 +109,31 @@ export interface VendingActions {
   updateStock: (productId: ProductType, change: number) => void
 }
 
-// 호환성을 위한 통합 타입
-export type VendingStore = VendingState & VendingActions
+// 슬라이스 타입 임포트 (새로운 구조)
+import type { PaymentSlice } from '../store/slices/paymentSlice'
+import type { ProductSlice } from '../store/slices/productSlice'
+import type { TransactionSlice } from '../store/slices/transactionSlice'
+import type { UiSlice } from '../store/slices/uiSlice'
+import type { CashActions } from '../store/actions/cashActions'
+import type { CardActions } from '../store/actions/cardActions'
+import type { DispenseActions } from '../store/actions/dispenseActions'
+
+// 새로운 리팩터링된 스토어 타입
+export type VendingStore = 
+  PaymentSlice & 
+  ProductSlice & 
+  TransactionSlice & 
+  UiSlice &
+  CashActions &
+  CardActions &
+  DispenseActions & {
+    // 통합 액션들
+    setPaymentMethod: (method: PaymentMethod) => ActionResult
+    selectProduct: (productId: ProductType) => ActionResult
+    reset: () => void
+    resetPaymentMethod: () => ActionResult
+    updateStock: (productId: ProductType, change: number) => void
+  }
+
+// 기존 호환성을 위한 레거시 타입 (필요시 사용)
+export type LegacyVendingStore = VendingState & VendingActions
