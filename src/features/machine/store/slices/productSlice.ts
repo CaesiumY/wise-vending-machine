@@ -19,7 +19,7 @@ const initialProductState: ProductState = {
 // 상품 액션 인터페이스 (액션만)
 interface ProductActions {
   updateProductStock: (productId: ProductType, newStock: number) => void;
-  resetProducts: () => void;
+  clearProductSelection: () => void;
 }
 
 // 상품 슬라이스 타입 (상태 + 액션)
@@ -47,5 +47,7 @@ export const createProductSlice: StateCreator<
       },
     })),
 
-  resetProducts: () => set(initialProductState),
+  clearProductSelection: () => set({ 
+    selectedProduct: null 
+  }),
 });

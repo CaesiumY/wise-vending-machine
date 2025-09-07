@@ -19,10 +19,10 @@ export const createResetActions: StateCreator<
 > = (set, get, _api) => ({
   reset: () => {
     // 각 슬라이스의 리셋 함수 호출
-    get().resetPayment();      // PaymentSlice
-    get().resetProducts();     // ProductSlice
-    get().resetTransaction();  // TransactionSlice
-    get().resetUi();           // UiSlice
+    get().resetPayment();           // PaymentSlice
+    get().clearProductSelection();  // ProductSlice
+    get().resetTransaction();       // TransactionSlice
+    get().resetUi();                // UiSlice
   },
 
   resetPaymentMethod: (): ActionResult => {

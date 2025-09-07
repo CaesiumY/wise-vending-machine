@@ -75,7 +75,7 @@ export const createCardActions: StateCreator<
       });
 
       // 배출 처리
-      state.dispenseProduct();
+      get().dispenseProduct();
 
       return { success: true };
     } catch (error) {
