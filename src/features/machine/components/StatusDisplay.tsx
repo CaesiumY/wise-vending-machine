@@ -1,7 +1,6 @@
 import { Card } from "@/shared/components/ui/card";
 import { cn } from "@/shared/utils/ui";
 import { useVendingStore } from "../store/vendingStore";
-import type { VendingStatus } from "@/features/machine/types/vending.types";
 
 interface StatusDisplayProps {
   className?: string;
@@ -21,8 +20,6 @@ export function StatusDisplay({ className }: StatusDisplayProps) {
     ? products[selectedProduct]
     : null;
 
-  // 상태별 색상 반환 (중립 톤, 상태 강조만 배지로)
-  const getStatusColor = (_status: VendingStatus) => "";
 
   // 상태별 메시지 반환
   const getStatusMessage = () => {
@@ -49,7 +46,7 @@ export function StatusDisplay({ className }: StatusDisplayProps) {
       <div className="space-y-3">
         {/* 상태 메시지 */}
         <div className="text-center">
-          <p className={cn("text-lg font-semibold", getStatusColor(status))}>
+          <p className="text-lg font-semibold">
             {getStatusMessage()}
           </p>
         </div>

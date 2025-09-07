@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { useAdminStore } from "@/features/admin/store/adminStore";
 import { Banknote } from "lucide-react";
-import { cn } from "@/shared/utils/ui";
 import type { CashDenomination } from "@/features/payment/types/payment.types";
 
 const CASH_DENOMINATIONS: CashDenomination[] = [10000, 5000, 1000, 500, 100];
@@ -12,11 +11,6 @@ const formatDenomination = (denomination: number): string => {
     : `${denomination}원`;
 };
 
-const getStockStatusColor = (count: number): string => {
-  if (count === 0) return "text-red-500";
-  if (count <= 2) return "text-orange-500";
-  return "text-foreground";
-};
 
 export function CashReserveDisplay() {
   const { cashReserve } = useAdminStore();
@@ -41,7 +35,7 @@ export function CashReserveDisplay() {
                 <span className="text-muted-foreground">
                   {formatDenomination(denomination)}
                 </span>
-                <span className={cn("font-medium", getStockStatusColor(count))}>
+                <span className="font-medium">
                   {count}개
                 </span>
               </div>

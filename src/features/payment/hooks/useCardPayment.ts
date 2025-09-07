@@ -146,13 +146,6 @@ export function useCardPayment() {
         toast.success("🎉 구매 완료!", {
           description: `${product?.name} (${product?.price.toLocaleString()}원)\n\n음료를 가져가세요! 🥤`,
           duration: 6000,
-          style: {
-            background: "hsl(var(--primary))",
-            color: "hsl(var(--primary-foreground))",
-            border: "2px solid hsl(var(--primary))",
-            fontSize: "14px",
-            lineHeight: "1.4",
-          },
         });
 
         // 거래 완료 후 상태 초기화
