@@ -38,22 +38,9 @@ export const createDispenseActions: StateCreator<
     if (adminState.dispenseFaultMode) {
       const product = products[selectedProduct];
 
-      if (isCashPayment(paymentMethod)) {
-        set((state: VendingStore) => ({
-          currentBalance: state.currentBalance + product.price, // 잔액 복구
-          status: "productSelect",
-          selectedProduct: null,
-        }));
-
-        return {
-          success: false,
-          error: "배출에 실패했습니다. 잔액이 복구되었습니다. 다시 선택해주세요.",
-          errorType: ErrorTypes.DISPENSE_FAILURE,
-          data: { paymentMethod: "cash", balanceRestored: true }
-        };
-      } else {
+      // 카드 결제 실패 시 즉시 반환
+      if (!isCashPayment(paymentMethod)) {
         set({ status: "idle" });
-
         return {
           success: false,
           error: "배출에 실패했습니다. 결제가 취소됩니다.",
@@ -61,6 +48,20 @@ export const createDispenseActions: StateCreator<
           data: { paymentMethod: "card", paymentCancelled: true }
         };
       }
+
+      // 현금 결제 실패 시 잔액 복구
+      set((state: VendingStore) => ({
+        currentBalance: state.currentBalance + product.price, // 잔액 복구
+        status: "productSelect",
+        selectedProduct: null,
+      }));
+
+      return {
+        success: false,
+        error: "배출에 실패했습니다. 잔액이 복구되었습니다. 다시 선택해주세요.",
+        errorType: ErrorTypes.DISPENSE_FAILURE,
+        data: { paymentMethod: "cash", balanceRestored: true }
+      };
     }
 
     // 배출 성공 - 재고 감소 처리
@@ -94,43 +95,42 @@ export const createDispenseActions: StateCreator<
     }
 
     // 현금 결제 후 잔액 확인 (다이어그램의 '잔액 확인' 단계)
-    if (isCashPayment(paymentMethod)) {
-      const { currentBalance } = get();
-
-      // 다이어그램: 단순히 잔액이 0원인지 아닌지만 확인
-      if (currentBalance > 0) {
-        // 잔액이 0원이 아닌 경우 → 음료 선택 가능 상태로 (연속 구매)
-        set({
-          status: "productSelect",
-          selectedProduct: null,
-        });
-
-        return { 
-          success: true, 
-          data: { 
-            productName,
-            message: `${productName}이(가) 배출되었습니다!`,
-            paymentMethod: "cash",
-            remainingBalance: currentBalance,
-            balanceMessage: `잔액 ${formatCurrency(currentBalance)}이 남아있습니다. 추가 구매가 가능합니다.`
-          }
-        };
-      } else {
-        // 잔액이 0원인 경우 → 대기 상태로 전환
-        reset();
-        return { 
-          success: true, 
-          data: { 
-            productName,
-            message: `${productName}이(가) 배출되었습니다!`,
-            paymentMethod: "cash",
-            remainingBalance: 0
-          }
-        };
-      }
+    if (!isCashPayment(paymentMethod)) {
+      return { success: true };
     }
 
-    return { success: true };
+    const { currentBalance } = get();
+
+    // 잔액이 0원인 경우 → 대기 상태로 전환
+    if (currentBalance === 0) {
+      reset();
+      return { 
+        success: true, 
+        data: { 
+          productName,
+          message: `${productName}이(가) 배출되었습니다!`,
+          paymentMethod: "cash",
+          remainingBalance: 0
+        }
+      };
+    }
+
+    // 잔액이 0원이 아닌 경우 → 음료 선택 가능 상태로 (연속 구매)
+    set({
+      status: "productSelect",
+      selectedProduct: null,
+    });
+
+    return { 
+      success: true, 
+      data: { 
+        productName,
+        message: `${productName}이(가) 배출되었습니다!`,
+        paymentMethod: "cash",
+        remainingBalance: currentBalance,
+        balanceMessage: `잔액 ${formatCurrency(currentBalance)}이 남아있습니다. 추가 구매가 가능합니다.`
+      }
+    };
   },
 
 });

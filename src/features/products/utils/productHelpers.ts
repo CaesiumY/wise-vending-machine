@@ -8,6 +8,13 @@ import { ButtonState } from "../types/product.types";
 import { isCashPayment } from "@/shared/utils/paymentHelpers";
 import { isProductSelectionAllowed } from "@/shared/utils/statusHelpers";
 
+// 비활성화되어야 하는 버튼 상태들
+const DISABLED_BUTTON_STATES: ReadonlySet<ButtonStateType> = new Set([
+  ButtonState.OUT_OF_STOCK,
+  ButtonState.INSUFFICIENT_FUNDS,
+  ButtonState.DISABLED
+]);
+
 /**
  * 상품의 버튼 상태를 결정하는 순수 함수
  * @param product 상품 정보
@@ -45,11 +52,7 @@ export const getProductState = (
  * @returns 비활성화 여부
  */
 export const isButtonDisabled = (productState: ButtonStateType): boolean => {
-  return (
-    productState === ButtonState.OUT_OF_STOCK ||
-    productState === ButtonState.INSUFFICIENT_FUNDS ||
-    productState === ButtonState.DISABLED
-  );
+  return DISABLED_BUTTON_STATES.has(productState);
 };
 
 /**

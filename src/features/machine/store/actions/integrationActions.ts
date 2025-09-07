@@ -84,16 +84,17 @@ export const createIntegrationActions: StateCreator<
 
     set({ selectedProduct: productId });
 
+    // 현금 결제인 경우 즉시 처리
     if (isCashPayment(paymentMethod)) {
-      const result = get().processCashTransaction(productId);
-      return result;
-    } else {
-      set({
-        selectedProductForCard: productId,
-        showPaymentConfirm: true,
-      });
-      return { success: true };
+      return get().processCashTransaction(productId);
     }
+
+    // 카드 결제인 경우 확인 화면 표시
+    set({
+      selectedProductForCard: productId,
+      showPaymentConfirm: true,
+    });
+    return { success: true };
   },
 
 });

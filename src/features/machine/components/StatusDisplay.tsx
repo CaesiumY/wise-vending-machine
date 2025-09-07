@@ -2,6 +2,7 @@ import { Card } from "@/shared/components/ui/card";
 import { cn } from "@/shared/utils/ui";
 import { formatCurrency } from "@/shared/utils/formatters";
 import { useVendingStore } from "../store/vendingStore";
+import type { VendingStatus } from "../types/vending.types";
 
 interface StatusDisplayProps {
   className?: string;
@@ -21,25 +22,18 @@ export function StatusDisplay({ className }: StatusDisplayProps) {
     ? products[selectedProduct]
     : null;
 
+  // 상태별 메시지 맵
+  const STATUS_MESSAGES: Record<VendingStatus, string> = {
+    idle: "음료를 선택해주세요",
+    cashInput: "현금을 투입해주세요",
+    productSelect: "구매할 음료를 선택해주세요",
+    cardProcess: "카드를 삽입해주세요",
+    dispensing: "음료를 배출하고 있습니다...",
+    completing: "음료를 선택해주세요"
+  } as const;
 
-  const getStatusMessage = () => {
-    switch (status) {
-      case "idle":
-        return "음료를 선택해주세요";
-      case "cashInput":
-        return "현금을 투입해주세요";
-      case "productSelect":
-        return "구매할 음료를 선택해주세요";
-      case "cardProcess":
-        return "카드를 삽입해주세요";
-      case "dispensing":
-        return "음료를 배출하고 있습니다...";
-      case "completing":
-        return "음료를 선택해주세요";
-      default:
-        return "준비 중입니다...";
-    }
-  };
+  const getStatusMessage = (): string => 
+    STATUS_MESSAGES[status] ?? "준비 중입니다...";
 
   return (
     <Card className={cn("p-4 mb-4", className)}>
@@ -73,9 +67,13 @@ export function StatusDisplay({ className }: StatusDisplayProps) {
         )}
 
         {/* 잔액 확인 (현금 결제시) */}
-        {paymentMethod === "cash" &&
-          selectedProductInfo &&
-          currentBalance >= selectedProductInfo.price && (
+        {(() => {
+          const shouldShowChange = 
+            paymentMethod === "cash" && 
+            selectedProductInfo && 
+            currentBalance >= selectedProductInfo.price;
+          
+          return shouldShowChange && (
             <div className="flex justify-between items-center rounded-md p-3 border border-border bg-background">
               <span>거스름돈</span>
               <div className="text-right">
@@ -84,7 +82,8 @@ export function StatusDisplay({ className }: StatusDisplayProps) {
                 </div>
               </div>
             </div>
-          )}
+          );
+        })()}
       </div>
     </Card>
   );

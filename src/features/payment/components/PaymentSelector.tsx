@@ -37,16 +37,17 @@ export function PaymentSelector({ className }: PaymentSelectorProps) {
   // 결제 방식 취소 핸들러
   const handlePaymentCancel = () => {
     const result = resetPaymentMethod();
-    if (result.success) {
-      if (result.data?.message) {
-        toast.success(result.data.message);
-      }
-    } else {
-      if (result.errorType) {
-        toast.error(getErrorMessage(result.errorType));
-      } else {
-        toast.error(result.error || "취소에 실패했습니다.");
-      }
+    
+    if (!result.success) {
+      const errorMessage = result.errorType 
+        ? getErrorMessage(result.errorType)
+        : result.error || "취소에 실패했습니다.";
+      toast.error(errorMessage);
+      return;
+    }
+    
+    if (result.data?.message) {
+      toast.success(result.data.message);
     }
   };
 

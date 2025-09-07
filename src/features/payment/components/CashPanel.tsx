@@ -32,26 +32,32 @@ export function CashPanel({ className }: CashPanelProps) {
     if (!canInsertCashNow) return;
 
     const result = insertCash(amount);
-    if (result.success) {
-      if (result.data?.message) {
-        toast.success(result.data.message);
-      }
-    } else {
-      if (result.errorType) {
-        toast.error(getErrorMessage(result.errorType));
-      } else {
-        toast.error(result.error || "현금 투입에 실패했습니다.");
-      }
+    
+    if (!result.success) {
+      const errorMessage = result.errorType 
+        ? getErrorMessage(result.errorType)
+        : result.error || "현금 투입에 실패했습니다.";
+      toast.error(errorMessage);
+      return;
+    }
+    
+    if (result.data?.message) {
+      toast.success(result.data.message);
     }
   };
 
   // 반환 버튼 핸들러
   const handleReturn = () => {
-    if (currentBalance > 0) {
-      const result = cancelTransaction();
-      if (result.success && result.data?.message) {
-        toast.success(result.data.message);
-      }
+    if (currentBalance <= 0) return;
+    
+    const result = cancelTransaction();
+    
+    if (!result.success) {
+      return;
+    }
+    
+    if (result.data?.message) {
+      toast.success(result.data.message);
     }
   };
 
@@ -97,13 +103,18 @@ export function CashPanel({ className }: CashPanelProps) {
         </div>
 
         {/* 상태 메시지 */}
-        {!canInsertCashNow && currentBalance === 0 && (
-          <div className="text-center">
-            <Badge variant="secondary" className="text-sm">
-              {isIdleState(status) ? "결제 방식을 선택해주세요" : "처리 중..."}
-            </Badge>
-          </div>
-        )}
+        {(() => {
+          const shouldShowStatusMessage = 
+            !canInsertCashNow && currentBalance === 0;
+          
+          return shouldShowStatusMessage && (
+            <div className="text-center">
+              <Badge variant="secondary" className="text-sm">
+                {isIdleState(status) ? "결제 방식을 선택해주세요" : "처리 중..."}
+              </Badge>
+            </div>
+          );
+        })()}
       </div>
     </Card>
   );

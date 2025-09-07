@@ -24,11 +24,13 @@ export function calculateOptimalChange(
 
   // 큰 단위부터 차례대로 계산
   for (const denomination of CASH_DENOMINATIONS) {
-    if (remainingAmount >= denomination && inventory[denomination] > 0) {
-      const maxUsable = Math.min(
-        Math.floor(remainingAmount / denomination), // 필요한 개수
-        inventory[denomination] // 보유 개수
-      );
+    const canUseDenomination = remainingAmount >= denomination;
+    const hasInventory = inventory[denomination] > 0;
+    
+    if (canUseDenomination && hasInventory) {
+      const requiredCount = Math.floor(remainingAmount / denomination);
+      const availableCount = inventory[denomination];
+      const maxUsable = Math.min(requiredCount, availableCount);
 
       if (maxUsable > 0) {
         breakdown[denomination] = maxUsable;

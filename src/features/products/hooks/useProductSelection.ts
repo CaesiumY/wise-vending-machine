@@ -39,21 +39,23 @@ export function useProductSelection() {
 
     const result = selectProduct(productId);
     
-    if (result.success) {
-      if (result.data?.message) {
-        toast.success(result.data.message);
-        
-        // 잔액이 남은 경우 추가 메시지
-        if (result.data.balanceMessage) {
-          toast.info(result.data.balanceMessage);
-        }
-      }
-    } else {
-      if (result.errorType) {
-        toast.error(getErrorMessage(result.errorType));
-      } else {
-        toast.error(result.error || "선택 실패");
-      }
+    // 액션 결과 처리
+    if (!result.success) {
+      const errorMessage = result.errorType 
+        ? getErrorMessage(result.errorType)
+        : result.error || "선택 실패";
+      toast.error(errorMessage);
+      return;
+    }
+    
+    // 성공 시 메시지 처리
+    if (result.data?.message) {
+      toast.success(result.data.message);
+    }
+    
+    // 추가 잔액 메시지 처리
+    if (result.data?.balanceMessage) {
+      toast.info(result.data.balanceMessage);
     }
   };
 

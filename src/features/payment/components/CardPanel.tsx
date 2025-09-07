@@ -19,19 +19,20 @@ export function CardPanel() {
 
   // 결제 확인 - Zustand 액션 직접 호출
   const handlePaymentConfirm = () => {
-    if (selectedProductForCard) {
-      const result = confirmCardPayment(selectedProductForCard);
-      if (result.success) {
-        if (result.data?.message) {
-          toast.success(result.data.message);
-        }
-      } else {
-        if (result.errorType) {
-          toast.error(getErrorMessage(result.errorType));
-        } else {
-          toast.error(result.error || "카드 결제에 실패했습니다.");
-        }
-      }
+    if (!selectedProductForCard) return;
+    
+    const result = confirmCardPayment(selectedProductForCard);
+    
+    if (!result.success) {
+      const errorMessage = result.errorType 
+        ? getErrorMessage(result.errorType)
+        : result.error || "카드 결제에 실패했습니다.";
+      toast.error(errorMessage);
+      return;
+    }
+    
+    if (result.data?.message) {
+      toast.success(result.data.message);
     }
   };
 

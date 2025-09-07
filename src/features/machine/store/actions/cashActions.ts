@@ -119,13 +119,13 @@ export const createCashActions: StateCreator<
       count: number;
     }> = [];
     if (changeAmount > 0) {
-      Object.entries(changeResult.breakdown).forEach(([denomStr, count]) => {
+      for (const [denomStr, count] of Object.entries(changeResult.breakdown)) {
         const denomination = parseInt(denomStr) as CashDenomination;
         if (count > 0) {
           changeAdjustments.push({ denomination, count });
           adminState.adjustCashCount(denomination, -count);
         }
-      });
+      }
     }
 
     set({
@@ -139,9 +139,9 @@ export const createCashActions: StateCreator<
 
     // 배출 실패 시 거스름돈 차감 롤백
     if (!dispenseResult.success) {
-      changeAdjustments.forEach(({ denomination, count }) => {
+      for (const { denomination, count } of changeAdjustments) {
         adminState.adjustCashCount(denomination, count); // 차감했던 거스름돈 복구
-      });
+      }
     }
     
     return dispenseResult;
@@ -151,18 +151,21 @@ export const createCashActions: StateCreator<
     const state = get();
     const { currentBalance } = state;
 
-    if (currentBalance > 0) {
-      state.reset();
-      return { 
-        success: true, 
-        data: { 
-          refundAmount: currentBalance,
-          message: `반환 완료! ${formatCurrency(currentBalance)}이 반환되었습니다.`
-        }
-      };
-    } else {
-      state.reset();
+    // 상태 초기화는 공통으로 수행
+    state.reset();
+
+    // 잔액이 없는 경우 단순 반환
+    if (currentBalance === 0) {
       return { success: true };
     }
+
+    // 잔액이 있는 경우 반환 정보와 함께 반환
+    return { 
+      success: true, 
+      data: { 
+        refundAmount: currentBalance,
+        message: `반환 완료! ${formatCurrency(currentBalance)}이 반환되었습니다.`
+      }
+    };
   },
 });
