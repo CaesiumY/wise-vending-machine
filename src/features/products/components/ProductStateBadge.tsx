@@ -1,5 +1,5 @@
-import { Badge } from "@/shared/components/ui/badge";
-import { ButtonState, type ButtonStateType } from "../types/product.types";
+import { Badge } from '@/shared/components/ui/badge';
+import { ButtonState, type ButtonStateType } from '../types/product.types';
 
 interface ProductStateBadgeProps {
   state: ButtonStateType;
@@ -8,19 +8,19 @@ interface ProductStateBadgeProps {
 // 상태별 배지 구성 맵
 const STATE_BADGE_CONFIG = {
   [ButtonState.OUT_OF_STOCK]: {
-    variant: "destructive" as const,
-    text: "품절"
+    variant: 'destructive' as const,
+    text: '품절',
   },
   [ButtonState.INSUFFICIENT_FUNDS]: {
-    variant: "secondary" as const,
-    text: "금액부족"
+    variant: 'secondary' as const,
+    text: '금액부족',
   },
   [ButtonState.SELECTED]: {
-    variant: "default" as const,
-    text: "선택됨"
+    variant: 'default' as const,
+    text: '선택됨',
   },
   [ButtonState.AVAILABLE]: null, // 배지 표시하지 않음
-  [ButtonState.DISABLED]: null,  // 배지 표시하지 않음
+  [ButtonState.DISABLED]: null, // 배지 표시하지 않음
 } as const;
 
 /**
@@ -30,9 +30,9 @@ const STATE_BADGE_CONFIG = {
  */
 export function ProductStateBadge({ state }: ProductStateBadgeProps) {
   const config = STATE_BADGE_CONFIG[state];
-  
+
   if (!config) return null;
-  
+
   return (
     <Badge variant={config.variant} className="text-xs">
       {config.text}

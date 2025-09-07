@@ -1,12 +1,17 @@
-import { Button } from "@/shared/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
-import { CreditCard, ShoppingCart, X, Clock } from "lucide-react";
-import { formatCurrency } from "@/shared/utils/formatters";
-import { useVendingStore } from "@/features/machine/store/vendingStore";
-import { isCardInputState } from "@/features/payment/utils/statusHelpers";
-import { usePaymentTimeout } from "@/features/payment/hooks/usePaymentTimeout";
-import { toast } from "sonner";
-import { getErrorMessage } from "@/features/machine/constants/errorMessages";
+import { Button } from '@/shared/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/shared/components/ui/card';
+import { CreditCard, ShoppingCart, X, Clock } from 'lucide-react';
+import { formatCurrency } from '@/shared/utils/formatters';
+import { useVendingStore } from '@/features/machine/store/vendingStore';
+import { isCardInputState } from '@/features/payment/utils/statusHelpers';
+import { usePaymentTimeout } from '@/features/payment/hooks/usePaymentTimeout';
+import { toast } from 'sonner';
+import { getErrorMessage } from '@/features/machine/constants/errorMessages';
 
 export function CardPanel() {
   const {
@@ -23,17 +28,17 @@ export function CardPanel() {
   // 결제 확인 - Zustand 액션 직접 호출
   const handlePaymentConfirm = () => {
     if (!selectedProductForCard) return;
-    
+
     const result = confirmCardPayment(selectedProductForCard);
-    
+
     if (!result.success) {
-      const errorMessage = result.errorType 
+      const errorMessage = result.errorType
         ? getErrorMessage(result.errorType)
-        : result.error || "카드 결제에 실패했습니다.";
+        : result.error || '카드 결제에 실패했습니다.';
       toast.error(errorMessage);
       return;
     }
-    
+
     if (result.data?.message) {
       toast.success(result.data.message);
     }
@@ -62,7 +67,7 @@ export function CardPanel() {
             </span>
           </div>
         )}
-        
+
         {isCardInputState(status) && !showPaymentConfirm && (
           <div className="space-y-2">
             <p className="text-sm text-muted-foreground">카드 인식 완료</p>
@@ -74,7 +79,6 @@ export function CardPanel() {
 
         {showPaymentConfirm && selectedProductForCard && (
           <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
-            
             <div className="flex items-center gap-2 text-sm font-medium">
               <ShoppingCart className="h-4 w-4" />
               결제 확인
@@ -96,10 +100,7 @@ export function CardPanel() {
             </div>
 
             <div className="flex gap-2">
-              <Button
-                onClick={handlePaymentConfirm}
-                className="flex-1"
-              >
+              <Button onClick={handlePaymentConfirm} className="flex-1">
                 <CreditCard className="h-4 w-4 mr-2" />
                 결제 진행
               </Button>
@@ -114,7 +115,6 @@ export function CardPanel() {
             </div>
           </div>
         )}
-
       </CardContent>
     </Card>
   );

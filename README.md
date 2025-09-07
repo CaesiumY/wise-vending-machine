@@ -1,6 +1,6 @@
 # 자판기 시뮬레이터
 
-React + TypeScript로 구현한 자판기 시스템  
+React + TypeScript로 구현한 자판기 시스템
 
 ## 다이어그램
 
@@ -9,6 +9,7 @@ React + TypeScript로 구현한 자판기 시스템
 ![다이어그램](./docs/vending-machine-flow.drawio.png)
 
 다이어그램 열람 방법:
+
 - [draw.io](https://app.diagrams.net/)에서 파일 업로드
 - VSCode Draw.io 확장 프로그램 설치 후 열람
 - 웹 브라우저에서 draw.io → File → Open from → Device
@@ -16,6 +17,7 @@ React + TypeScript로 구현한 자판기 시스템
 **다이어그램 내용**: 현금/카드 결제 플로우, 예외 처리 분기, 상태 전환 다이어그램
 
 ### 다이어그램 관련 문서 참고
+
 - [docs/flow-explain.md](./docs/flow-explain.md)
 
 ## 기술 스택
@@ -31,44 +33,53 @@ React + TypeScript로 구현한 자판기 시스템
 ## 빠른 시작
 
 ### 필수 요구사항
-- Node.js 18+ 
+
+- Node.js 18+
 - pnpm (권장 패키지 매니저)
 
 ### 설치 및 실행
 
 저장소 클론:
+
 ```bash
 git clone https://github.com/your-username/wise-vending-machine.git
 cd wise-vending-machine
 ```
 
 패키지 설치:
+
 ```bash
 pnpm install
 ```
 
 개발 서버 시작:
+
 ```bash
 pnpm dev
 ```
+
 http://localhost:5173 에서 확인
 
 프로덕션 빌드:
+
 ```bash
 pnpm build
 ```
 
 빌드 결과 미리보기:
+
 ```bash
 pnpm preview
 ```
 
 코드 검사:
+
 ```bash
 pnpm lint
 ```
 
 타입 검사:
+
 ```bash
 pnpm typecheck
 ```
@@ -96,13 +107,15 @@ src/
 ### 기본 구매 방법
 
 #### 현금 결제
+
 1. 결제 방식 선택: "현금" 버튼 클릭
 2. 현금 투입: 100원~10,000원 버튼으로 금액 투입
 3. 음료 선택: 투입 금액 이상의 음료 버튼 활성화됨
 4. 음료 배출: 선택한 음료가 배출구로 나옴
 5. 거스름돈 수령: 잔돈이 있으면 자동 반환
 
-#### 카드 결제  
+#### 카드 결제
+
 1. 결제 방식 선택: "카드" 버튼 클릭
 2. 음료 선택: 재고가 있는 음료 버튼 활성화됨
 3. 카드 결제 확인: 결제 확인 대화상자에서 승인
@@ -126,12 +139,13 @@ src/
 관리자 패널을 통해 다음 예외 상황을 인위적으로 발생시킬 수 있습니다:
 
 - **카드 인식 실패**: 카드를 인식하지 못하는 오류 시뮬레이션
-- **카드 결제 거부**: 카드 결제 승인이 거부되는 오류 시뮬레이션  
+- **카드 결제 거부**: 카드 결제 승인이 거부되는 오류 시뮬레이션
 - **배출 실패**: 카드 결제 후 음료 배출 과정에서 실패 발생
 
 ### 예외 케이스 테스트 방법
 
 #### 1. 거스름돈 부족 테스트
+
 ```
 1. 10,000원 투입
 2. 물(600원) 선택 시도
@@ -139,6 +153,7 @@ src/
 ```
 
 #### 2. 화폐 인식 실패 테스트
+
 ```
 1. 현금 투입 버튼을 빠르게 연속 클릭
 2. "화폐 인식 실패" 메시지 확인
@@ -146,12 +161,14 @@ src/
 ```
 
 #### 3. 타임아웃 테스트
+
 ```
 현금: 현금 투입 후 60초 대기 → 자동 반환
 카드: 카드 결제 선택 후 30초 대기 → 자동 취소
 ```
 
 #### 4. 관리자 패널 예외 테스트
+
 ```
 1. 화면 우측 "🔧 관리자 패널" 열기
 2. 원하는 예외 상황 토글 활성화
@@ -201,4 +218,3 @@ src/
 | `tsconfig.node.json` | Node.js 환경용 TypeScript 설정           |
 | `tailwind.config.js` | Tailwind CSS 설정                        |
 | `components.json`    | shadcn/ui 컴포넌트 라이브러리 설정       |
-

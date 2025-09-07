@@ -1,18 +1,18 @@
-import { useVendingStore } from "@/features/machine/store/vendingStore";
-import type { 
-  Product, 
-  ButtonStateType, 
-  VendingContext 
-} from "../types/product.types";
-import { ButtonState } from "../types/product.types";
-import { isCashPayment } from "@/shared/utils/paymentHelpers";
-import { isProductSelectionAllowed } from "@/features/machine/utils/statusHelpers";
+import { useVendingStore } from '@/features/machine/store/vendingStore';
+import type {
+  Product,
+  ButtonStateType,
+  VendingContext,
+} from '../types/product.types';
+import { ButtonState } from '../types/product.types';
+import { isCashPayment } from '@/shared/utils/paymentHelpers';
+import { isProductSelectionAllowed } from '@/features/machine/utils/statusHelpers';
 
 // 비활성화되어야 하는 버튼 상태들
 const DISABLED_BUTTON_STATES: ReadonlySet<ButtonStateType> = new Set([
   ButtonState.OUT_OF_STOCK,
   ButtonState.INSUFFICIENT_FUNDS,
-  ButtonState.DISABLED
+  ButtonState.DISABLED,
 ]);
 
 /**
@@ -70,12 +70,8 @@ export const canSelectProduct = (productState: ButtonStateType): boolean => {
  * @returns 버튼 상태
  */
 export const useProductState = (product: Product): ButtonStateType => {
-  const {
-    selectedProduct,
-    paymentMethod,
-    status,
-    currentBalance,
-  } = useVendingStore();
+  const { selectedProduct, paymentMethod, status, currentBalance } =
+    useVendingStore();
 
   return getProductState(product, {
     selectedProduct,

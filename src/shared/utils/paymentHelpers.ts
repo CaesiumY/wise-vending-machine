@@ -6,7 +6,7 @@ import type { PaymentMethod } from '@/features/payment/types/payment.types';
  * @returns 현금 결제인지 여부
  */
 export function isCashPayment(paymentMethod: PaymentMethod | null): boolean {
-  return paymentMethod === "cash";
+  return paymentMethod === 'cash';
 }
 
 /**
@@ -15,7 +15,7 @@ export function isCashPayment(paymentMethod: PaymentMethod | null): boolean {
  * @returns 카드 결제인지 여부
  */
 export function isCardPayment(paymentMethod: PaymentMethod | null): boolean {
-  return paymentMethod === "card";
+  return paymentMethod === 'card';
 }
 
 /**

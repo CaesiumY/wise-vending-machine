@@ -1,4 +1,4 @@
-import type { ErrorType } from "@/features/machine/constants/errorTypes";
+import type { ErrorType } from '@/features/machine/constants/errorTypes';
 
 /**
  * 자판기 시뮬레이터 오류 메시지 상수
@@ -7,14 +7,14 @@ import type { ErrorType } from "@/features/machine/constants/errorTypes";
  * 실제 자판기에서 표시되는 안내문구를 참고하여 시뮬레이션용으로 작성되었습니다.
  */
 const ERROR_MESSAGES: Record<ErrorType, string> = {
-  changeShortage: "거스름돈이 부족합니다.",
-  outOfStock: "선택하신 음료가 품절되었습니다.",
-  dispenseFailure: "음료 배출에 실패했습니다.",
-  cardReaderFault: "카드를 인식할 수 없습니다.",
-  cardPaymentReject: "카드 결제가 거부되었습니다.",
-  cashInsertTooFast: "너무 빠르게 투입하고 있습니다. 잠시 기다려주세요.",
-  productNotFound: "상품을 찾을 수 없습니다.",
-  invalidState: "현재 상태에서는 해당 작업을 수행할 수 없습니다.",
+  changeShortage: '거스름돈이 부족합니다.',
+  outOfStock: '선택하신 음료가 품절되었습니다.',
+  dispenseFailure: '음료 배출에 실패했습니다.',
+  cardReaderFault: '카드를 인식할 수 없습니다.',
+  cardPaymentReject: '카드 결제가 거부되었습니다.',
+  cashInsertTooFast: '너무 빠르게 투입하고 있습니다. 잠시 기다려주세요.',
+  productNotFound: '상품을 찾을 수 없습니다.',
+  invalidState: '현재 상태에서는 해당 작업을 수행할 수 없습니다.',
 };
 
 /**

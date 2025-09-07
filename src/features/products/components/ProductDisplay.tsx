@@ -1,7 +1,7 @@
-import { cn } from "@/shared/utils/ui";
-import { useVendingStore } from "@/features/machine/store/vendingStore";
-import { useProductSelection } from "../hooks/useProductSelection";
-import { ProductButton } from "./ProductButton";
+import { cn } from '@/shared/utils/ui';
+import { useVendingStore } from '@/features/machine/store/vendingStore';
+import { useProductSelection } from '../hooks/useProductSelection';
+import { ProductButton } from './ProductButton';
 
 interface ProductDisplayProps {
   className?: string;
@@ -17,7 +17,7 @@ export function ProductDisplay({ className }: ProductDisplayProps) {
   const { handleProductSelect } = useProductSelection();
 
   return (
-    <div className={cn("grid grid-cols-3 gap-3", className)}>
+    <div className={cn('grid grid-cols-3 gap-3', className)}>
       {Object.values(products).map((product) => (
         <ProductButton
           key={product.id}

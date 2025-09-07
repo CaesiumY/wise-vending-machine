@@ -1,9 +1,9 @@
-import { AdminPanel } from "@/features/admin/components/AdminPanel";
-import { PaymentSelector } from "@/features/payment/components/PaymentSelector";
-import { ProductDisplay } from "@/features/products/components/ProductDisplay";
-import { StatusDisplay } from "@/features/machine/components/StatusDisplay";
-import { VendingMachine } from "@/features/machine/components/VendingMachine";
-import { Toaster } from "@/shared/components/ui/sonner";
+import { AdminPanel } from '@/features/admin/components/AdminPanel';
+import { PaymentSelector } from '@/features/payment/components/PaymentSelector';
+import { ProductDisplay } from '@/features/products/components/ProductDisplay';
+import { StatusDisplay } from '@/features/machine/components/StatusDisplay';
+import { VendingMachine } from '@/features/machine/components/VendingMachine';
+import { Toaster } from '@/shared/components/ui/sonner';
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
             </div>
           </div>
         </VendingMachine.Display>
-        
+
         <VendingMachine.Controls>
           {/* 결제 방식 선택 */}
           <PaymentSelector />
@@ -32,7 +32,7 @@ function App() {
           <AdminPanel />
         </VendingMachine.Controls>
       </VendingMachine>
-      
+
       <Toaster />
     </>
   );

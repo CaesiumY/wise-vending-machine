@@ -1,5 +1,5 @@
-import type { StateCreator } from "zustand";
-import type { Transaction, VendingStore } from "../../types/vending.types";
+import type { StateCreator } from 'zustand';
+import type { Transaction, VendingStore } from '../../types/vending.types';
 
 // 거래 상태 인터페이스 (상태만)
 interface TransactionState {
@@ -17,7 +17,9 @@ interface TransactionActions {
 }
 
 // 거래 슬라이스 타입 (상태 + 액션)
-export interface TransactionSlice extends TransactionState, TransactionActions {}
+export interface TransactionSlice
+  extends TransactionState,
+    TransactionActions {}
 
 // 거래 슬라이스 생성 함수
 export const createTransactionSlice: StateCreator<

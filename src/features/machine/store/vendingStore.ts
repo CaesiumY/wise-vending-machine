@@ -1,22 +1,22 @@
-import { create } from "zustand";
-import { devtools } from "zustand/middleware";
-import type { StateCreator } from "zustand";
-import type { VendingStore } from "../types/vending.types";
+import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
+import type { StateCreator } from 'zustand';
+import type { VendingStore } from '../types/vending.types';
 
 // 슬라이스 임포트
-import { createPaymentSlice } from "./slices/paymentSlice";
-import { createProductSlice } from "./slices/productSlice";
-import { createTransactionSlice } from "./slices/transactionSlice";
-import { createUiSlice } from "./slices/uiSlice";
+import { createPaymentSlice } from './slices/paymentSlice';
+import { createProductSlice } from './slices/productSlice';
+import { createTransactionSlice } from './slices/transactionSlice';
+import { createUiSlice } from './slices/uiSlice';
 
 // 액션 임포트
-import { createCashActions } from "./actions/cashActions";
-import { createCardActions } from "./actions/cardActions";
-import { createDispenseActions } from "./actions/dispenseActions";
-import { createIntegrationActions } from "./actions/integrationActions";
-import { createResetActions } from "./actions/resetActions";
+import { createCashActions } from './actions/cashActions';
+import { createCardActions } from './actions/cardActions';
+import { createDispenseActions } from './actions/dispenseActions';
+import { createIntegrationActions } from './actions/integrationActions';
+import { createResetActions } from './actions/resetActions';
 
-// 슬라이스와 액션을 조합한 통합 스토어 생성  
+// 슬라이스와 액션을 조합한 통합 스토어 생성
 const storeCreator: StateCreator<VendingStore> = (set, get, api) => ({
   // 슬라이스 조합
   ...createPaymentSlice(set, get, api),
@@ -33,7 +33,7 @@ const storeCreator: StateCreator<VendingStore> = (set, get, api) => ({
 });
 
 export const useVendingStore = create<VendingStore>()(
-  devtools(storeCreator, { 
-    name: "useVendingStore"
+  devtools(storeCreator, {
+    name: 'useVendingStore',
   })
 );

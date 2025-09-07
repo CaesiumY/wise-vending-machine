@@ -1,8 +1,13 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
-import { useAdminStore } from "@/features/admin/store/adminStore";
-import { Banknote } from "lucide-react";
-import { CASH_DENOMINATIONS } from "@/features/payment/constants/denominations";
-import { formatDenomination } from "@/shared/utils/formatters";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/shared/components/ui/card';
+import { useAdminStore } from '@/features/admin/store/adminStore';
+import { Banknote } from 'lucide-react';
+import { CASH_DENOMINATIONS } from '@/features/payment/constants/denominations';
+import { formatDenomination } from '@/shared/utils/formatters';
 
 export function CashReserveDisplay() {
   const { cashReserve } = useAdminStore();

@@ -1,4 +1,4 @@
-import type { ErrorType } from "@/features/machine/types/vending.types";
+import type { ErrorType } from '@/features/machine/types/vending.types';
 
 export interface CashInsertData {
   amount: number;
@@ -22,8 +22,8 @@ export interface DispenseData {
 }
 
 export interface ActionResult<T = void> {
-  success: boolean
-  data?: T
-  error?: string
-  errorType?: ErrorType
+  success: boolean;
+  data?: T;
+  error?: string;
+  errorType?: ErrorType;
 }

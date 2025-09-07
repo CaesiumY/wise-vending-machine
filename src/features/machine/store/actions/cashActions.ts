@@ -1,18 +1,25 @@
-import type { StateCreator } from "zustand";
-import type { CashDenomination } from "@/features/payment/types/payment.types";
-import type { ProductType } from "@/features/products/types/product.types";
-import type { ActionResult, CashInsertData, RefundData, DispenseData } from "@/shared/types/utility.types";
-import type { Transaction, VendingStore } from "../../types/vending.types";
-import { calculateOptimalChange } from "@/features/payment/utils/changeCalculator";
-import { useAdminStore } from "@/features/admin/store/adminStore";
-import { ErrorTypes } from "@/features/machine/constants/errorTypes";
-import { formatCurrency } from "@/shared/utils/formatters";
+import type { StateCreator } from 'zustand';
+import type { CashDenomination } from '@/features/payment/types/payment.types';
+import type { ProductType } from '@/features/products/types/product.types';
+import type {
+  ActionResult,
+  CashInsertData,
+  RefundData,
+  DispenseData,
+} from '@/shared/types/utility.types';
+import type { Transaction, VendingStore } from '../../types/vending.types';
+import { calculateOptimalChange } from '@/features/payment/utils/changeCalculator';
+import { useAdminStore } from '@/features/admin/store/adminStore';
+import { ErrorTypes } from '@/features/machine/constants/errorTypes';
+import { formatCurrency } from '@/shared/utils/formatters';
 
 const CASH_INSERT_DELAY_MS = 1000;
 
 export interface CashActions {
   insertCash: (denomination: CashDenomination) => ActionResult<CashInsertData>;
-  processCashTransaction: (productId: ProductType) => ActionResult<DispenseData>;
+  processCashTransaction: (
+    productId: ProductType
+  ) => ActionResult<DispenseData>;
   cancelTransaction: (isTimeout?: boolean) => ActionResult<RefundData | void>;
 }
 
@@ -22,8 +29,9 @@ export const createCashActions: StateCreator<
   [],
   CashActions
 > = (set, get, _api) => ({
-  
-  insertCash: (denomination: CashDenomination): ActionResult<CashInsertData> => {
+  insertCash: (
+    denomination: CashDenomination
+  ): ActionResult<CashInsertData> => {
     const state = get();
     const { currentBalance, insertedCash, lastInsertTime } = state;
 
@@ -31,7 +39,7 @@ export const createCashActions: StateCreator<
     if (Date.now() - lastInsertTime < CASH_INSERT_DELAY_MS) {
       return {
         success: false,
-        error: "화폐가 반환되었습니다. 천천히 다시 투입해주세요.",
+        error: '화폐가 반환되었습니다. 천천히 다시 투입해주세요.',
         errorType: ErrorTypes.CASH_INSERT_TOO_FAST,
       };
     }
@@ -42,35 +50,37 @@ export const createCashActions: StateCreator<
 
     const handleTimeout = () => {
       const currentState = get();
-      if (currentState.paymentMethod === "cash") {
+      if (currentState.paymentMethod === 'cash') {
         const result = currentState.cancelTransaction(true);
         return result;
       }
     };
     if (currentBalance === 0) {
-      state.startPaymentTimeout(handleTimeout, "cash");
+      state.startPaymentTimeout(handleTimeout, 'cash');
     } else {
-      state.extendPaymentTimeout(handleTimeout, "cash");
+      state.extendPaymentTimeout(handleTimeout, 'cash');
     }
 
     set({
       currentBalance: currentBalance + denomination,
       insertedCash: [...insertedCash, denomination],
       lastInsertTime: Date.now(),
-      status: "productSelect",
+      status: 'productSelect',
     });
 
-    return { 
-      success: true, 
-      data: { 
-        amount: denomination, 
+    return {
+      success: true,
+      data: {
+        amount: denomination,
         newBalance: currentBalance + denomination,
-        message: `${formatCurrency(denomination)}이 투입되었습니다.`
-      }
+        message: `${formatCurrency(denomination)}이 투입되었습니다.`,
+      },
     };
   },
 
-  processCashTransaction: (productId: ProductType): ActionResult<DispenseData> => {
+  processCashTransaction: (
+    productId: ProductType
+  ): ActionResult<DispenseData> => {
     const state = get();
     const { products, currentBalance } = state;
 
@@ -78,10 +88,10 @@ export const createCashActions: StateCreator<
     const product = products[productId];
 
     if (!product) {
-      return { 
-        success: false, 
-        error: "상품을 찾을 수 없습니다.",
-        errorType: ErrorTypes.PRODUCT_NOT_FOUND
+      return {
+        success: false,
+        error: '상품을 찾을 수 없습니다.',
+        errorType: ErrorTypes.PRODUCT_NOT_FOUND,
       };
     }
 
@@ -97,10 +107,10 @@ export const createCashActions: StateCreator<
 
     if (shouldFailChange) {
       state.setError(ErrorTypes.CHANGE_SHORTAGE);
-      return { 
-        success: false, 
-        error: "거스름돈이 부족합니다.",
-        errorType: ErrorTypes.CHANGE_SHORTAGE 
+      return {
+        success: false,
+        error: '거스름돈이 부족합니다.',
+        errorType: ErrorTypes.CHANGE_SHORTAGE,
       };
     }
 
@@ -109,28 +119,29 @@ export const createCashActions: StateCreator<
       productId: product.id,
       productName: product.name,
       amount: product.price,
-      paymentMethod: "cash",
+      paymentMethod: 'cash',
       change: changeAmount,
       changeBreakdown: changeResult,
       timestamp: new Date(),
-      status: "pending",
+      status: 'pending',
     };
 
     // 트랜잭션 안전장치: 배출 실패 시 거스름돈 복구를 위한 롤백 정보 저장
-    const changeAdjustments = changeAmount > 0
-      ? Object.entries(changeResult.breakdown)
-          .filter(([, count]) => count > 0)
-          .map(([denomStr, count]) => {
-            const denomination = parseInt(denomStr) as CashDenomination;
-            adminState.adjustCashCount(denomination, -count);
-            return { denomination, count };
-          })
-      : [];
+    const changeAdjustments =
+      changeAmount > 0
+        ? Object.entries(changeResult.breakdown)
+            .filter(([, count]) => count > 0)
+            .map(([denomStr, count]) => {
+              const denomination = parseInt(denomStr) as CashDenomination;
+              adminState.adjustCashCount(denomination, -count);
+              return { denomination, count };
+            })
+        : [];
 
     set({
       lastTransaction: transaction,
       currentBalance: currentBalance - product.price,
-      status: "dispensing",
+      status: 'dispensing',
     });
 
     const dispenseResult = state.dispenseProduct();
@@ -141,7 +152,7 @@ export const createCashActions: StateCreator<
         adminState.adjustCashCount(denomination, count);
       }
     }
-    
+
     return dispenseResult;
   },
 
@@ -160,15 +171,15 @@ export const createCashActions: StateCreator<
     if (isTimeout) {
       return {
         success: false,
-        error: `시간 초과로 현금이 반환되었습니다.\n반환 완료! ${formatCurrency(currentBalance)}이 반환되었습니다.`
+        error: `시간 초과로 현금이 반환되었습니다.\n반환 완료! ${formatCurrency(currentBalance)}이 반환되었습니다.`,
       };
     }
-    return { 
-      success: true, 
-      data: { 
+    return {
+      success: true,
+      data: {
         refundAmount: currentBalance,
-        message: `반환 완료! ${formatCurrency(currentBalance)}이 반환되었습니다.`
-      }
+        message: `반환 완료! ${formatCurrency(currentBalance)}이 반환되었습니다.`,
+      },
     };
   },
 });

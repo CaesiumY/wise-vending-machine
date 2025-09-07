@@ -1,5 +1,5 @@
-import type { ReactNode } from "react";
-import { cn } from "@/shared/utils/ui";
+import type { ReactNode } from 'react';
+import { cn } from '@/shared/utils/ui';
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -14,19 +14,19 @@ export function MainLayout({ children, className }: MainLayoutProps) {
   return (
     <div
       className={cn(
-        "min-h-screen bg-gradient-to-br from-slate-50 to-slate-100",
-        "flex items-center justify-center p-4",
+        'min-h-screen bg-gradient-to-br from-slate-50 to-slate-100',
+        'flex items-center justify-center p-4',
         className
       )}
     >
       <div
         className={cn(
           // 자판기 컨테이너 - 기본 레이아웃
-          "w-full max-w-6xl mx-auto",
-          "rounded-2xl shadow-2xl overflow-hidden",
+          'w-full max-w-6xl mx-auto',
+          'rounded-2xl shadow-2xl overflow-hidden',
           // 중립 톤의 카드형 컨테이너
-          "bg-card text-card-foreground",
-          "border border-border"
+          'bg-card text-card-foreground',
+          'border border-border'
         )}
       >
         {children}

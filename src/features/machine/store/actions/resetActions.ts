@@ -1,9 +1,9 @@
-import type { StateCreator } from "zustand";
-import type { VendingStore } from "../../types/vending.types";
-import type { ActionResult, RefundData } from "@/shared/types/utility.types";
-import { formatCurrency } from "@/shared/utils/formatters";
-import { ErrorTypes } from "@/features/machine/constants/errorTypes";
-import { isProcessing } from "@/features/machine/utils/statusHelpers";
+import type { StateCreator } from 'zustand';
+import type { VendingStore } from '../../types/vending.types';
+import type { ActionResult, RefundData } from '@/shared/types/utility.types';
+import { formatCurrency } from '@/shared/utils/formatters';
+import { ErrorTypes } from '@/features/machine/constants/errorTypes';
+import { isProcessing } from '@/features/machine/utils/statusHelpers';
 
 // 리셋 액션 인터페이스
 export interface ResetActions {
@@ -20,10 +20,10 @@ export const createResetActions: StateCreator<
 > = (set, get, _api) => ({
   reset: () => {
     // 각 슬라이스의 리셋 함수 호출 (resetPayment에서 타임아웃 클리어 포함)
-    get().resetPayment();           // PaymentSlice (타임아웃 클리어 포함)
-    get().clearProductSelection();  // ProductSlice
-    get().resetTransaction();       // TransactionSlice
-    get().resetUi();                // UiSlice
+    get().resetPayment(); // PaymentSlice (타임아웃 클리어 포함)
+    get().clearProductSelection(); // ProductSlice
+    get().resetTransaction(); // TransactionSlice
+    get().resetUi(); // UiSlice
   },
 
   resetPaymentMethod: (): ActionResult<RefundData | void> => {
@@ -32,28 +32,31 @@ export const createResetActions: StateCreator<
     if (isProcessing(status)) {
       return {
         success: false,
-        error: "현재 상태에서는 결제 방식을 변경할 수 없습니다.",
-        errorType: ErrorTypes.INVALID_STATE
+        error: '현재 상태에서는 결제 방식을 변경할 수 없습니다.',
+        errorType: ErrorTypes.INVALID_STATE,
       };
     }
 
-    const refundData = currentBalance > 0 ? {
-      refundAmount: currentBalance,
-      message: `${formatCurrency(currentBalance)}이 반환되었습니다.`
-    } : undefined;
+    const refundData =
+      currentBalance > 0
+        ? {
+            refundAmount: currentBalance,
+            message: `${formatCurrency(currentBalance)}이 반환되었습니다.`,
+          }
+        : undefined;
 
     // 슬라이스별 리셋 호출 (resetPayment에서 타임아웃 클리어 포함)
     get().resetPayment();
     get().clearError();
-    
-    set({ 
+
+    set({
       selectedProduct: null,
-      status: "idle"
+      status: 'idle',
     });
-    
-    return { 
+
+    return {
       success: true,
-      data: refundData
+      data: refundData,
     };
   },
 });

@@ -1,6 +1,9 @@
-import type { CashDenomination } from '@/features/payment/types/payment.types'
-import type { ChangeBreakdown } from '@/features/machine/types/vending.types'
-import { CASH_DENOMINATIONS, EMPTY_BREAKDOWN } from '@/features/payment/constants/denominations'
+import type { CashDenomination } from '@/features/payment/types/payment.types';
+import type { ChangeBreakdown } from '@/features/machine/types/vending.types';
+import {
+  CASH_DENOMINATIONS,
+  EMPTY_BREAKDOWN,
+} from '@/features/payment/constants/denominations';
 
 /**
  * 최적 거스름돈 조합 계산 (그리디 알고리즘)
@@ -14,7 +17,7 @@ export function calculateOptimalChange(
     return {
       canProvideChange: true,
       totalChange: 0,
-      breakdown: { ...EMPTY_BREAKDOWN }
+      breakdown: { ...EMPTY_BREAKDOWN },
     };
   }
 
@@ -26,7 +29,7 @@ export function calculateOptimalChange(
   for (const denomination of CASH_DENOMINATIONS) {
     const canUseDenomination = remainingAmount >= denomination;
     const hasInventory = inventory[denomination] > 0;
-    
+
     if (canUseDenomination && hasInventory) {
       const requiredCount = Math.floor(remainingAmount / denomination);
       const availableCount = inventory[denomination];
@@ -44,6 +47,6 @@ export function calculateOptimalChange(
   return {
     canProvideChange,
     totalChange: changeAmount,
-    breakdown
+    breakdown,
   };
 }

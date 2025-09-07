@@ -1,9 +1,9 @@
-import type { ReactNode } from "react";
-import { cn } from "@/shared/utils/ui";
-import { useVendingStore } from "@/features/machine/store/vendingStore";
-import { CashPanel } from "@/features/payment/components/CashPanel";
-import { CardPanel } from "@/features/payment/components/CardPanel";
-import { MainLayout } from "@/shared/components/layout/MainLayout";
+import type { ReactNode } from 'react';
+import { cn } from '@/shared/utils/ui';
+import { useVendingStore } from '@/features/machine/store/vendingStore';
+import { CashPanel } from '@/features/payment/components/CashPanel';
+import { CardPanel } from '@/features/payment/components/CardPanel';
+import { MainLayout } from '@/shared/components/layout/MainLayout';
 
 // 공통 컴포넌트 속성 타입
 interface VendingComponentProps {
@@ -13,14 +13,14 @@ interface VendingComponentProps {
 
 /**
  * VendingMachine - 자판기 메인 컨테이너 (Compound Component Pattern)
- * 
+ *
  * Usage:
  * <VendingMachine>
  *   <VendingMachine.Display>
  *     <StatusDisplay />
  *     <ProductDisplay />
  *   </VendingMachine.Display>
- *   
+ *
  *   <VendingMachine.Controls>
  *     <PaymentSelector />
  *     <VendingMachine.PaymentPanel />
@@ -34,7 +34,7 @@ function VendingMachine({ children, className }: VendingComponentProps) {
       <div
         className={cn(
           // 메인 패널 - 2분할 그리드
-          "grid grid-cols-2 min-h-[600px]",
+          'grid grid-cols-2 min-h-[600px]',
           className
         )}
       >
@@ -53,10 +53,10 @@ function VendingDisplay({ children, className }: VendingComponentProps) {
     <div
       className={cn(
         // 자판기 디스플레이 영역
-        "bg-muted",
-        "p-6",
-        "border-r border-border",
-        "flex flex-col justify-between",
+        'bg-muted',
+        'p-6',
+        'border-r border-border',
+        'flex flex-col justify-between',
         className
       )}
     >
@@ -74,9 +74,9 @@ function VendingControls({ children, className }: VendingComponentProps) {
     <div
       className={cn(
         // 컨트롤 패널 영역
-        "bg-background",
-        "p-6",
-        "flex flex-col gap-4",
+        'bg-background',
+        'p-6',
+        'flex flex-col gap-4',
         className
       )}
     >
@@ -91,11 +91,11 @@ function VendingControls({ children, className }: VendingComponentProps) {
  */
 function VendingPaymentPanel() {
   const { paymentMethod } = useVendingStore();
-  
+
   return (
     <div className="flex-1">
-      {paymentMethod === "cash" && <CashPanel />}
-      {paymentMethod === "card" && <CardPanel />}
+      {paymentMethod === 'cash' && <CashPanel />}
+      {paymentMethod === 'card' && <CardPanel />}
     </div>
   );
 }
@@ -105,9 +105,4 @@ VendingMachine.Display = VendingDisplay;
 VendingMachine.Controls = VendingControls;
 VendingMachine.PaymentPanel = VendingPaymentPanel;
 
-export {
-  VendingMachine,
-  VendingDisplay,
-  VendingControls,
-  VendingPaymentPanel,
-};
+export { VendingMachine, VendingDisplay, VendingControls, VendingPaymentPanel };

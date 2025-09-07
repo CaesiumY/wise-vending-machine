@@ -1,6 +1,8 @@
-import type { CashDenomination } from '@/features/payment/types/payment.types'
+import type { CashDenomination } from '@/features/payment/types/payment.types';
 
-export const CASH_DENOMINATIONS: CashDenomination[] = [10000, 5000, 1000, 500, 100]
+export const CASH_DENOMINATIONS: CashDenomination[] = [
+  10000, 5000, 1000, 500, 100,
+];
 
 export const DEFAULT_CASH_RESERVE: Record<CashDenomination, number> = {
   100: 3,
@@ -8,7 +10,7 @@ export const DEFAULT_CASH_RESERVE: Record<CashDenomination, number> = {
   1000: 3,
   5000: 3,
   10000: 3,
-} as const
+} as const;
 
 export const EMPTY_BREAKDOWN: Record<CashDenomination, number> = {
   100: 0,
@@ -16,4 +18,4 @@ export const EMPTY_BREAKDOWN: Record<CashDenomination, number> = {
   1000: 0,
   5000: 0,
   10000: 0,
-} as const
+} as const;

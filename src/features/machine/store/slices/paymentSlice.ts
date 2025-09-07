@@ -1,10 +1,10 @@
-import type { StateCreator } from "zustand";
+import type { StateCreator } from 'zustand';
 import type {
   PaymentMethod,
   CashDenomination,
-} from "@/features/payment/types/payment.types";
-import type { ProductType } from "@/features/products/types/product.types";
-import type { VendingStore } from "../../types/vending.types";
+} from '@/features/payment/types/payment.types';
+import type { ProductType } from '@/features/products/types/product.types';
+import type { VendingStore } from '../../types/vending.types';
 
 // 결제 상태 인터페이스 (상태만)
 interface PaymentState {
@@ -47,11 +47,11 @@ interface PaymentActions {
   clearPaymentTimeout: () => void;
   startPaymentTimeout: (
     onTimeout: () => void,
-    paymentMethod: "card" | "cash"
+    paymentMethod: 'card' | 'cash'
   ) => void;
   extendPaymentTimeout: (
     onTimeout: () => void,
-    paymentMethod: "card" | "cash"
+    paymentMethod: 'card' | 'cash'
   ) => void;
 }
 
@@ -91,7 +91,7 @@ export const createPaymentSlice: StateCreator<
 
   startPaymentTimeout: (
     onTimeout: () => void,
-    paymentMethod: "card" | "cash"
+    paymentMethod: 'card' | 'cash'
   ) => {
     const state = get();
     // 기존 타임아웃이 있으면 먼저 정리
@@ -100,7 +100,7 @@ export const createPaymentSlice: StateCreator<
     }
 
     const timeoutMs =
-      paymentMethod === "card"
+      paymentMethod === 'card'
         ? CARD_PAYMENT_TIMEOUT_MS
         : CASH_PAYMENT_TIMEOUT_MS;
     const timeoutId = setTimeout(onTimeout, timeoutMs);
@@ -112,7 +112,7 @@ export const createPaymentSlice: StateCreator<
 
   extendPaymentTimeout: (
     onTimeout: () => void,
-    paymentMethod: "card" | "cash"
+    paymentMethod: 'card' | 'cash'
   ) => {
     const state = get();
     // 기존 타임아웃 정리
@@ -122,7 +122,7 @@ export const createPaymentSlice: StateCreator<
 
     // 새로운 타임아웃 설정 (결제 방식에 따라 다른 시간)
     const timeoutMs =
-      paymentMethod === "card"
+      paymentMethod === 'card'
         ? CARD_PAYMENT_TIMEOUT_MS
         : CASH_PAYMENT_TIMEOUT_MS;
     const timeoutId = setTimeout(onTimeout, timeoutMs);

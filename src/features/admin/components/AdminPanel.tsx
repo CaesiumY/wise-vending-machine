@@ -1,9 +1,13 @@
-import { Card } from "@/shared/components/ui/card";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/shared/components/ui/collapsible";
-import { cn } from "@/shared/utils/ui";
-import { ChevronDown, Settings } from "lucide-react";
-import { ExceptionToggles } from "./ExceptionToggles";
-import { CashReserveDisplay } from "./CashReserveDisplay";
+import { Card } from '@/shared/components/ui/card';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/shared/components/ui/collapsible';
+import { cn } from '@/shared/utils/ui';
+import { ChevronDown, Settings } from 'lucide-react';
+import { ExceptionToggles } from './ExceptionToggles';
+import { CashReserveDisplay } from './CashReserveDisplay';
 
 interface AdminPanelProps {
   className?: string;
@@ -11,7 +15,7 @@ interface AdminPanelProps {
 
 export function AdminPanel({ className }: AdminPanelProps) {
   return (
-    <div className={cn("mt-auto", className)}>
+    <div className={cn('mt-auto', className)}>
       <Collapsible defaultOpen={false}>
         <CollapsibleTrigger asChild>
           <Card className="p-3 cursor-pointer">
@@ -30,7 +34,7 @@ export function AdminPanel({ className }: AdminPanelProps) {
         <CollapsibleContent className="mt-2 space-y-3">
           {/* 화폐 재고 표시 */}
           <CashReserveDisplay />
-          
+
           {/* 예외 상황 토글 */}
           <ExceptionToggles />
         </CollapsibleContent>

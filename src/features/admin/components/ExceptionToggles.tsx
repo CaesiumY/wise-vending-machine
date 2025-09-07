@@ -1,9 +1,9 @@
-import { Card } from "@/shared/components/ui/card";
-import { Label } from "@/shared/components/ui/label";
-import { Switch } from "@/shared/components/ui/switch";
-import { EXCEPTION_TOGGLES } from "@/features/admin/constants/adminConfig";
-import { useAdminStore } from "@/features/admin/store/adminStore";
-import type { AdminSettings } from "@/features/admin/types/admin.types";
+import { Card } from '@/shared/components/ui/card';
+import { Label } from '@/shared/components/ui/label';
+import { Switch } from '@/shared/components/ui/switch';
+import { EXCEPTION_TOGGLES } from '@/features/admin/constants/adminConfig';
+import { useAdminStore } from '@/features/admin/store/adminStore';
+import type { AdminSettings } from '@/features/admin/types/admin.types';
 
 export function ExceptionToggles() {
   const adminStore = useAdminStore();
@@ -38,9 +38,7 @@ export function ExceptionToggles() {
             <Switch
               id={toggle.key}
               checked={adminStore[toggle.key] || false}
-              onCheckedChange={(checked) =>
-                handleToggle(toggle.key, checked)
-              }
+              onCheckedChange={(checked) => handleToggle(toggle.key, checked)}
               className="scale-75"
             />
           </div>

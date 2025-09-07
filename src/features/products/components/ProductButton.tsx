@@ -1,9 +1,9 @@
-import { Button } from "@/shared/components/ui/button";
-import type { Product } from "../types/product.types";
-import { ButtonState } from "../types/product.types";
-import { useProductState, isButtonDisabled } from "../utils/productHelpers";
-import { ProductStateBadge } from "./ProductStateBadge";
-import { formatCurrency } from "@/shared/utils/formatters";
+import { Button } from '@/shared/components/ui/button';
+import type { Product } from '../types/product.types';
+import { ButtonState } from '../types/product.types';
+import { useProductState, isButtonDisabled } from '../utils/productHelpers';
+import { ProductStateBadge } from './ProductStateBadge';
+import { formatCurrency } from '@/shared/utils/formatters';
 
 interface ProductButtonProps {
   product: Product;
@@ -36,9 +36,7 @@ export function ProductButton({ product, onSelect }: ProductButtonProps) {
       </span>
 
       {/* 가격 정보 */}
-      <span className="text-sm">
-        {formatCurrency(product.price)}
-      </span>
+      <span className="text-sm">{formatCurrency(product.price)}</span>
 
       {/* 상태 표시 */}
       <div className="flex gap-1 flex-wrap justify-center">

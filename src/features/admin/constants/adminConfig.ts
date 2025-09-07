@@ -1,5 +1,5 @@
 // adminConfig.ts - 관리자 패널 설정 상수
-import type { AdminSettings } from "@/features/admin/types/admin.types";
+import type { AdminSettings } from '@/features/admin/types/admin.types';
 
 // 예외 토글 항목 인터페이스
 export interface ExceptionToggleItem {
@@ -27,4 +27,3 @@ export const EXCEPTION_TOGGLES: ExceptionToggleItem[] = [
     description: '음료 배출 과정에서 실패가 발생합니다',
   },
 ];
-
