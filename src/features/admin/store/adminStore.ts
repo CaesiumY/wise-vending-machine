@@ -22,10 +22,7 @@ export const useAdminStore = create(
       // ===== 예외 설정 =====
       // 예외 설정을 직접 값으로 설정
       setException: (exception: keyof AdminSettings, value: boolean) => {
-        set((state) => ({
-          ...state,
-          [exception]: value,
-        }));
+        set({ [exception]: value });
       },
 
       // ===== 화폐 재고 관리 =====

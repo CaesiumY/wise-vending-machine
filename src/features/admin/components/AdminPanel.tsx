@@ -1,9 +1,5 @@
 import { Card } from "@/shared/components/ui/card";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/shared/components/ui/collapsible";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/shared/components/ui/collapsible";
 import { cn } from "@/shared/utils/ui";
 import { ChevronDown, Settings } from "lucide-react";
 import { ExceptionToggles } from "./ExceptionToggles";
@@ -14,8 +10,6 @@ interface AdminPanelProps {
 }
 
 export function AdminPanel({ className }: AdminPanelProps) {
-
-
   return (
     <div className={cn("mt-auto", className)}>
       <Collapsible defaultOpen={false}>

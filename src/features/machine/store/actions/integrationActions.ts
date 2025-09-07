@@ -5,6 +5,7 @@ import type { PaymentMethod } from "@/features/payment/types/payment.types";
 import type { ActionResult } from "@/shared/types/utility.types";
 import { isCashPayment } from "@/shared/utils/paymentHelpers";
 import { formatCurrency } from "@/shared/utils/formatters";
+import { isProductSelectionAllowed } from "@/shared/utils/statusHelpers";
 
 // 통합 액션 인터페이스
 export interface IntegrationActions {
@@ -42,7 +43,7 @@ export const createIntegrationActions: StateCreator<
     const { status, currentBalance, products, paymentMethod } = get();
 
     // 음료 선택 가능한 상태인지 확인
-    if (status !== "productSelect" && status !== "cardProcess") {
+    if (!isProductSelectionAllowed(status)) {
       return { success: false, error: "음료를 선택할 수 없는 상태입니다." };
     }
 

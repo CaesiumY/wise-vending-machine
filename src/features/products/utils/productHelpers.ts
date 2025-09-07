@@ -6,6 +6,7 @@ import type {
 } from "../types/product.types";
 import { ButtonState } from "../types/product.types";
 import { isCashPayment } from "@/shared/utils/paymentHelpers";
+import { isProductSelectionAllowed } from "@/shared/utils/statusHelpers";
 
 /**
  * 상품의 버튼 상태를 결정하는 순수 함수
@@ -31,7 +32,7 @@ export const getProductState = (
   }
 
   // 음료 선택 가능한 상태인지 확인
-  if (status === "productSelect" || status === "cardProcess") {
+  if (isProductSelectionAllowed(status)) {
     return ButtonState.AVAILABLE;
   }
 

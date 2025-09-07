@@ -19,8 +19,7 @@ export const createDispenseActions: StateCreator<
 > = (set, get, _api) => ({
   
   dispenseProduct: (): boolean => {
-    const state = get();
-    const { selectedProduct, paymentMethod, products } = state;
+    const { selectedProduct, paymentMethod, products, setError, reset } = get();
     const adminState = useAdminStore.getState();
 
     if (!selectedProduct) return false;
@@ -48,7 +47,7 @@ export const createDispenseActions: StateCreator<
         set({ status: "idle" });
 
         // 카드 결제는 기존 setError 방식 유지
-        state.setError("dispenseFailure");
+        setError("dispenseFailure");
       }
       return false;
     }
@@ -72,7 +71,7 @@ export const createDispenseActions: StateCreator<
 
     // 카드 결제는 바로 대기 상태로 복귀
     if (isCardPayment(paymentMethod)) {
-      state.reset();
+      reset();
       return true;
     }
 
@@ -94,7 +93,7 @@ export const createDispenseActions: StateCreator<
         return true;
       } else {
         // 잔액이 0원인 경우 → 대기 상태로 전환
-        state.reset();
+        reset();
         return true;
       }
     }

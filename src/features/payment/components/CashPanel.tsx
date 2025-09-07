@@ -6,6 +6,7 @@ import { formatCurrency, formatDenomination } from "@/shared/utils/formatters";
 import { useVendingStore } from "@/features/machine/store/vendingStore";
 import { CASH_DENOMINATIONS } from "@/features/payment/constants/denominations";
 import type { CashDenomination } from "@/features/payment/types/payment.types";
+import { isProcessing, canInsertCash, isIdleState } from "@/shared/utils/statusHelpers";
 
 interface CashPanelProps {
   className?: string;
@@ -22,14 +23,12 @@ export function CashPanel({ className }: CashPanelProps) {
 
   // 현금 투입 가능 상태 확인
   const isVisible = paymentMethod === "cash";
-  const isDisabled =
-    status === "dispensing" ||
-    status === "completing";
-  const canInsertCash = status === "cashInput" || status === "productSelect";
+  const isDisabled = isProcessing(status);
+  const canInsertCashNow = !isDisabled && canInsertCash(status);
 
   // 현금 투입 핸들러
   const handleCashInsert = (amount: CashDenomination) => {
-    if (!canInsertCash) return;
+    if (!canInsertCashNow) return;
 
     insertCash(amount);
   };
@@ -62,7 +61,7 @@ export function CashPanel({ className }: CashPanelProps) {
                 "font-bold"
               )}
               onClick={() => handleCashInsert(denomination)}
-              disabled={isDisabled || !canInsertCash}
+              disabled={!canInsertCashNow}
             >
               <span className="text-lg">{formatCurrency(denomination)}</span>
               <span className="text-xs">{formatDenomination(denomination)}</span>
@@ -83,10 +82,10 @@ export function CashPanel({ className }: CashPanelProps) {
         </div>
 
         {/* 상태 메시지 */}
-        {!canInsertCash && currentBalance === 0 && (
+        {!canInsertCashNow && currentBalance === 0 && (
           <div className="text-center">
             <Badge variant="secondary" className="text-sm">
-              {status === "idle" ? "결제 방식을 선택해주세요" : "처리 중..."}
+              {isIdleState(status) ? "결제 방식을 선택해주세요" : "처리 중..."}
             </Badge>
           </div>
         )}

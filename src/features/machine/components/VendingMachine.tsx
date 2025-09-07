@@ -6,16 +6,10 @@ import { CardPanel } from "@/features/payment/components/CardPanel";
 import { MainLayout } from "@/shared/components/layout/MainLayout";
 
 // 공통 컴포넌트 속성 타입
-interface ComponentWithChildren {
+interface VendingComponentProps {
   children: ReactNode;
   className?: string;
 }
-
-type VendingMachineProps = ComponentWithChildren;
-
-type VendingDisplayProps = ComponentWithChildren;
-
-type VendingControlsProps = ComponentWithChildren;
 
 /**
  * VendingMachine - 자판기 메인 컨테이너 (Compound Component Pattern)
@@ -34,7 +28,7 @@ type VendingControlsProps = ComponentWithChildren;
  *   </VendingMachine.Controls>
  * </VendingMachine>
  */
-function VendingMachine({ children, className }: VendingMachineProps) {
+function VendingMachine({ children, className }: VendingComponentProps) {
   return (
     <MainLayout>
       <div
@@ -54,7 +48,7 @@ function VendingMachine({ children, className }: VendingMachineProps) {
  * VendingMachine.Display - 자판기 디스플레이 영역
  * 상태 표시, 상품 진열 등의 시각적 요소를 포함
  */
-function VendingDisplay({ children, className }: VendingDisplayProps) {
+function VendingDisplay({ children, className }: VendingComponentProps) {
   return (
     <div
       className={cn(
@@ -75,7 +69,7 @@ function VendingDisplay({ children, className }: VendingDisplayProps) {
  * VendingMachine.Controls - 컨트롤 패널 영역
  * 결제 방식 선택, 관리자 패널 등의 인터랙션 요소를 포함
  */
-function VendingControls({ children, className }: VendingControlsProps) {
+function VendingControls({ children, className }: VendingComponentProps) {
   return (
     <div
       className={cn(

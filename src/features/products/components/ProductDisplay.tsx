@@ -1,4 +1,5 @@
 import { cn } from "@/shared/utils/ui";
+import { useVendingStore } from "@/features/machine/store/vendingStore";
 import { useProductSelection } from "../hooks/useProductSelection";
 import { ProductButton } from "./ProductButton";
 
@@ -12,10 +13,8 @@ interface ProductDisplayProps {
  * - 모든 비즈니스 로직은 useProductSelection 훅으로 위임
  */
 export function ProductDisplay({ className }: ProductDisplayProps) {
-  const { 
-    products, 
-    handleProductSelect, 
-  } = useProductSelection();
+  const { products } = useVendingStore();
+  const { handleProductSelect } = useProductSelection();
 
   return (
     <div className={cn("grid grid-cols-3 gap-3", className)}>

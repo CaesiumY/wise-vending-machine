@@ -20,7 +20,6 @@ export function useCardPayment() {
   };
 
   return {
-    isProcessing: false, // 현재 사용하지 않는 상태
     autoRecognizeCard,
   };
 }

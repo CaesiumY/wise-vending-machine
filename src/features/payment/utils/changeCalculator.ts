@@ -42,10 +42,6 @@ export function calculateOptimalChange(
   return {
     canProvideChange,
     totalChange: changeAmount,
-    breakdown,
-    shortage: canProvideChange ? undefined : CASH_DENOMINATIONS.filter(d => 
-      Math.floor(remainingAmount / d) > (inventory[d] || 0)
-    ),
-    remainingAmount: canProvideChange ? 0 : remainingAmount
+    breakdown
   };
 }

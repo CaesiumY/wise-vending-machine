@@ -41,7 +41,6 @@ export function useProductSelection() {
   };
 
   return {
-    products,
     handleProductSelect,
   };
 }

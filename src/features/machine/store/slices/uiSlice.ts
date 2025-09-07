@@ -48,7 +48,7 @@ export const createUiSlice: StateCreator<
     const errorMessage = message || getErrorMessage(errorType);
     set({
       currentError: errorType,
-      errorMessage: errorMessage,
+      errorMessage,
     });
     
     toast.error(errorMessage);

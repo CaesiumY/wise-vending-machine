@@ -89,7 +89,7 @@ export const createCardActions: StateCreator<
         status: "productSelect", // 재선택 가능
       });
 
-      return { success: false, errorType };
+      return { success: false, error: getErrorMessage(errorType) };
     }
   },
 

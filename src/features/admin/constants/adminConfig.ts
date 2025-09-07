@@ -1,8 +1,9 @@
 // adminConfig.ts - 관리자 패널 설정 상수
+import type { AdminSettings } from "@/features/admin/types/admin.types";
 
 // 예외 토글 항목 인터페이스
 export interface ExceptionToggleItem {
-  key: string;
+  key: keyof AdminSettings;
   label: string;
   description: string;
 }

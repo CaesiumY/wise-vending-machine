@@ -38,8 +38,6 @@ export interface ChangeBreakdown {
   canProvideChange: boolean;
   totalChange: number;
   breakdown: { [K in CashDenomination]: number };
-  shortage?: CashDenomination[];
-  remainingAmount?: number;
 }
 
 // 거래 정보

@@ -34,7 +34,6 @@ const storeCreator: StateCreator<VendingStore> = (set, get, api) => ({
 
 export const useVendingStore = create<VendingStore>()(
   devtools(storeCreator, { 
-    name: "useVendingStore",
-    enabled: process.env.NODE_ENV === 'development'
+    name: "useVendingStore"
   })
 );

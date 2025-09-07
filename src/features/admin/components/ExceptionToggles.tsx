@@ -37,13 +37,9 @@ export function ExceptionToggles() {
             </div>
             <Switch
               id={toggle.key}
-              checked={
-                (adminStore[
-                  toggle.key as keyof AdminSettings
-                ] as boolean) || false
-              }
+              checked={adminStore[toggle.key] || false}
               onCheckedChange={(checked) =>
-                handleToggle(toggle.key as keyof AdminSettings, checked)
+                handleToggle(toggle.key, checked)
               }
               className="scale-75"
             />
