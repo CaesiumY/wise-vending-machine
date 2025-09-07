@@ -19,46 +19,59 @@ export const createCardActions: StateCreator<
   [],
   CardActions
 > = (set, get, _api) => ({
-  
   confirmCardPayment: (productId: ProductType): ActionResult<DispenseData> => {
     const state = get();
     const { products } = state;
 
     if (!productId) {
-      return { 
-        success: false, 
+      return {
+        success: false,
         error: "선택된 상품이 없습니다.",
-        errorType: ErrorTypes.PRODUCT_NOT_FOUND
+        errorType: ErrorTypes.PRODUCT_NOT_FOUND,
       };
     }
 
     const product = products[productId];
+    const adminState = useAdminStore.getState();
 
+    // 카드 인식 실패 체크를 먼저 수행
+    if (adminState.cardReaderFault) {
+      set({
+        selectedProduct: null,
+        selectedProductForCard: null,
+        showPaymentConfirm: false,
+        status: "cardProcess",
+      });
+
+      return {
+        success: false,
+        error: "카드를 인식할 수 없습니다. 카드를 다시 확인해주세요.",
+        errorType: ErrorTypes.CARD_READER_FAULT,
+      };
+    }
+
+    // 결제 거부 체크
+    if (adminState.cardPaymentReject) {
+      set({
+        selectedProduct: null,
+        selectedProductForCard: null,
+        showPaymentConfirm: false,
+        status: "cardProcess",
+      });
+
+      return {
+        success: false,
+        error: "카드 결제가 거부되었습니다. 다른 카드를 사용해주세요.",
+        errorType: ErrorTypes.CARD_PAYMENT_REJECT,
+      };
+    }
+
+    // 결제 성공 시에만 상태 변경
     set({
       selectedProduct: productId,
       status: "cardProcess",
       showPaymentConfirm: false,
     });
-
-    const adminState = useAdminStore.getState();
-
-    // 카드 인식 실패 시뮬레이션
-    if (adminState.cardReaderFault) {
-      return {
-        success: false,
-        error: "카드 인식 실패",
-        errorType: ErrorTypes.CARD_READER_FAULT
-      };
-    }
-
-    // 결제 거부 시뮬레이션
-    if (adminState.cardPaymentReject) {
-      return {
-        success: false,
-        error: "결제 거부",
-        errorType: ErrorTypes.CARD_PAYMENT_REJECT
-      };
-    }
 
     // 결제 성공 - 거래 생성
     const transaction: Transaction = {
@@ -83,7 +96,7 @@ export const createCardActions: StateCreator<
     });
 
     const dispenseResult = get().dispenseProduct();
-    
+
     // 배출 결과 반환 (성공/실패 모두)
     return dispenseResult;
   },
