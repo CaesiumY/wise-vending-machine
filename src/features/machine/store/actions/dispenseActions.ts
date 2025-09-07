@@ -38,20 +38,25 @@ export const createDispenseActions: StateCreator<
     if (adminState.dispenseFaultMode) {
       const product = products[selectedProduct];
 
-      // 카드 결제 실패 시 즉시 반환
+      // 카드 결제 실패 시 상태만 초기화
       if (!isCashPayment(paymentMethod)) {
-        set({ status: "idle" });
+        set({ 
+          status: "cardProcess",
+          selectedProduct: null,
+          selectedProductForCard: null,
+        });
+
         return {
           success: false,
-          error: "배출에 실패했습니다. 결제가 취소됩니다.",
+          error: "배출에 실패했습니다. 결제가 취소되었습니다. 다시 선택해주세요.",
           errorType: ErrorTypes.DISPENSE_FAILURE,
           data: { paymentMethod: "card", paymentCancelled: true }
         };
       }
 
-      // 현금 결제 실패 시 잔액 복구
+      // 현금 결제 실패 시
       set((state: VendingStore) => ({
-        currentBalance: state.currentBalance + product.price, // 잔액 복구
+        currentBalance: state.currentBalance + product.price,
         status: "productSelect",
         selectedProduct: null,
       }));

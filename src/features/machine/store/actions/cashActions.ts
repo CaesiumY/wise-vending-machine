@@ -8,17 +8,14 @@ import { useAdminStore } from "@/features/admin/store/adminStore";
 import { ErrorTypes } from "@/features/machine/constants/errorTypes";
 import { formatCurrency } from "@/shared/utils/formatters";
 
-// 현금 투입 간격 제한 (밀리초)
 const CASH_INSERT_DELAY_MS = 1000;
 
-// 현금 관련 액션 인터페이스
 export interface CashActions {
   insertCash: (denomination: CashDenomination) => ActionResult<CashInsertData>;
   processCashTransaction: (productId: ProductType) => ActionResult<DispenseData>;
   cancelTransaction: () => ActionResult<RefundData | void>;
 }
 
-// 현금 액션 생성 함수
 export const createCashActions: StateCreator<
   VendingStore,
   [],
@@ -30,35 +27,31 @@ export const createCashActions: StateCreator<
     const state = get();
     const { currentBalance, insertedCash, lastInsertTime } = state;
 
-    // 1. 연속 투입 간격 검증 (1초 간격) - 화폐 인식 시간 시뮬레이션
+    // 빠른 연속 투입 방지 - 실제 자판기의 화폐 인식 시간 시뮬레이션
     if (Date.now() - lastInsertTime < CASH_INSERT_DELAY_MS) {
       return {
         success: false,
         error: "화폐가 반환되었습니다. 천천히 다시 투입해주세요.",
-        errorType: "cashInsertTooFast",
+        errorType: ErrorTypes.CASH_INSERT_TOO_FAST,
       };
     }
 
-    const newBalance = currentBalance + denomination;
-    const newInsertedCash = [...insertedCash, denomination];
-
-    // 4. AdminStore의 화폐 재고 증가 (투입된 화폐를 자판기에 추가)
+    // 투입된 화폐를 자판기 재고에 즉시 반영
     const adminStore = useAdminStore.getState();
     adminStore.adjustCashCount(denomination, 1);
 
     set({
-      currentBalance: newBalance,
-      insertedCash: newInsertedCash,
+      currentBalance: currentBalance + denomination,
+      insertedCash: [...insertedCash, denomination],
       lastInsertTime: Date.now(),
       status: "productSelect",
     });
 
-    // 5. 성공 데이터 반환
     return { 
       success: true, 
       data: { 
         amount: denomination, 
-        newBalance,
+        newBalance: currentBalance + denomination,
         message: `${formatCurrency(denomination)}이 투입되었습니다.`
       }
     };
@@ -113,20 +106,16 @@ export const createCashActions: StateCreator<
       status: "pending",
     };
 
-    // 임시로 거스름돈 차감 정보 저장 (롤백용)
-    const changeAdjustments: Array<{
-      denomination: CashDenomination;
-      count: number;
-    }> = [];
-    if (changeAmount > 0) {
-      for (const [denomStr, count] of Object.entries(changeResult.breakdown)) {
-        const denomination = parseInt(denomStr) as CashDenomination;
-        if (count > 0) {
-          changeAdjustments.push({ denomination, count });
-          adminState.adjustCashCount(denomination, -count);
-        }
-      }
-    }
+    // 트랜잭션 안전장치: 배출 실패 시 거스름돈 복구를 위한 롤백 정보 저장
+    const changeAdjustments = changeAmount > 0
+      ? Object.entries(changeResult.breakdown)
+          .filter(([, count]) => count > 0)
+          .map(([denomStr, count]) => {
+            const denomination = parseInt(denomStr) as CashDenomination;
+            adminState.adjustCashCount(denomination, -count);
+            return { denomination, count };
+          })
+      : [];
 
     set({
       lastTransaction: transaction,
@@ -137,7 +126,7 @@ export const createCashActions: StateCreator<
     // 배출 시도
     const dispenseResult = state.dispenseProduct();
 
-    // 배출 실패 시 거스름돈 차감 롤백
+    // 배출 실패 시 추가 안전장치: 사용자 자금 보호를 위한 거스름돈 복구
     if (!dispenseResult.success) {
       for (const { denomination, count } of changeAdjustments) {
         adminState.adjustCashCount(denomination, count); // 차감했던 거스름돈 복구
