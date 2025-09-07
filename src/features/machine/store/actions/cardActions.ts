@@ -9,7 +9,7 @@ import { toast } from "sonner";
 
 // 카드 관련 액션 인터페이스
 export interface CardActions {
-  confirmCardPayment: (productId: ProductType) => Promise<ActionResult>;
+  confirmCardPayment: (productId: ProductType) => ActionResult;
   cancelCardPayment: () => void;
 }
 
@@ -21,7 +21,7 @@ export const createCardActions: StateCreator<
   CardActions
 > = (set, get, _api) => ({
   
-  confirmCardPayment: async (productId: ProductType): Promise<ActionResult> => {
+  confirmCardPayment: (productId: ProductType): ActionResult => {
     const state = get();
     const { products } = state;
 

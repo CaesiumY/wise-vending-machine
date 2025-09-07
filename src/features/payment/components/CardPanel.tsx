@@ -17,9 +17,9 @@ export function CardPanel() {
   } = useVendingStore();
 
   // 결제 확인 - Zustand 액션 직접 호출
-  const handlePaymentConfirm = async () => {
+  const handlePaymentConfirm = () => {
     if (selectedProductForCard) {
-      await confirmCardPayment(selectedProductForCard);
+      confirmCardPayment(selectedProductForCard);
       // 상태 초기화는 confirmCardPayment 내부에서 처리
     }
   };
