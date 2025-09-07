@@ -32,14 +32,7 @@ export const createCardActions: StateCreator<
     const product = products[productId];
     const adminState = useAdminStore.getState();
 
-    const handleTimeout = () => {
-      const currentState = get();
-      if (currentState.paymentMethod === "card") {
-        currentState.resetPaymentMethod();
-      }
-    };
-
-    state.extendPaymentTimeout(handleTimeout, "card");
+    state.extendPaymentTimeout(() => {}, "card");
 
     if (adminState.cardReaderFault) {
       set({

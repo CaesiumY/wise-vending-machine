@@ -1,5 +1,4 @@
 import { useVendingStore } from "@/features/machine/store/vendingStore";
-import { useAdminStore } from "@/features/admin/store/adminStore";
 import { CARD_PAYMENT_TIMEOUT_MS, CASH_PAYMENT_TIMEOUT_MS } from "@/features/machine/store/slices/paymentSlice";
 import { useState, useEffect, useRef } from "react";
 
@@ -8,29 +7,15 @@ import { useState, useEffect, useRef } from "react";
  */
 export function usePaymentTimeout() {
   const { 
-    setError, 
-    setStatus, 
     paymentMethod, 
     paymentStartTime, 
     paymentTimeout,
     cancelTransaction
   } = useVendingStore();
-  const { cardReaderFault } = useAdminStore();
   
   const [remainingTime, setRemainingTime] = useState<number>(0);
   
   const prevRemainingTimeRef = useRef<number>(0);
-
-  const autoRecognizeCard = (): boolean => {
-    if (cardReaderFault) {
-      setError("cardReaderFault", "카드를 인식할 수 없습니다.");
-      return false;
-    }
-
-    setStatus("cardProcess");
-
-    return true;
-  };
 
   useEffect(() => {
     if (!paymentMethod || !paymentStartTime || !paymentTimeout) {
@@ -55,21 +40,28 @@ export function usePaymentTimeout() {
   useEffect(() => {
     const prevTime = prevRemainingTimeRef.current;
     
-    if (remainingTime === 0 && prevTime > 0) {
-      if (paymentMethod === 'cash') {
-        cancelTransaction(true);
-      }
+    if (remainingTime !== 0 || prevTime <= 0) {
+      prevRemainingTimeRef.current = remainingTime;
+      return;
     }
-    
+
+    const { resetPaymentMethod } = useVendingStore.getState();
+
+    if (paymentMethod === 'cash') {
+      cancelTransaction(true);
+      prevRemainingTimeRef.current = remainingTime;
+      return;
+    }
+
+    if (paymentMethod === 'card') {
+      resetPaymentMethod();
+    }
+
     prevRemainingTimeRef.current = remainingTime;
   }, [remainingTime, paymentMethod, cancelTransaction]);
 
-  const isTimeoutWarning = remainingTime > 0 && remainingTime <= 10;
-
   return {
-    autoRecognizeCard,
     remainingTime,
-    isTimeoutWarning,
     hasActiveTimeout: paymentMethod !== null && remainingTime > 0,
   };
 }

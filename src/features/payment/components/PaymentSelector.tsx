@@ -2,7 +2,7 @@ import { Button } from "@/shared/components/ui/button";
 import { Card } from "@/shared/components/ui/card";
 import { cn } from "@/shared/utils/ui";
 import { useVendingStore } from "@/features/machine/store/vendingStore";
-import { usePaymentTimeout } from "@/features/payment/hooks/usePaymentTimeout";
+import { autoRecognizeCard } from "@/features/payment/utils/cardHelpers";
 import type { PaymentMethod } from "@/features/payment/types/payment.types";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/features/machine/constants/errorMessages";
@@ -13,7 +13,6 @@ interface PaymentSelectorProps {
 
 export function PaymentSelector({ className }: PaymentSelectorProps) {
   const { paymentMethod, status, setPaymentMethod, resetPaymentMethod } = useVendingStore();
-  const { autoRecognizeCard } = usePaymentTimeout();
 
   const isSelectionDisabled = status !== "idle";
   
