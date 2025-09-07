@@ -7,7 +7,6 @@ import { toast } from "sonner";
 
 // 카드 관련 액션 인터페이스
 export interface CardActions {
-  processCardPayment: () => Promise<ActionResult>;
   confirmCardPayment: () => Promise<ActionResult>;
   cancelCardPayment: () => void;
 }
@@ -20,17 +19,21 @@ export const createCardActions: StateCreator<
   CardActions
 > = (set, get, _api) => ({
   
-  processCardPayment: async (): Promise<ActionResult> => {
+  confirmCardPayment: async (): Promise<ActionResult> => {
     const state = get();
-    const { products, selectedProduct } = state;
+    const { selectedProductForCard, products } = state;
 
-    if (!selectedProduct) {
+    if (!selectedProductForCard) {
       return { success: false, error: "선택된 상품이 없습니다." };
     }
 
-    const product = products[selectedProduct];
+    const product = products[selectedProductForCard];
 
-    set({ status: "cardProcess" });
+    set({
+      showPaymentConfirm: false,
+      selectedProduct: selectedProductForCard,
+      status: "cardProcess",
+    });
 
     try {
       // adminStore 설정 확인
@@ -51,7 +54,7 @@ export const createCardActions: StateCreator<
       // 결제 성공 - 거래 생성
       const transaction: Transaction = {
         id: Date.now().toString(),
-        productId: selectedProduct,
+        productId: selectedProductForCard,
         productName: product.name,
         amount: product.price,
         paymentMethod: "card",
@@ -87,24 +90,6 @@ export const createCardActions: StateCreator<
 
       return { success: false, errorType };
     }
-  },
-
-  confirmCardPayment: async (): Promise<ActionResult> => {
-    const state = get();
-    const { selectedProductForCard } = state;
-
-    if (!selectedProductForCard) {
-      return { success: false, error: "선택된 상품이 없습니다." };
-    }
-
-    set({
-      showPaymentConfirm: false,
-      selectedProduct: selectedProductForCard,
-    });
-
-    // 실제 카드 결제 진행
-    const result = await state.processCardPayment();
-    return result;
   },
 
   cancelCardPayment: () => {

@@ -1,6 +1,3 @@
-// 유틸리티 타입들
-export type Nullable<T> = T | null
-
 // 액션 결과 타입
 export interface ActionResult<T = void> {
   success: boolean

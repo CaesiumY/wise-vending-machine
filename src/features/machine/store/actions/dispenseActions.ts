@@ -1,13 +1,11 @@
 import type { StateCreator } from "zustand";
-import type { ChangeBreakdown, VendingStore } from "../../types/vending.types";
-import { calculateOptimalChange } from "@/features/payment/utils/changeCalculator";
+import type { VendingStore } from "../../types/vending.types";
 import { useAdminStore } from "@/features/admin/store/adminStore";
 import { toast } from "sonner";
 
 // 배출 관련 액션 인터페이스
 export interface DispenseActions {
   dispenseProduct: () => boolean;
-  calculateChange: (amount: number) => ChangeBreakdown;
 }
 
 // 배출 액션 생성 함수
@@ -104,8 +102,4 @@ export const createDispenseActions: StateCreator<
     return true;
   },
 
-  calculateChange: (amount: number): ChangeBreakdown => {
-    const adminState = useAdminStore.getState();
-    return calculateOptimalChange(amount, adminState.cashReserve);
-  },
 });

@@ -3,21 +3,32 @@ import type { VendingStatus, ErrorType, VendingStore } from "../../types/vending
 import { getErrorMessage } from "../../constants/errorMessages";
 import { toast } from "sonner";
 
-// UI 관련 상태 인터페이스
-export interface UiSlice {
-  // UI 상태
+// UI 상태 인터페이스 (상태만)
+interface UiState {
   status: VendingStatus;
   currentError: ErrorType | null;
   errorMessage: string;
   isLoading: boolean;
+}
 
-  // 기본 액션들 (단순한 상태 변경만)
+// 초기 상태 (재사용 가능)
+const initialUiState: UiState = {
+  status: "idle",
+  currentError: null,
+  errorMessage: "",
+  isLoading: false,
+};
+
+// UI 액션 인터페이스 (액션만)
+interface UiActions {
   setStatus: (status: VendingStatus) => void;
   setError: (errorType: ErrorType, message?: string) => void;
   clearError: () => void;
-  setLoading: (loading: boolean) => void;
   resetUi: () => void;
 }
+
+// UI 슬라이스 타입 (상태 + 액션)
+export interface UiSlice extends UiState, UiActions {}
 
 // UI 슬라이스 생성 함수
 export const createUiSlice: StateCreator<
@@ -26,13 +37,10 @@ export const createUiSlice: StateCreator<
   [],
   UiSlice
 > = (set, _get, _api) => ({
-  // 초기 상태
-  status: "idle",
-  currentError: null,
-  errorMessage: "",
-  isLoading: false,
+  // 초기 상태 spread
+  ...initialUiState,
 
-  // 기본 액션들
+  // 액션들
   setStatus: (status) =>
     set({ status }),
 
@@ -49,14 +57,5 @@ export const createUiSlice: StateCreator<
   clearError: () =>
     set({ currentError: null, errorMessage: "" }),
 
-  setLoading: (loading) =>
-    set({ isLoading: loading }),
-
-  resetUi: () =>
-    set({
-      status: "idle",
-      currentError: null,
-      errorMessage: "",
-      isLoading: false,
-    }),
+  resetUi: () => set(initialUiState),
 });
