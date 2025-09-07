@@ -5,6 +5,7 @@ import type { ActionResult, CashInsertData, RefundData, DispenseData } from "@/s
 import type { Transaction, VendingStore } from "../../types/vending.types";
 import { calculateOptimalChange } from "@/features/payment/utils/changeCalculator";
 import { useAdminStore } from "@/features/admin/store/adminStore";
+import { ErrorTypes } from "@/features/machine/constants/errorTypes";
 import { formatCurrency } from "@/shared/utils/formatters";
 
 // 현금 투입 간격 제한 (밀리초)
@@ -29,47 +30,39 @@ export const createCashActions: StateCreator<
     const state = get();
     const { currentBalance, insertedCash, lastInsertTime } = state;
 
-    try {
-      // 1. 연속 투입 간격 검증 (1초 간격) - 화폐 인식 시간 시뮬레이션
-      if (Date.now() - lastInsertTime < CASH_INSERT_DELAY_MS) {
-        return {
-          success: false,
-          error: "화폐가 반환되었습니다. 천천히 다시 투입해주세요.",
-          errorType: "cashInsertTooFast",
-        };
-      }
-
-      // 3. 정상 투입 처리
-      const newBalance = currentBalance + denomination;
-      const newInsertedCash = [...insertedCash, denomination];
-
-      // 4. AdminStore의 화폐 재고 증가 (투입된 화폐를 자판기에 추가)
-      const adminStore = useAdminStore.getState();
-      adminStore.adjustCashCount(denomination, 1);
-
-      set({
-        currentBalance: newBalance,
-        insertedCash: newInsertedCash,
-        lastInsertTime: Date.now(),
-        status: "productSelect", // 음료 선택 가능 상태로 전환
-      });
-
-      // 5. 성공 데이터 반환
-      return { 
-        success: true, 
-        data: { 
-          amount: denomination, 
-          newBalance,
-          message: `${formatCurrency(denomination)}이 투입되었습니다.`
-        }
-      };
-    } catch (error) {
-      console.error('현금 투입 중 오류:', error);
-      return { 
-        success: false, 
-        error: '현금 투입 중 오류가 발생했습니다.' 
+    // 1. 연속 투입 간격 검증 (1초 간격) - 화폐 인식 시간 시뮬레이션
+    if (Date.now() - lastInsertTime < CASH_INSERT_DELAY_MS) {
+      return {
+        success: false,
+        error: "화폐가 반환되었습니다. 천천히 다시 투입해주세요.",
+        errorType: "cashInsertTooFast",
       };
     }
+
+    // 3. 정상 투입 처리
+    const newBalance = currentBalance + denomination;
+    const newInsertedCash = [...insertedCash, denomination];
+
+    // 4. AdminStore의 화폐 재고 증가 (투입된 화폐를 자판기에 추가)
+    const adminStore = useAdminStore.getState();
+    adminStore.adjustCashCount(denomination, 1);
+
+    set({
+      currentBalance: newBalance,
+      insertedCash: newInsertedCash,
+      lastInsertTime: Date.now(),
+      status: "productSelect", // 음료 선택 가능 상태로 전환
+    });
+
+    // 5. 성공 데이터 반환
+    return { 
+      success: true, 
+      data: { 
+        amount: denomination, 
+        newBalance,
+        message: `${formatCurrency(denomination)}이 투입되었습니다.`
+      }
+    };
   },
 
   processCashTransaction: (productId: ProductType): ActionResult<DispenseData> => {
@@ -78,7 +71,11 @@ export const createCashActions: StateCreator<
     const product = products[productId];
 
     if (!product) {
-      return { success: false, error: "상품을 찾을 수 없습니다." };
+      return { 
+        success: false, 
+        error: "상품을 찾을 수 없습니다.",
+        errorType: ErrorTypes.PRODUCT_NOT_FOUND
+      };
     }
 
     // 거스름돈 계산 - 실시간 재고 사용
@@ -96,11 +93,11 @@ export const createCashActions: StateCreator<
     const shouldFailChange = !changeResult.canProvideChange;
 
     if (shouldFailChange) {
-      state.setError("changeShortage");
+      state.setError(ErrorTypes.CHANGE_SHORTAGE);
       return { 
         success: false, 
         error: "거스름돈이 부족합니다.",
-        errorType: "changeShortage" 
+        errorType: ErrorTypes.CHANGE_SHORTAGE 
       };
     }
 

@@ -5,6 +5,7 @@ import { useVendingStore } from "@/features/machine/store/vendingStore";
 import { useCardPayment } from "@/features/payment/hooks/useCardPayment";
 import type { PaymentMethod } from "@/features/payment/types/payment.types";
 import { toast } from "sonner";
+import { getErrorMessage } from "@/features/machine/constants/errorMessages";
 
 interface PaymentSelectorProps {
   className?: string;
@@ -38,10 +39,16 @@ export function PaymentSelector({ className }: PaymentSelectorProps) {
   // 결제 방식 취소 핸들러
   const handlePaymentCancel = () => {
     const result = resetPaymentMethod();
-    if (result.success && result.data?.message) {
-      toast.info(result.data.message);
-    } else if (!result.success) {
-      toast.error(result.error || "취소에 실패했습니다.");
+    if (result.success) {
+      if (result.data?.message) {
+        toast.success(result.data.message);
+      }
+    } else {
+      if (result.errorType) {
+        toast.error(getErrorMessage(result.errorType));
+      } else {
+        toast.error(result.error || "취소에 실패했습니다.");
+      }
     }
   };
 

@@ -2,6 +2,7 @@ import type { StateCreator } from "zustand";
 import type { VendingStore } from "../../types/vending.types";
 import type { ActionResult, RefundData } from "@/shared/types/utility.types";
 import { formatCurrency } from "@/shared/utils/formatters";
+import { ErrorTypes } from "@/features/machine/constants/errorTypes";
 
 // 리셋 액션 인터페이스
 export interface ResetActions {
@@ -35,6 +36,7 @@ export const createResetActions: StateCreator<
       return {
         success: false,
         error: "현재 상태에서는 결제 방식을 변경할 수 없습니다.",
+        errorType: ErrorTypes.INVALID_STATE
       };
     }
 

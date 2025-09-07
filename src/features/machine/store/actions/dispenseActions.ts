@@ -3,6 +3,7 @@ import type { VendingStore } from "../../types/vending.types";
 import { useAdminStore } from "@/features/admin/store/adminStore";
 import { isCashPayment, isCardPayment, ensureNonNegative } from "@/shared/utils/paymentHelpers";
 import { formatCurrency } from "@/shared/utils/formatters";
+import { ErrorTypes } from "@/features/machine/constants/errorTypes";
 
 import type { ActionResult, DispenseData } from "@/shared/types/utility.types";
 
@@ -24,7 +25,11 @@ export const createDispenseActions: StateCreator<
     const adminState = useAdminStore.getState();
 
     if (!selectedProduct) {
-      return { success: false, error: "선택된 상품이 없습니다." };
+      return { 
+        success: false, 
+        error: "선택된 상품이 없습니다.",
+        errorType: ErrorTypes.PRODUCT_NOT_FOUND
+      };
     }
 
     set({ status: "dispensing" });
@@ -44,7 +49,7 @@ export const createDispenseActions: StateCreator<
         return {
           success: false,
           error: "배출에 실패했습니다. 잔액이 복구되었습니다. 다시 선택해주세요.",
-          errorType: "dispenseFailure",
+          errorType: ErrorTypes.DISPENSE_FAILURE,
           data: { paymentMethod: "cash", balanceRestored: true }
         };
       } else {
@@ -54,7 +59,7 @@ export const createDispenseActions: StateCreator<
         return {
           success: false,
           error: "배출에 실패했습니다. 결제가 취소됩니다.",
-          errorType: "dispenseFailure",
+          errorType: ErrorTypes.DISPENSE_FAILURE,
           data: { paymentMethod: "card", paymentCancelled: true }
         };
       }

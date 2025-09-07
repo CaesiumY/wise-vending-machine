@@ -1,9 +1,9 @@
-import type { ErrorType } from "@/features/machine/types/vending.types";
+import type { ErrorType } from "@/features/machine/constants/errorTypes";
 
 /**
  * 자판기 시뮬레이터 오류 메시지 상수
  *
- * 실제로 사용되는 ErrorType에 대응하는 사용자 친화적인 오류 메시지를 정의합니다.
+ * 실제로 발생 가능한 ErrorType에 대응하는 사용자 친화적인 오류 메시지를 정의합니다.
  * 실제 자판기에서 표시되는 안내문구를 참고하여 시뮬레이션용으로 작성되었습니다.
  */
 const ERROR_MESSAGES: Record<ErrorType, string> = {
@@ -13,6 +13,8 @@ const ERROR_MESSAGES: Record<ErrorType, string> = {
   cardReaderFault: "카드를 인식할 수 없습니다.",
   cardPaymentReject: "카드 결제가 거부되었습니다.",
   cashInsertTooFast: "너무 빠르게 투입하고 있습니다. 잠시 기다려주세요.",
+  productNotFound: "상품을 찾을 수 없습니다.",
+  invalidState: "현재 상태에서는 해당 작업을 수행할 수 없습니다.",
 };
 
 /**

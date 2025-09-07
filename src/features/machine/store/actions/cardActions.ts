@@ -4,6 +4,7 @@ import type { ActionResult, DispenseData } from "@/shared/types/utility.types";
 import type { Transaction, VendingStore } from "../../types/vending.types";
 import { useAdminStore } from "@/features/admin/store/adminStore";
 import { EMPTY_BREAKDOWN } from "@/features/payment/constants/denominations";
+import { ErrorTypes } from "@/features/machine/constants/errorTypes";
 
 // 카드 관련 액션 인터페이스
 export interface CardActions {
@@ -24,7 +25,11 @@ export const createCardActions: StateCreator<
     const { products } = state;
 
     if (!productId) {
-      return { success: false, error: "선택된 상품이 없습니다." };
+      return { 
+        success: false, 
+        error: "선택된 상품이 없습니다.",
+        errorType: ErrorTypes.PRODUCT_NOT_FOUND
+      };
     }
 
     const product = products[productId];
@@ -43,7 +48,7 @@ export const createCardActions: StateCreator<
       return {
         success: false,
         error: "카드 인식 실패",
-        errorType: "cardReaderFault"
+        errorType: ErrorTypes.CARD_READER_FAULT
       };
     }
 
@@ -52,7 +57,7 @@ export const createCardActions: StateCreator<
       return {
         success: false,
         error: "결제 거부",
-        errorType: "cardPaymentReject"
+        errorType: ErrorTypes.CARD_PAYMENT_REJECT
       };
     }
 

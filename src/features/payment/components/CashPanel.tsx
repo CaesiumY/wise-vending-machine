@@ -8,6 +8,7 @@ import { CASH_DENOMINATIONS } from "@/features/payment/constants/denominations";
 import type { CashDenomination } from "@/features/payment/types/payment.types";
 import { isProcessing, canInsertCash, isIdleState } from "@/shared/utils/statusHelpers";
 import { toast } from "sonner";
+import { getErrorMessage } from "@/features/machine/constants/errorMessages";
 
 interface CashPanelProps {
   className?: string;
@@ -32,17 +33,15 @@ export function CashPanel({ className }: CashPanelProps) {
     if (!canInsertCashNow) return;
 
     const result = insertCash(amount);
-    
     if (result.success) {
       if (result.data?.message) {
         toast.success(result.data.message);
       }
     } else {
-      // 에러 타입별 메시지 처리
-      if (result.errorType === 'cashInsertTooFast') {
-        toast.warning("천천히 투입해주세요");
+      if (result.errorType) {
+        toast.error(getErrorMessage(result.errorType));
       } else {
-        toast.error(result.error || "투입 실패");
+        toast.error(result.error || "현금 투입에 실패했습니다.");
       }
     }
   };
@@ -51,7 +50,6 @@ export function CashPanel({ className }: CashPanelProps) {
   const handleReturn = () => {
     if (currentBalance > 0) {
       const result = cancelTransaction();
-      
       if (result.success && result.data?.message) {
         toast.success(result.data.message);
       }

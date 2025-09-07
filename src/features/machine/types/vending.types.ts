@@ -23,14 +23,8 @@ export type VendingStatus =
   | "dispensing" // 배출 진행 중
   | "completing"; // 거스름돈 처리 중
 
-// 오류 타입 (시뮬레이션)
-export type ErrorType =
-  | "changeShortage" // 거스름돈 부족
-  | "outOfStock" // 재고 부족
-  | "dispenseFailure" // 음료 배출 실패
-  | "cardReaderFault" // 카드 인식 실패 (시뮬레이션)
-  | "cardPaymentReject" // 카드 결제 거부 (시뮬레이션)
-  | "cashInsertTooFast"; // 현금 투입 간격 제한
+// ErrorType은 별도 파일에서 정의하여 import
+export type { ErrorType } from "@/features/machine/constants/errorTypes";
 
 // ===== 핵심 타입 정의 =====
 

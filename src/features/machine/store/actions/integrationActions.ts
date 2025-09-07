@@ -6,6 +6,7 @@ import type { ActionResult, DispenseData } from "@/shared/types/utility.types";
 import { isCashPayment } from "@/shared/utils/paymentHelpers";
 import { formatCurrency } from "@/shared/utils/formatters";
 import { isProductSelectionAllowed } from "@/shared/utils/statusHelpers";
+import { ErrorTypes } from "@/features/machine/constants/errorTypes";
 
 // 통합 액션 인터페이스
 export interface IntegrationActions {
@@ -28,6 +29,7 @@ export const createIntegrationActions: StateCreator<
       return {
         success: false,
         error: "결제 방식을 선택할 수 없는 상태입니다.",
+        errorType: ErrorTypes.INVALID_STATE
       };
     }
 
@@ -44,17 +46,25 @@ export const createIntegrationActions: StateCreator<
 
     // 음료 선택 가능한 상태인지 확인
     if (!isProductSelectionAllowed(status)) {
-      return { success: false, error: "음료를 선택할 수 없는 상태입니다." };
+      return { 
+        success: false, 
+        error: "음료를 선택할 수 없는 상태입니다.",
+        errorType: ErrorTypes.INVALID_STATE
+      };
     }
 
     const product = products[productId];
     if (!product) {
-      return { success: false, error: "존재하지 않는 상품입니다." };
+      return { 
+        success: false, 
+        error: "존재하지 않는 상품입니다.",
+        errorType: ErrorTypes.PRODUCT_NOT_FOUND
+      };
     }
 
     // 재고 확인
     if (product.stock <= 0) {
-      get().setError("outOfStock", `${product.name}이(가) 품절되었습니다.`);
+      get().setError(ErrorTypes.OUT_OF_STOCK, `${product.name}이(가) 품절되었습니다.`);
       return {
         success: false,
         error: `${product.name}이(가) 품절되었습니다.`,
@@ -67,7 +77,11 @@ export const createIntegrationActions: StateCreator<
         "changeShortage",
         `잔액이 부족합니다. (필요: ${formatCurrency(product.price)}, 보유: ${formatCurrency(currentBalance)})`
       );
-      return { success: false, error: "잔액이 부족합니다." };
+      return { 
+        success: false, 
+        error: "잔액이 부족합니다.",
+        errorType: ErrorTypes.INVALID_STATE
+      };
     }
 
     set({ selectedProduct: productId });
