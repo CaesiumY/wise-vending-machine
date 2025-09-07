@@ -4,7 +4,8 @@ import { CreditCard, ShoppingCart, X } from "lucide-react";
 import { formatCurrency } from "@/shared/utils/formatters";
 import { useVendingStore } from "@/features/machine/store/vendingStore";
 import { isCardInputState } from "@/shared/utils/statusHelpers";
-import { handleActionResult } from "@/shared/utils/toastHelpers";
+import { toast } from "sonner";
+import { getErrorMessage } from "@/features/machine/constants/errorMessages";
 
 export function CardPanel() {
   const {
@@ -20,7 +21,17 @@ export function CardPanel() {
   const handlePaymentConfirm = () => {
     if (selectedProductForCard) {
       const result = confirmCardPayment(selectedProductForCard);
-      handleActionResult(result);
+      if (result.success) {
+        if (result.data?.message) {
+          toast.success(result.data.message);
+        }
+      } else {
+        if (result.errorType) {
+          toast.error(getErrorMessage(result.errorType));
+        } else {
+          toast.error(result.error || "카드 결제에 실패했습니다.");
+        }
+      }
     }
   };
 
