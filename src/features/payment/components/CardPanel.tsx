@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui
 import { CreditCard, ShoppingCart, X } from "lucide-react";
 import { formatCurrency } from "@/shared/utils/formatters";
 import { useVendingStore } from "@/features/machine/store/vendingStore";
-import { isCardInputState } from "@/shared/utils/statusHelpers";
+import { isCardInputState } from "@/features/payment/utils/statusHelpers";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/features/machine/constants/errorMessages";
 

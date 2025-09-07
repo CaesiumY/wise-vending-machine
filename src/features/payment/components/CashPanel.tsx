@@ -6,7 +6,8 @@ import { formatCurrency, formatDenomination } from "@/shared/utils/formatters";
 import { useVendingStore } from "@/features/machine/store/vendingStore";
 import { CASH_DENOMINATIONS } from "@/features/payment/constants/denominations";
 import type { CashDenomination } from "@/features/payment/types/payment.types";
-import { isProcessing, canInsertCash, isIdleState } from "@/shared/utils/statusHelpers";
+import { canInsertCash, isIdleState } from "@/features/payment/utils/statusHelpers";
+import { isProcessing } from "@/features/machine/utils/statusHelpers";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/features/machine/constants/errorMessages";
 

@@ -3,7 +3,7 @@ import type { VendingStore } from "../../types/vending.types";
 import type { ActionResult, RefundData } from "@/shared/types/utility.types";
 import { formatCurrency } from "@/shared/utils/formatters";
 import { ErrorTypes } from "@/features/machine/constants/errorTypes";
-import { isProcessing } from "@/shared/utils/statusHelpers";
+import { isProcessing } from "@/features/machine/utils/statusHelpers";
 
 // 리셋 액션 인터페이스
 export interface ResetActions {

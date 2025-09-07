@@ -6,7 +6,7 @@ import type {
 } from "../types/product.types";
 import { ButtonState } from "../types/product.types";
 import { isCashPayment } from "@/shared/utils/paymentHelpers";
-import { isProductSelectionAllowed } from "@/shared/utils/statusHelpers";
+import { isProductSelectionAllowed } from "@/features/machine/utils/statusHelpers";
 
 // 비활성화되어야 하는 버튼 상태들
 const DISABLED_BUTTON_STATES: ReadonlySet<ButtonStateType> = new Set([

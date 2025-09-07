@@ -5,7 +5,7 @@ import type { PaymentMethod } from "@/features/payment/types/payment.types";
 import type { ActionResult, DispenseData } from "@/shared/types/utility.types";
 import { isCashPayment } from "@/shared/utils/paymentHelpers";
 import { formatCurrency } from "@/shared/utils/formatters";
-import { isProductSelectionAllowed } from "@/shared/utils/statusHelpers";
+import { isProductSelectionAllowed } from "@/features/machine/utils/statusHelpers";
 import { ErrorTypes } from "@/features/machine/constants/errorTypes";
 
 // 통합 액션 인터페이스
